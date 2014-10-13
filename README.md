@@ -1,4 +1,4 @@
-uc-Makefile
+uC-Makefile
 ===========
 
 Makefile for Microcontrollers
