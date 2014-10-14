@@ -19,7 +19,7 @@ Create a Makefile in your sketch directory, such as this:
 
 Invoke with:
 
-	make -I _somedir_
+	make -I somedir
 
 Note: installing the fragments in a directory on Gnu Make's [include 
 path](https://www.gnu.org/software/make/manual/html_node/Include.html)
