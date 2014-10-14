@@ -19,13 +19,21 @@ Create a Makefile in your sketch directory, such as this:
 
 Invoke with:
 
-	make -I somedir	
+	make -I somedir
 
 Note: installing the fragments in a directory on Gnu Make's [include 
 path](https://www.gnu.org/software/make/manual/html_node/Include.html)
-means you can invoke as simply:
+means you can simply do:
 
 	make
+
+Other Settings
+--------------
+
+Some settings it might be necessary to override, and their defaults are:
+
+- IDE_HOME (/usr/local/energia)
+- SKETCHBOOK (~/energia/sketchbook)
 
 Credits
 -------
