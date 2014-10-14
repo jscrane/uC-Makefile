@@ -27,6 +27,14 @@ means you can invoke as simply:
 
 	make
 
+Other Settings
+--------------
+
+Some settings it might be necessary to override, and their defaults are:
+
+- IDE_HOME (/usr/local/energia)
+- SKETCHBOOK (~/energia/sketchbook)
+
 Credits
 -------
 
