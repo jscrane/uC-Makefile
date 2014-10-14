@@ -2,6 +2,7 @@
 export PATH := $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)/bin:$(PATH)
 
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
+DEPS = $(foreach d, $(SKETCH) $(SOURCES), .$d.d)
 HARDWARE_FAMILY = $(IDE_HOME)/hardware/$(PROCESSOR_FAMILY)
 PROCESSOR_CORE = $(HARDWARE_FAMILY)/cores/$(PROCESSOR_FAMILY)
 SKETCH_ELF = $(SKETCH:.ino=.elf)
@@ -25,12 +26,15 @@ CORE_LIB = libcore.a
 CORE_SOURCES = $(wildcard $(addprefix $(PROCESSOR_CORE)/, *.c *.cpp) $(addprefix $(PROCESSOR_CORE)/driverlib/, *.c))
 CORE_OBJECTS = $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
 
-.PHONY: upload clean size
+.PHONY: all upload clean size
+
+all: $(DEPS) $(SKETCH_BIN)
 
 include $(PROCESSOR_FAMILY).mk
 
 CPPFLAGS += -DF_CPU=$(BUILD_FCPU) -I$(PROCESSOR_CORE) -I$(PROCESSOR_CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT)
 CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBRARIES), -I$(lib)) $(foreach lib, $(IDE_LIBRARIES), -I$(lib)) 
+DEPFLAGS = -MM -MP -MF 
 
 CC = $(COMPILER_FAMILY)-gcc
 CXX = $(COMPILER_FAMILY)-g++
@@ -41,7 +45,7 @@ SIZE = $(COMPILER_FAMILY)-size
 LDLIBS = -L. -lcore -lm -lc -lgcc
 
 $(SKETCH_BIN): $(SKETCH_ELF)
-	$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
+	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@
 
 $(SKETCH_ELF): $(OBJECTS) $(CORE_LIB)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
@@ -49,6 +53,13 @@ $(SKETCH_ELF): $(OBJECTS) $(CORE_LIB)
 $(CORE_LIB): $(CORE_OBJECTS)
 	$(AR) rcs $@ $?
 	$(RANLIB) $@
+
+.%.cpp.d: %.c
+	mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
+
+.%.ino.d: %.ino
+	$(CXX) $(CPPFLAGS) -x c++ -include $(PROCESSOR_CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
 
 .lib/%.c.o: %.c
 	mkdir -p $(dir $@)
@@ -65,7 +76,9 @@ size: $(SKETCH_BIN)
 	$(SIZE) $<
 
 upload: $(SKETCH_BIN)
-	$(UPLOADER) $(UPLOAD_PROTOCOL) $(SKETCH_BIN)
+	$(UPLOADER) $(UPLOAD_FLAGS) $(SKETCH_BIN)
 
 clean:
-	rm -fr .lib $(OBJECTS) $(CORE_LIB) $(SKETCH_ELF) $(SKETCH_BIN)
+	rm -fr .lib $(DEPS) $(OBJECTS) $(CORE_LIB) $(SKETCH_ELF) $(SKETCH_BIN)
+
+include $(DEPS)
