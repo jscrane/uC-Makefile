@@ -1,3 +1,2 @@
-- reduce size of binaries
 - fragments for Arduino
-- use include path
+- use include path .INCLUDE_DIRS
