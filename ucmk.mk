@@ -25,11 +25,13 @@ CORE_LIB = libcore.a
 CORE_SOURCES = $(wildcard $(addprefix $(PROCESSOR_CORE)/, *.c *.cpp) $(addprefix $(PROCESSOR_CORE)/driverlib/, *.c))
 CORE_OBJECTS = $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
 
+TARGETS = $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
+
 .PHONY: all upload clean size
 
-all: $(DEPS) $(SKETCH_BIN)
-
 include $(PROCESSOR_FAMILY).mk
+
+all: $(TARGETS)
 
 CPPFLAGS += -DF_CPU=$(BUILD_FCPU) -I$(PROCESSOR_CORE) -I$(PROCESSOR_CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT)
 CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBRARIES), -I$(lib)) $(foreach lib, $(IDE_LIBRARIES), -I$(lib)) 
@@ -54,7 +56,6 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(RANLIB) $@
 
 .%.cpp.d: %.cpp
-	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
 
 .%.ino.d: %.ino
@@ -75,9 +76,9 @@ size: $(SKETCH_BIN)
 	$(SIZE) $<
 
 upload: $(SKETCH_BIN)
-	$(UPLOADER) $(UPLOAD_FLAGS) $(SKETCH_BIN)
+	$(UPLOADER) $(UPLOAD_FLAGS)
 
 clean:
-	rm -fr .lib $(DEPS) $(OBJECTS) $(CORE_LIB) $(SKETCH_ELF) $(SKETCH_BIN)
+	rm -fr .lib $(OBJECTS) $(CORE_LIB) $(TARGETS)
 
 include $(DEPS)
