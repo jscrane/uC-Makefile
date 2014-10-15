@@ -2,7 +2,7 @@ uC-Makefile
 ===========
 
 A Makefile for popular Microcontrollers supporting Energia (all boards) 
-and (in future) Arduino (all boards).
+and Arduino-1.0 (all boards).
 
 Configuration
 -------------
@@ -16,6 +16,10 @@ Create a Makefile in your sketch directory, such as this:
 	SOURCES = 
 
 	include energia.mk
+
+For Arduino 1.0, replace the last line with:
+
+	include arduino10.mk
 
 Invoke with:
 
@@ -32,8 +36,9 @@ Other Settings
 
 Some settings it might be necessary to override, and their defaults are:
 
-- IDE_HOME (/usr/local/energia)
-- SKETCHBOOK (~/energia/sketchbook)
+- IDE_HOME (/usr/local/energia or /usr/local/arduino)
+- SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
+- UPLOAD_PORT (/dev/ttyUSB0)
 
 Credits
 -------

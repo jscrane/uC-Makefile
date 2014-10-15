@@ -1,4 +1,4 @@
-CPUFLAGS = -mmcu=msp430g2553
+CPUFLAGS = -mmcu=$(BUILD_MCU)
 CFLAGS = -Os -Wall -ffunction-sections -fdata-sections $(CPUFLAGS)
 CXXFLAGS = $(CFLAGS)
 LDFLAGS = -Os -Wl,--gc-sections -u main $(CPUFLAGS)

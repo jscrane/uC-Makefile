@@ -12,7 +12,6 @@ BOARDS = $(HARDWARE_FAMILY)/boards.txt
 BUILD_MCU = $(shell sed -ne "s/$(BOARD).build.mcu=\(.*\)/\1/p" $(BOARDS))
 BUILD_FCPU = $(shell sed -ne "s/$(BOARD).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT = $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
-UPLOAD_SPEED = $(shell sed -ne "s/$(BOARD).upload.speed=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_PROTOCOL = $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 
 REQUIRED_LIBS = $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
@@ -54,7 +53,7 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(AR) rcs $@ $?
 	$(RANLIB) $@
 
-.%.cpp.d: %.c
+.%.cpp.d: %.cpp
 	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
 
