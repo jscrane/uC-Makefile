@@ -7,7 +7,7 @@ and Arduino-1.0 (all boards).
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
 - Your preferred source tree layout differs from Arduino's
-- You want more control over the build process than it gives you
+- You want more control over the build process than it gives you (e.g., compiler optimisation levels)
 - ... then this is for you!
 
 Configuration
