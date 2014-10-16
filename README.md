@@ -4,6 +4,11 @@ uC-Makefile
 A Makefile for popular Microcontrollers supporting Energia (all boards) 
 and Arduino-1.0 (all boards).
 
+If:
+- You'd prefer to be using vi or emacs to the Arduino IDE
+- You want more control over the build process than it gives you
+- ... then this is for you!
+
 Configuration
 -------------
 Install the makefile fragments in _somedir_.
