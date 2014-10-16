@@ -1,6 +1,7 @@
-
 export PATH := $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)/bin:$(PATH)
 
+SKETCH ?= $(wildcard *.ino)
+SOURCES ?= $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
 DEPS = $(foreach d, $(SKETCH) $(SOURCES), .$d.d)
 HARDWARE_FAMILY = $(IDE_HOME)/hardware/$(PROCESSOR_FAMILY)
