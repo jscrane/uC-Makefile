@@ -6,6 +6,7 @@ and Arduino-1.0 (all boards).
 
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
+- Your preferred source tree layout differs from Arduino's
 - You want more control over the build process than it gives you
 - ... then this is for you!
 
@@ -13,24 +14,23 @@ Configuration
 -------------
 Install the makefile fragments in _somedir_.
 
-Create a Makefile in your sketch directory, such as this:
+Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
 
 	PROCESSOR_FAMILY := msp430
 	BOARD := lpmsp430g2553
-	SKETCH = Blink.ino
-	SOURCES = 
-
 	include energia.mk
 
-For Arduino 1.0, replace the last line with:
+For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
+	PROCESSOR_FAMILY := arduino
+	BOARD := uno
 	include arduino10.mk
 
 Invoke with:
 
 	make -I somedir
 
-Note: installing the fragments in a directory on Gnu Make's [include 
+**Note**: installing the fragments in a directory on Gnu Make's [include 
 path](https://www.gnu.org/software/make/manual/html_node/Include.html)
 means you can simply do:
 
@@ -44,6 +44,8 @@ Some settings it might be necessary to override, and their defaults are:
 - IDE_HOME (/usr/local/energia or /usr/local/arduino)
 - SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
 - UPLOAD_PORT (/dev/ttyUSB0)
+- SKETCH (e.g., Blink.ino)
+- SOURCES (e.g., foo.cpp bar.c)
 
 Credits
 -------
