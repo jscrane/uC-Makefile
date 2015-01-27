@@ -46,9 +46,9 @@ Some settings it might be necessary to override, and their defaults are:
 - UPLOAD_PORT (/dev/ttyUSB0)
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
+- LOCAL_CPPFLAGS (e.g., local #defines)
 
 Credits
 -------
 
-- elpaso's [Makefile](https://github.com/elpaso/energia-makefile) for 
-  msp430 provided inspiration.
+- elpaso's [Makefile](https://github.com/elpaso/energia-makefile) for msp430 provided inspiration.
