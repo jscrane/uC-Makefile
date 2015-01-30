@@ -5,7 +5,7 @@ SOURCES ?= $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
 DEPS = $(foreach d, $(SKETCH) $(SOURCES), .$d.d)
 HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)
-CORE = $(HARDWARE_FAMILY)/cores/$(PLATFORM)
+CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 SKETCH_ELF = $(SKETCH:.ino=.elf)
 SKETCH_BIN = $(SKETCH:.ino=.bin)
 
