@@ -1,8 +1,10 @@
 IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
 UPLOAD_PORT ?= /dev/ttyUSB0
+
+PLATFORM := arduino
 PLATFORM_HEADER := Arduino.h
-CPPFLAGS := -DARDUINO=105 
+CPPFLAGS := -DARDUINO=106 
 
 SKETCH_EEP = $(SKETCH:.ino=.eep)
 EXTRA_TARGETS = $(SKETCH_EEP)

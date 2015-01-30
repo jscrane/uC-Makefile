@@ -4,8 +4,8 @@ SKETCH ?= $(wildcard *.ino)
 SOURCES ?= $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
 DEPS = $(foreach d, $(SKETCH) $(SOURCES), .$d.d)
-HARDWARE_FAMILY = $(IDE_HOME)/hardware/$(PROCESSOR_FAMILY)
-PROCESSOR_CORE = $(HARDWARE_FAMILY)/cores/$(PROCESSOR_FAMILY)
+HARDWARE_FAMILY = $(IDE_HOME)/hardware/$(PLATFORM)
+CORE = $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 SKETCH_ELF = $(SKETCH:.ino=.elf)
 SKETCH_BIN = $(SKETCH:.ino=.bin)
 
@@ -23,18 +23,18 @@ IDE_LIBRARIES = $(foreach lib, $(IDE_LIBS), $(HARDWARE_FAMILY)/libraries/$(lib) 
 LIBRARY_SOURCES = $(foreach lib, $(SKETCHBOOK_LIBRARIES) $(IDE_LIBRARIES), $(wildcard $(lib)/*.c) $(wildcard $(lib)/*.cpp))
 
 CORE_LIB = libcore.a
-CORE_SOURCES = $(wildcard $(addprefix $(PROCESSOR_CORE)/, *.c *.cpp) $(addprefix $(PROCESSOR_CORE)/driverlib/, *.c))
+CORE_SOURCES = $(wildcard $(addprefix $(CORE)/, *.c *.cpp) $(addprefix $(CORE)/driverlib/, *.c))
 CORE_OBJECTS = $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
 
 TARGETS = $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
 .PHONY: all upload clean size
 
-include $(PROCESSOR_FAMILY).mk
+include $(PLATFORM).mk
 
 all: $(TARGETS)
 
-CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(PROCESSOR_CORE) -I$(PROCESSOR_CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT)
+CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT)
 CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBRARIES), -I$(lib)) $(foreach lib, $(IDE_LIBRARIES), -I$(lib)) 
 DEPFLAGS = -MM -MP -MF 
 
@@ -60,7 +60,7 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
 
 .%.ino.d: %.ino
-	$(CXX) $(CPPFLAGS) -x c++ -include $(PROCESSOR_CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
+	$(CXX) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
 
 .lib/%.c.o: %.c
 	mkdir -p $(dir $@)
@@ -71,7 +71,7 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.o: %.ino
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(PROCESSOR_CORE)/$(PLATFORM_HEADER) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) -c -o $@ $<
 
 size: $(SKETCH_BIN)
 	$(SIZE) $<
