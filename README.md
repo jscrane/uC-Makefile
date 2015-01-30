@@ -2,7 +2,7 @@ uC-Makefile
 ===========
 
 A Makefile for popular Microcontrollers supporting Energia (all boards) 
-and Arduino-1.0 (all boards).
+and Arduino-1.x (all boards).
 
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
@@ -23,7 +23,6 @@ Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](h
 
 For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
-	PROCESSOR_FAMILY := arduino
 	BOARD := uno
 	include arduino10.mk
 
@@ -48,6 +47,7 @@ Some settings it might be necessary to override, and their defaults are:
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
 - LOCAL_CPPFLAGS (e.g., local #defines)
+- PROCESSOR_FAMILY (required for Launchpads, defaults to avr for Arduino)
 
 Credits
 -------
