@@ -1,16 +1,17 @@
 export PATH := $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)/bin:$(PATH)
 
+BOARDS = $(HARDWARE_FAMILY)/boards.txt
+BUILD_MCU = $(shell sed -ne "s/$(BOARD).build.mcu=\(.*\)/\1/p" $(BOARDS))
+
 SKETCH ?= $(wildcard *.ino)
-SOURCES ?= $(wildcard *.cpp) $(wildcard *.c)
+SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
-DEPS = $(foreach d, $(SKETCH) $(SOURCES), .$d.d)
+DEPS = $(foreach d, $(SKETCH) $(SOURCES), .deps/$d.d)
 HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 SKETCH_ELF = $(SKETCH:.ino=.elf)
 SKETCH_BIN = $(SKETCH:.ino=.bin)
 
-BOARDS = $(HARDWARE_FAMILY)/boards.txt
-BUILD_MCU = $(shell sed -ne "s/$(BOARD).build.mcu=\(.*\)/\1/p" $(BOARDS))
 BUILD_FCPU = $(shell sed -ne "s/$(BOARD).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT = $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_PROTOCOL = $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
@@ -34,7 +35,7 @@ include $(PLATFORM).mk
 
 all: $(TARGETS)
 
-CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT)
+CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBRARIES), -I$(lib)) $(foreach lib, $(IDE_LIBRARIES), -I$(lib)) 
 DEPFLAGS = -MM -MP -MF 
 
@@ -56,10 +57,12 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(AR) rcs $@ $?
 	$(RANLIB) $@
 
-.%.cpp.d: %.cpp
+.deps/%.cpp.d: %.cpp
+	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
 
-.%.ino.d: %.ino
+.deps/%.ino.d: %.ino
+	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
 
 .lib/%.c.o: %.c
