@@ -13,7 +13,6 @@ LDFLAGS = -Os -Wl,--gc-sections $(CPUFLAGS)
 LD = $(COMPILER_FAMILY)-gcc
 OBJCOPY_FLAGS = -O ihex -R .eeprom
 
-# FIXME
-UPLOADER = avrdude
-#UPLOAD_SPEED = $(shell sed -ne "s/$(BOARD).upload.speed=\(.*\)/\1/p" $(BOARDS)) 
-UPLOAD_FLAGS = -v
+UPLOAD_FLAGS = $(UPLOAD_PORT):$(UPLOAD_SPEED) fw $(SKETCH_BIN)
+
+PATH := $(HARDWARE_FAMILY)/tools:$(PATH)

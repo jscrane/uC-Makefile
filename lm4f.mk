@@ -5,6 +5,6 @@ LD_SCRIPT = $(shell sed -ne "s/$(BOARD).ldscript=\(.*\)/\1/p" $(BOARDS))
 LDFLAGS = -Os -nostartfiles -nostdlib -Wl,--gc-sections,--entry=ResetISR -T $(CORE)/$(LD_SCRIPT) $(CPUFLAGS)
 LD = $(COMPILER_FAMILY)-g++
 OBJCOPY_FLAGS = -O binary
-UPLOADER = lm4flash 
+UPLOAD_TOOL = lm4flash 
 UPLOAD_FLAGS = $(SKETCH_BIN)
 COMPILER_FAMILY := arm-none-eabi
