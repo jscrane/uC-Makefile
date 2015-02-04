@@ -83,6 +83,6 @@ upload: $(SKETCH_BIN)
 	$(UPLOAD_TOOL) $(UPLOAD_FLAGS)
 
 clean:
-	rm -fr .lib $(OBJECTS) $(CORE_LIB) $(TARGETS)
+	rm -fr .lib .deps $(OBJECTS) $(CORE_LIB) $(TARGETS)
 
 include $(DEPS)
