@@ -1,13 +1,14 @@
-export PATH := $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)/bin:$(PATH)
-
+HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)
 BOARDS = $(HARDWARE_FAMILY)/boards.txt
 BUILD_MCU = $(shell sed -ne "s/$(BOARD).build.mcu=\(.*\)/\1/p" $(BOARDS))
+TOOLS = $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)
+
+export PATH := $(TOOLS)/bin:$(PATH)
 
 SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
 OBJECTS = $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
 DEPS = $(foreach d, $(SKETCH) $(SOURCES), .deps/$d.d)
-HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 SKETCH_ELF = $(SKETCH:.ino=.elf)
 SKETCH_BIN = $(SKETCH:.ino=.bin)

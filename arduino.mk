@@ -25,4 +25,8 @@ OBJCOPY_FLAGS = -O ihex -R .eeprom
 
 UPLOAD_TOOL ?= avrdude
 UPLOAD_SPEED = $(shell sed -ne "s/$(BOARD).upload.speed=\(.*\)/\1/p" $(BOARDS)) 
-UPLOAD_FLAGS = -b $(UPLOAD_SPEED) -c $(UPLOAD_PROTOCOL) -P $(UPLOAD_PORT) -p ${U_${BUILD_MCU}} -D -Uflash:w:$(SKETCH_BIN):i
+
+ifneq ("$(wildcard $(TOOLS)/etc/avrdude.conf)","") 
+UPLOAD_FLAGS = -C $(TOOLS)/etc/avrdude.conf
+endif
+UPLOAD_FLAGS += -b $(UPLOAD_SPEED) -c $(UPLOAD_PROTOCOL) -P $(UPLOAD_PORT) -p ${U_${BUILD_MCU}} -D -Uflash:w:$(SKETCH_BIN):i
