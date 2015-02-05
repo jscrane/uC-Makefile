@@ -3,6 +3,7 @@ SKETCHBOOK ?= $(HOME)/sketchbook
 UPLOAD_PORT ?= /dev/ttyUSB0
 PLATFORM ?= arduino
 
+IDE_LIBRARIES := $(IDE_HOME)/libraries
 PLATFORM_HEADER := Arduino.h
 CPPFLAGS := -DARDUINO=106 
 

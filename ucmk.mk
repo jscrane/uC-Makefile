@@ -19,10 +19,13 @@ UPLOAD_PROTOCOL = $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOA
 
 REQUIRED_LIBS = $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 SKETCHBOOK_LIBS = $(filter $(notdir $(wildcard $(SKETCHBOOK)/libraries/*)), $(REQUIRED_LIBS))
-SKETCHBOOK_LIBRARIES = $(foreach lib, $(SKETCHBOOK_LIBS), $(SKETCHBOOK)/libraries/$(lib) $(SKETCHBOOK)/libraries/$(lib)/utility) 
-IDE_LIBS = $(filter $(notdir $(wildcard $(HARDWARE_FAMILY)/libraries/*)), $(REQUIRED_LIBS))
-IDE_LIBRARIES = $(foreach lib, $(IDE_LIBS), $(HARDWARE_FAMILY)/libraries/$(lib) $(HARDWARE_FAMILY)/libraries/$(lib)/utility)
-LIBRARY_SOURCES = $(foreach lib, $(SKETCHBOOK_LIBRARIES) $(IDE_LIBRARIES), $(wildcard $(lib)/*.c) $(wildcard $(lib)/*.cpp))
+SKETCHBOOK_LIBDIRS = $(foreach lib, $(SKETCHBOOK_LIBS), $(SKETCHBOOK)/libraries/$(lib) $(SKETCHBOOK)/libraries/$(lib)/utility) 
+IDE_LIBS = $(filter $(notdir $(wildcard $(IDE_LIBRARIES)/*)), $(REQUIRED_LIBS))
+IDE_LIBDIRS = $(foreach lib, $(IDE_LIBS), $(IDE_LIBRARIES)/$(lib) $(IDE_LIBRARIES)/$(lib)/utility)
+LIBRARY_SOURCES = $(foreach lib, $(SKETCHBOOK_LIBDIRS) $(IDE_LIBDIRS), $(wildcard $(lib)/*.c) $(wildcard $(lib)/*.cpp))
+
+debug:
+	echo $(REQUIRED_LIBS) $(IDE_LIBRARIES) $(IDE_LIBS) $(IDE_LIBDIRS)
 
 CORE_LIB = libcore.a
 CORE_SOURCES = $(wildcard $(addprefix $(CORE)/, *.c *.cpp) $(addprefix $(CORE)/driverlib/, *.c))
@@ -37,7 +40,7 @@ include $(PLATFORM).mk
 all: $(TARGETS)
 
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
-CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBRARIES), -I$(lib)) $(foreach lib, $(IDE_LIBRARIES), -I$(lib)) 
+CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBDIRS), -I$(lib)) $(foreach lib, $(IDE_LIBDIRS), -I$(lib)) 
 DEPFLAGS = -MM -MP -MF 
 
 CC = $(COMPILER_FAMILY)-gcc
