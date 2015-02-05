@@ -18,29 +18,17 @@ BUILD_VARIANT = $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS)
 UPLOAD_PROTOCOL = $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 
 REQUIRED_LIBS = $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
-SKETCHBOOK_LIBS = $(filter $(notdir $(wildcard $(SKETCHBOOK)/libraries/*)), $(REQUIRED_LIBS))
-SKETCHBOOK_LIBDIRS = $(foreach lib, $(SKETCHBOOK_LIBS), $(SKETCHBOOK)/libraries/$(lib) $(SKETCHBOOK)/libraries/$(lib)/utility) 
-IDE_LIBS = $(filter $(notdir $(wildcard $(IDE_LIBRARIES)/*)), $(REQUIRED_LIBS))
-IDE_LIBDIRS = $(foreach lib, $(IDE_LIBS), $(IDE_LIBRARIES)/$(lib) $(IDE_LIBRARIES)/$(lib)/utility)
-LIBRARY_SOURCES = $(foreach lib, $(SKETCHBOOK_LIBDIRS) $(IDE_LIBDIRS), $(wildcard $(lib)/*.c) $(wildcard $(lib)/*.cpp))
-
-debug:
-	echo $(REQUIRED_LIBS) $(IDE_LIBRARIES) $(IDE_LIBS) $(IDE_LIBDIRS)
+LIBDIRS = $(foreach l, $(REQUIRED_LIBS), $(wildcard $(SKETCHBOOK)/libraries/$l) $(wildcard $(SKETCHBOOK)/libraries/$l/utility) $(wildcard $(IDE_LIBRARIES)/$l) $(wildcard $(IDE_LIBRARIES)/$l/utility))
+LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
 CORE_LIB = libcore.a
 CORE_SOURCES = $(wildcard $(addprefix $(CORE)/, *.c *.cpp) $(addprefix $(CORE)/driverlib/, *.c))
 CORE_OBJECTS = $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
 
-TARGETS = $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
-
-.PHONY: all upload clean size
-
 include $(PLATFORM).mk
 
-all: $(TARGETS)
-
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
-CPPFLAGS += $(foreach lib, $(SKETCHBOOK_LIBDIRS), -I$(lib)) $(foreach lib, $(IDE_LIBDIRS), -I$(lib)) 
+CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
 DEPFLAGS = -MM -MP -MF 
 
 CC = $(COMPILER_FAMILY)-gcc
@@ -50,6 +38,12 @@ AR = $(COMPILER_FAMILY)-ar
 OBJCOPY = $(COMPILER_FAMILY)-objcopy
 SIZE = $(COMPILER_FAMILY)-size
 LDLIBS = -L. -lcore -lm -lc -lgcc
+
+TARGETS = $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
+
+.PHONY: all upload clean size
+
+all: $(TARGETS)
 
 $(SKETCH_BIN): $(SKETCH_ELF)
 	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@
