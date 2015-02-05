@@ -1,8 +1,8 @@
 IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
 UPLOAD_PORT ?= /dev/ttyUSB0
+PLATFORM ?= arduino
 
-PLATFORM := arduino
 PLATFORM_HEADER := Arduino.h
 CPPFLAGS := -DARDUINO=106 
 
