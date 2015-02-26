@@ -18,7 +18,7 @@ BUILD_VARIANT = $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS)
 UPLOAD_PROTOCOL = $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 
 REQUIRED_LIBS = $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
-LIBDIRS = $(foreach l, $(REQUIRED_LIBS), $(wildcard $(SKETCHBOOK)/libraries/$l) $(wildcard $(SKETCHBOOK)/libraries/$l/utility) $(wildcard $(IDE_LIBRARIES)/$l) $(wildcard $(IDE_LIBRARIES)/$l/utility))
+LIBDIRS = $(foreach req, $(REQUIRED_LIBS), $(foreach dir, $(LIBRARIES), $(wildcard $(dir)/$(req)) $(wildcard $(dir)/$(req)/utility)))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
 CORE_LIB = libcore.a
@@ -74,7 +74,7 @@ $(CORE_LIB): $(CORE_OBJECTS)
 %.o: %.ino
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) -c -o $@ $<
 
-size: $(SKETCH_BIN)
+size: $(SKETCH_ELF)
 	$(SIZE) $<
 
 upload: $(SKETCH_BIN)

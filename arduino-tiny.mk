@@ -1,16 +1,17 @@
-IDE_HOME ?= /usr/local/arduino-1.5
+IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
 UPLOAD_PORT ?= /dev/ttyUSB0
-PROCESSOR_FAMILY ?= avr
-PLATFORM ?= arduino
-HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
+PROCESSOR_FAMILY := avr
+PLATFORM := attiny
+HARDWARE_FAMILY := $(SKETCHBOOK)/hardware/attiny/avr
+CORE := $(HARDWARE_FAMILY)/cores/tiny
 
-LIBRARIES := $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
+LIBRARIES := $(SKETCHBOOK)/libraries $(IDE_HOME)/hardware/arduino/avr/libraries $(IDE_HOME)/libraries
 PLATFORM_HEADER := Arduino.h
 CPPFLAGS := -DARDUINO=154 
 
 SKETCH_EEP = $(SKETCH:.ino=.eep)
-EXTRA_TARGETS = $(SKETCH_EEP)
+EXTRA_TARGETS = $(SKETCH_EEP) size
 
 include ucmk.mk
 
