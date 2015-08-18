@@ -57,11 +57,11 @@ $(CORE_LIB): $(CORE_OBJECTS)
 
 .deps/%.cpp.d: %.cpp
 	mkdir -p $(dir $@)
-	$(CXX) $(CPPFLAGS) $(DEPFLAGS) $@ $<
+	$(CXX) $(CPUFLAGS) $(CPPFLAGS) $(DEPFLAGS) $@ $<
 
 .deps/%.ino.d: %.ino
 	mkdir -p $(dir $@)
-	$(CXX) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
+	$(CXX) $(CPUFLAGS) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
 
 .lib/%.c.o: %.c
 	mkdir -p $(dir $@)

@@ -4,7 +4,7 @@ UPLOAD_PORT ?= /dev/ttyUSB0
 PROCESSOR_FAMILY := avr
 PLATFORM := attiny
 HARDWARE_FAMILY := $(SKETCHBOOK)/hardware/attiny/avr
-CORE := $(HARDWARE_FAMILY)/cores/tiny
+CORE := $(IDE_HOME)/hardware/arduino/avr/cores/arduino
 
 LIBRARIES := $(SKETCHBOOK)/libraries $(IDE_HOME)/hardware/arduino/avr/libraries $(IDE_HOME)/libraries
 PLATFORM_HEADER := Arduino.h
