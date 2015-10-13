@@ -1,4 +1,4 @@
-IDE_HOME ?= /usr/local/arduino-1.5
+IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
 UPLOAD_PORT ?= /dev/ttyUSB0
 PROCESSOR_FAMILY ?= avr
