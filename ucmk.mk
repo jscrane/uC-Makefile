@@ -35,6 +35,7 @@ CC = $(COMPILER_FAMILY)-gcc
 CXX = $(COMPILER_FAMILY)-g++
 RANLIB = $(COMPILER_FAMILY)-ranlib
 AR = $(COMPILER_FAMILY)-ar
+NM = $(COMPILER_FAMILY)-nm
 OBJCOPY = $(COMPILER_FAMILY)-objcopy
 SIZE = $(COMPILER_FAMILY)-size
 LDLIBS = -L. -lcore -lm -lc -lgcc
@@ -79,6 +80,9 @@ size: $(SKETCH_ELF)
 
 upload: $(SKETCH_BIN)
 	$(UPLOAD_TOOL) $(UPLOAD_FLAGS)
+
+nm: $(SKETCH_ELF)
+	$(NM) -n $<
 
 clean:
 	rm -fr .lib .deps $(OBJECTS) $(CORE_LIB) $(TARGETS)
