@@ -9,8 +9,8 @@ U_attiny85 = t85
 COMPILER_FAMILY := avr
 CPPFLAGS += -D${P_${BUILD_MCU}}
 CPUFLAGS = -mmcu=$(BUILD_MCU)
-CFLAGS = -Os -w -ffunction-sections -fdata-sections $(CPUFLAGS)
-CXXFLAGS = -fno-exceptions $(CFLAGS)
+CFLAGS += -Os -w -ffunction-sections -fdata-sections $(CPUFLAGS)
+CXXFLAGS += -fno-exceptions $(CFLAGS)
 LDFLAGS = -Os -Wl,--gc-sections $(CPUFLAGS)
 LD = $(COMPILER_FAMILY)-gcc
 OBJCOPY_FLAGS = -O ihex -R .eeprom

@@ -17,8 +17,8 @@ U_atmega8 = m8
 COMPILER_FAMILY := avr
 CPPFLAGS = -D${P_${BUILD_MCU}}
 CPUFLAGS = -mmcu=$(BUILD_MCU)
-CFLAGS = -Os -Wall -ffunction-sections $(CPUFLAGS)
-CXXFLAGS = -fno-exceptions $(CFLAGS)
+CFLAGS += -Os -Wall -ffunction-sections $(CPUFLAGS)
+CXXFLAGS += -fno-exceptions $(CFLAGS)
 LDFLAGS = -Os -Wl,--gc-sections $(CPUFLAGS)
 LD = $(COMPILER_FAMILY)-gcc
 OBJCOPY_FLAGS = -O ihex -R .eeprom
