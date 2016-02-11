@@ -42,7 +42,7 @@ LDLIBS = -L. -lcore -lm -lc -lgcc
 
 TARGETS = $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
-.PHONY: all upload clean size
+.PHONY: all upload clean size nm
 
 all: $(TARGETS)
 
