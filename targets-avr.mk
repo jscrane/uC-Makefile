@@ -7,10 +7,11 @@ $(SKETCH_EEP): $(SKETCH_ELF)
 
 PROGRAM_TOOL := avrdude
 PROGRAM_FLAGS := -C $(TOOLS)/etc/avrdude.conf -P$(UPLOAD_PORT) -c avrisp -b 19200 -p ${U_${BUILD_MCU}} 
-BOOTLOADER_LFUSE := $(shell sed -ne "s/$(BOARD).bootloader.low_fuses=\(.*\)/\1/p" $(BOARDS))
-BOOTLOADER_EFUSE := $(shell sed -ne "s/$(BOARD).bootloader.extended_fuses=\(.*\)/\1/p" $(BOARDS))
-BOOTLOADER_HFUSE := $(shell sed -ne "s/$(BOARD).bootloader.high_fuses=\(.*\)/\1/p" $(BOARDS))
-BOOTLOADER_FILE := $(shell sed -ne "s/$(BOARD).bootloader.file=\(.*\)/\1/p" $(BOARDS))
+BOOTLOADER_LFUSE ?= $(shell sed -ne "s/$(BOARD).bootloader.low_fuses=\(.*\)/\1/p" $(BOARDS))
+BOOTLOADER_EFUSE ?= $(shell sed -ne "s/$(BOARD).bootloader.extended_fuses=\(.*\)/\1/p" $(BOARDS))
+BOOTLOADER_HFUSE ?= $(shell sed -ne "s/$(BOARD).bootloader.high_fuses=\(.*\)/\1/p" $(BOARDS))
+BOOTLOADER_FILE ?= $(shell sed -ne "s/$(BOARD).bootloader.file=\(.*\)/\1/p" $(BOARDS))
+BOOTLOADER_PATH := $(HARDWARE_FAMILY)/bootloaders/$(BOOTLOADER_FILE)
 
 download: read-flash
 
@@ -36,5 +37,5 @@ write-eeprom: $(SKETCH_EEP)
 write-fuses:
 	$(PROGRAM_TOOL) $(PROGRAM_FLAGS) -U lfuse:w:$(BOOTLOADER_LFUSE):m -U hfuse:w:$(BOOTLOADER_HFUSE):m -U efuse:w:$(BOOTLOADER_EFUSE):m
 
-bootloader: write-fuses
-	$(PROGRAM_TOOL) $(PROGRAM_FLAGS) -U flash:w:$(BOOTLOADER_FILE)
+bootloader:
+	$(PROGRAM_TOOL) $(PROGRAM_FLAGS) -U flash:w:$(BOOTLOADER_PATH)
