@@ -7,7 +7,6 @@ HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 
 LIBRARIES := $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
 PLATFORM_HEADER := Arduino.h
-CPPFLAGS := -DARDUINO=154 
 
 EXTRA_TARGETS := eep size
 include ucmk.mk

@@ -8,7 +8,6 @@ CORE := $(IDE_HOME)/hardware/arduino/avr/cores/arduino
 
 LIBRARIES := $(SKETCHBOOK)/libraries $(IDE_HOME)/hardware/arduino/avr/libraries $(IDE_HOME)/libraries
 PLATFORM_HEADER := Arduino.h
-CPPFLAGS := -DARDUINO=154 
 
 EXTRA_TARGETS := eep size
 include ucmk.mk
