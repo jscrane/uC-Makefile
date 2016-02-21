@@ -31,11 +31,10 @@ UPLOAD_TOOL ?= $(shell sed -ne "s/$(BOARD).upload.tool=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_SPEED ?= $(shell sed -ne "s/$(BOARD).upload.speed=\(.*\)/\1/p" $(BOARDS)) 
 ifeq ("$(UPLOAD_TOOL)", "arduino:avrdude")
 UPLOAD_TOOL := avrdude
-UPLOAD_FLAGS := -C $(TOOLS)/etc/avrdude.conf
 endif
 
 ifeq ("$(UPLOAD_TOOL)", "avrdude")
-UPLOAD_FLAGS += -b $(UPLOAD_SPEED) -c $(UPLOAD_PROTOCOL) -P $(UPLOAD_PORT) -p ${U_${BUILD_MCU}} -D -Uflash:w:$(SKETCH_BIN):i
+UPLOAD_FLAGS := -C $(TOOLS)/etc/avrdude.conf -b $(UPLOAD_SPEED) -c $(UPLOAD_PROTOCOL) -P $(UPLOAD_PORT) -p ${U_${BUILD_MCU}} -D -Uflash:w:$(SKETCH_BIN):i
 endif
 
 ifeq ("$(UPLOAD_TOOL)", "tsb")
