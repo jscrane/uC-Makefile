@@ -10,7 +10,7 @@ Common include
 
 Platform includes
 -----------------
-- avr.mk and targets-avr.mk
+- arduino.mk and targets-avr.mk
 - msp430.mk
 - lm4f.mk
 
