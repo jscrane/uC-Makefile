@@ -1,4 +1,4 @@
-HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)
+HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 BOARDS := $(HARDWARE_FAMILY)/boards.txt
 BP := $(if $(BOARD_CPU),$(BOARD).menu.cpu.$(BOARD_CPU),$(BOARD))
 BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
@@ -10,7 +10,6 @@ SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
 OBJECTS := $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
 DEPS := $(foreach d, $(SKETCH) $(SOURCES), .deps/$d.d)
-CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 SKETCH_ELF := $(SKETCH:.ino=.elf)
 SKETCH_BIN := $(SKETCH:.ino=.bin)
 
@@ -22,11 +21,12 @@ REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\
 LIBDIRS := $(foreach r, $(REQUIRED_LIBS), $(foreach d, $(LIBRARIES), $(wildcard $d/$r) $(wildcard $d/$r/src) $(wildcard $d/$r/utility) $(wildcard $d/$r/$(BUILD_MCU))))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
+include $(PROCESSOR_FAMILY).mk
+
+CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 CORE_LIB := libcore.a
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp) $(addprefix $(CORE)/driverlib/, *.c))
 CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
-
-include $(PLATFORM).mk
 
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
