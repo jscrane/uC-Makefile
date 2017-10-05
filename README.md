@@ -18,13 +18,13 @@ Install the makefile fragments in _somedir_.
 Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
 
 	PROCESSOR_FAMILY := msp430
-	BOARD := lpmsp430g2553
+	BOARD := MSP-EXP430FR5739LP
 	include energia.mk
 
 For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
 	BOARD := uno
-	include arduino10.mk
+	include arduino15.mk
 
 Invoke with:
 
