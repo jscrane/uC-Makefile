@@ -18,7 +18,8 @@ BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS
 UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 
 REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
-LIBDIRS := $(foreach r, $(REQUIRED_LIBS), $(foreach d, $(LIBRARIES), $(wildcard $d/$r) $(wildcard $d/$r/src) $(wildcard $d/$r/utility) $(wildcard $d/$r/$(BUILD_MCU))))
+REQUIRED_ROOTS := $(foreach r, $(REQUIRED_LIBS), $(firstword $(foreach d, $(LIBRARIES), $(wildcard $d/$r))))
+LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src) $r $(wildcard $r/utility) $(wildcard $r/$(BUILD_MCU)))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
 include $(PROCESSOR_FAMILY).mk
