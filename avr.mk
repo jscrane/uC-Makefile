@@ -18,7 +18,6 @@ U_atmega8 = m8
 U_attiny84 = t84
 U_attiny85 = t85
 
-COMPILER_FAMILY := avr
 CPPFLAGS += -D${P_${BUILD_MCU}}
 CPUFLAGS += -mmcu=$(BUILD_MCU)
 CFLAGS += -Os -w -ffunction-sections -fdata-sections $(CPUFLAGS)

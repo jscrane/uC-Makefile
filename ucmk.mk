@@ -2,9 +2,6 @@ HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 BOARDS := $(HARDWARE_FAMILY)/boards.txt
 BP := $(if $(BOARD_CPU),$(BOARD).menu.cpu.$(BOARD_CPU),$(BOARD))
 BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
-TOOLS := $(IDE_HOME)/hardware/tools/$(PROCESSOR_FAMILY)
-
-export PATH := $(TOOLS)/bin:$(PATH)
 
 SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
@@ -17,12 +14,17 @@ BUILD_FCPU ?= $(shell sed -ne "s/$(BP).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 
+LIBRARIES ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
 REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(REQUIRED_LIBS), $(firstword $(foreach d, $(LIBRARIES), $(wildcard $d/$r))))
 LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src) $r $(wildcard $r/utility) $(wildcard $r/$(BUILD_MCU)))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
 include $(PROCESSOR_FAMILY).mk
+
+COMPILER_FAMILY ?= $(PROCESSOR_FAMILY)
+TOOLS ?= $(IDE_HOME)/hardware/tools/$(COMPILER_FAMILY)
+export PATH := $(TOOLS)/bin:$(PATH)
 
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 CORE_LIB := libcore.a
