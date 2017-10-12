@@ -28,12 +28,13 @@ export PATH := $(TOOLS)/bin:$(PATH)
 
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 CORE_LIB := libcore.a
-CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp) $(addprefix $(CORE)/driverlib/, *.c))
+CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c))
 CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
 
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
 DEPFLAGS := -MM -MP -MF
+LDLIBS ?= -L. -lcore -lm -lc -lgcc
 
 CC := $(COMPILER_FAMILY)-gcc
 CXX := $(COMPILER_FAMILY)-g++
@@ -42,7 +43,7 @@ AR := $(COMPILER_FAMILY)-ar
 NM := $(COMPILER_FAMILY)-nm
 OBJCOPY := $(COMPILER_FAMILY)-objcopy
 SIZE := $(COMPILER_FAMILY)-size
-LDLIBS := -L. -lcore -lm -lc -lgcc
+AS := $(COMPILER_FAMILY)-as
 
 TARGETS := $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
@@ -67,6 +68,10 @@ $(CORE_LIB): $(CORE_OBJECTS)
 .deps/%.ino.d: %.ino
 	mkdir -p $(dir $@)
 	$(CXX) $(CPUFLAGS) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
+
+.lib/%.S.o: %.S
+	mkdir -p $(dir $@)
+	$(AS) -o $@ $<
 
 .lib/%.c.o: %.c
 	mkdir -p $(dir $@)
