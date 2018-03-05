@@ -17,7 +17,8 @@ UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BO
 LIBRARIES ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
 REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(REQUIRED_LIBS), $(firstword $(foreach d, $(LIBRARIES), $(wildcard $d/$r))))
-LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src) $r $(wildcard $r/utility) $(wildcard $r/$(BUILD_MCU)))
+LIBSUBDIRS := . src src/detail utility $(BUILD_MCU)
+LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
 
 include $(PROCESSOR_FAMILY).mk
@@ -44,6 +45,8 @@ NM := $(COMPILER_FAMILY)-nm
 OBJCOPY := $(COMPILER_FAMILY)-objcopy
 SIZE := $(COMPILER_FAMILY)-size
 AS := $(COMPILER_FAMILY)-as
+LDPOST ?= $(OBJCOPY)
+LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
 TARGETS := $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
@@ -52,7 +55,7 @@ TARGETS := $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 all: $(TARGETS)
 
 $(SKETCH_BIN): $(SKETCH_ELF)
-	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@
+	$(LDPOST) $(LDPOST_FLAGS)
 
 $(SKETCH_ELF): $(OBJECTS) $(CORE_LIB)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
