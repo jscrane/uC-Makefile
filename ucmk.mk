@@ -1,3 +1,4 @@
+BUILD_DIR := .lib
 HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 BOARDS := $(HARDWARE_FAMILY)/boards.txt
 BP := $(if $(BOARD_CPU),$(BOARD).menu.cpu.$(BOARD_CPU),$(BOARD))
@@ -6,7 +7,7 @@ BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
 SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
 OBJECTS := $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
-DEPS := $(foreach d, $(SKETCH) $(SOURCES), .deps/$d.d)
+DEPS := $(OBJECTS:.o=.d)
 SKETCH_ELF := $(SKETCH:.ino=.elf)
 SKETCH_BIN := $(SKETCH:.ino=.bin)
 
@@ -29,13 +30,12 @@ TOOLS ?= $(IDE_HOME)/hardware/tools/$(COMPILER_FAMILY)
 export PATH := $(TOOLS)/bin:$(PATH)
 
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
-CORE_LIB := libcore.a
+CORE_LIB := $(BUILD_DIR)/libcore.a
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c))
-CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), .lib/$b.o)
+CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), $(BUILD_DIR)/$b.o)
 
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
-DEPFLAGS := -MM -MP -MF
 LDLIBS ?= -L. -lcore -lm -lc -lgcc
 
 CC := $(COMPILER_FAMILY)-gcc
@@ -49,7 +49,7 @@ AS := $(COMPILER_FAMILY)-as
 LDPOST ?= $(OBJCOPY)
 LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
-TARGETS := $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
+TARGETS := $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
 .PHONY: all upload clean size nm term
 
@@ -65,23 +65,15 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(AR) rcs $@ $?
 	$(RANLIB) $@
 
-.deps/%.cpp.d: %.cpp
-	mkdir -p $(dir $@)
-	$(CXX) $(CPUFLAGS) $(CPPFLAGS) $(DEPFLAGS) $@ $<
-
-.deps/%.ino.d: %.ino
-	mkdir -p $(dir $@)
-	$(CXX) $(CPUFLAGS) $(CPPFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) $(DEPFLAGS) $@ $<
-
-.lib/%.S.o: %.S
+$(BUILD_DIR)/%.S.o: %.S
 	mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) -o $@ $<
 
-.lib/%.c.o: %.c
+$(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-.lib/%.cpp.o: %.cpp
+$(BUILD_DIR)/%.cpp.o: %.cpp
 	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
@@ -101,6 +93,6 @@ term:
 	minicom -D $(UPLOAD_PORT) -b $(TERM_SPEED)
 
 clean:
-	rm -fr .lib .deps $(OBJECTS) $(CORE_LIB) $(TARGETS)
+	rm -fr $(BUILD_DIR) $(DEPS) $(OBJECTS) $(TARGETS)
 
 -include $(DEPS)
