@@ -13,6 +13,7 @@ SKETCH_BIN := $(SKETCH:.ino=.bin)
 BUILD_FCPU ?= $(shell sed -ne "s/$(BP).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
+TERM_SPEED ?= $(UPLOAD_SPEED)
 
 LIBRARIES ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
 REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
@@ -50,7 +51,7 @@ LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
 TARGETS := $(DEPS) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
-.PHONY: all upload clean size nm
+.PHONY: all upload clean size nm term
 
 all: $(TARGETS)
 
@@ -58,7 +59,7 @@ $(SKETCH_BIN): $(SKETCH_ELF)
 	$(LDPOST) $(LDPOST_FLAGS)
 
 $(SKETCH_ELF): $(OBJECTS) $(CORE_LIB)
-	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
+	$(LD) -o $@ $(LDFLAGS) $(OBJECTS) $(LDLIBS)
 
 $(CORE_LIB): $(CORE_OBJECTS)
 	$(AR) rcs $@ $?
@@ -74,7 +75,7 @@ $(CORE_LIB): $(CORE_OBJECTS)
 
 .lib/%.S.o: %.S
 	mkdir -p $(dir $@)
-	$(AS) -o $@ $<
+	$(AS) $(ASFLAGS) -o $@ $<
 
 .lib/%.c.o: %.c
 	mkdir -p $(dir $@)
@@ -88,13 +89,16 @@ $(CORE_LIB): $(CORE_OBJECTS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) -c -o $@ $<
 
 size: $(SKETCH_ELF)
-	$(SIZE) $<
+	$(SIZE) $(SIZE_FLAGS) $<
 
 upload: $(SKETCH_BIN)
 	$(UPLOAD_TOOL) $(UPLOAD_FLAGS)
 
 nm: $(SKETCH_ELF)
 	$(NM) -n $<
+
+term:
+	minicom -D $(UPLOAD_PORT) -b $(TERM_SPEED)
 
 clean:
 	rm -fr .lib .deps $(OBJECTS) $(CORE_LIB) $(TARGETS)

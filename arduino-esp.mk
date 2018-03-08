@@ -10,3 +10,4 @@ CPPFLAGS += -DARDUINO=10804
 PATH := $(PATH):$(HARDWARE_FAMILY)/tools/esptool
 
 include ucmk.mk
+include targets-esp.mk
