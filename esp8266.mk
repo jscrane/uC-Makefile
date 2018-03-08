@@ -27,6 +27,7 @@ UPLOAD_FLAGS = -cd $(UPLOAD_RESET) -cb $(UPLOAD_SPEED) -cp $(UPLOAD_PORT) -ca 0x
 
 MKSPIFFS := mkspiffs
 SPIFFS_DIR := data
-SPIFFS_START_ADDRESS = $(shell sed -ne "s/$(FLASH_MENU).spiffs_start=\(.*\)/\1/p" $(BOARDS))
+SPIFFS_START = $(shell sed -ne "s/$(FLASH_MENU).spiffs_start=\(.*\)/\1/p" $(BOARDS))
+SPIFFS_END = $(shell sed -ne "s/$(FLASH_MENU).spiffs_end=\(.*\)/\1/p" $(BOARDS))
 
 SIZE_FLAGS = -A
