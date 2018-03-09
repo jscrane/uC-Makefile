@@ -1,8 +1,8 @@
 uC-Makefile
 ===========
 
-A Makefile for popular Microcontrollers supporting Energia (all boards) 
-and Arduino-1.x (all boards).
+A Makefile for popular Microcontrollers supporting Energia (msp430 and lm4f boards) 
+and Arduino-1.8.x (avr and esp8266 boards).
 
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
