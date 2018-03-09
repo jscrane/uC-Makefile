@@ -6,7 +6,7 @@ BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
 
 SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
-OBJECTS := $(SKETCH:.ino=.o) $(SOURCES:.cpp=.o)
+OBJECTS := $(SKETCH:.ino=.cpp.o) $(foreach s, $(SOURCES), $s.o)
 DEPS := $(OBJECTS:.o=.d)
 SKETCH_ELF := $(SKETCH:.ino=.elf)
 SKETCH_BIN := $(SKETCH:.ino=.bin)
@@ -77,8 +77,11 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-%.o: %.ino
+%.cpp.o: %.ino
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) -c -o $@ $<
+
+%.cpp.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 size: $(SKETCH_ELF)
 	$(SIZE) $(SIZE_FLAGS) $<
