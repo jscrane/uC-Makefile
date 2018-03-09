@@ -8,8 +8,8 @@ SKETCH ?= $(wildcard *.ino)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
 OBJECTS := $(SKETCH:.ino=.cpp.o) $(foreach s, $(SOURCES), $s.o)
 DEPS := $(OBJECTS:.o=.d)
-SKETCH_ELF := $(SKETCH:.ino=.elf)
-SKETCH_BIN := $(SKETCH:.ino=.bin)
+SKETCH_ELF := $(SKETCH).elf
+SKETCH_BIN := $(SKETCH).bin
 
 BUILD_FCPU ?= $(shell sed -ne "s/$(BP).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
