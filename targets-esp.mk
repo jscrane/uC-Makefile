@@ -1,7 +1,7 @@
 SPIFFS_SIZE := $(shell echo $$(( $(SPIFFS_END) - $(SPIFFS_START) )))
 IMAGE ?= spiffs.img
 
-$(IMAGE):
+$(IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	mkspiffs -c $(SPIFFS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $(IMAGE)
 
 fs: $(IMAGE)
