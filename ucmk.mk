@@ -36,7 +36,7 @@ CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), $(BUILD_DIR)/$b
 
 CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
-LDLIBS ?= -L. -lcore -lm -lc -lgcc
+LDLIBS ?= -L$(BUILD_DIR) -lcore -lm -lc -lgcc
 
 CC := $(COMPILER_FAMILY)-gcc
 CXX := $(COMPILER_FAMILY)-g++
