@@ -1,6 +1,7 @@
 BUILD_DIR := .lib
 HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 BOARDS := $(HARDWARE_FAMILY)/boards.txt
+BOARD ?= $(shell sed -ne "s/\(.*\).name=$(BOARD_NAME)/\1/p" $(BOARDS))
 BP := $(if $(BOARD_CPU),$(BOARD).menu.cpu.$(BOARD_CPU),$(BOARD))
 BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
 

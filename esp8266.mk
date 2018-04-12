@@ -30,5 +30,6 @@ SPIFFS_START = $(shell sed -ne "s/$(FLASH_MENU).spiffs_start=\(.*\)/\1/p" $(BOAR
 SPIFFS_END = $(shell sed -ne "s/$(FLASH_MENU).spiffs_end=\(.*\)/\1/p" $(BOARDS))
 SPIFFS_BLOCKSIZE = $(shell sed -ne "s/$(FLASH_MENU).spiffs_blocksize=\(.*\)/\1/p" $(BOARDS))
 SPIFFS_PAGESIZE = $(shell sed -ne "s/$(FLASH_MENU).spiffs_pagesize=\(.*\)/\1/p" $(BOARDS))
+SPIFFS_SIZE := $(shell echo $$(( $(SPIFFS_END) - $(SPIFFS_START) )))
 
 SIZE_FLAGS = -A

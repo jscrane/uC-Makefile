@@ -3,6 +3,8 @@ Top-level includes
 - arduino-tiny.mk
 - arduino15.mk
 - energia.mk
+- arduino-esp.mk
+- arduino-esp32.mk
 
 Common include
 --------------
@@ -13,8 +15,10 @@ Platform includes
 - arduino.mk and targets-avr.mk
 - msp430.mk
 - lm4f.mk
+- esp8266.mk
+- esp32.mk
 
 Note:
-- for Energia, specify PROCESSOR_FAMILY and BOARD
-- for Arduino, specify only BOARD
-- should include PROCESSOR_FAMILY in both cases
+-----
+- for Arduino, specify BOARD
+- for Energia, specify BOARD _and _ PROCESSOR_FAMILY
