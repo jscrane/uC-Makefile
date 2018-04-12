@@ -1,4 +1,3 @@
-SPIFFS_SIZE := $(shell echo $$(( $(SPIFFS_END) - $(SPIFFS_START) )))
 IMAGE ?= spiffs.img
 
 $(IMAGE): $(wildcard $(SPIFFS_DIR)/*)

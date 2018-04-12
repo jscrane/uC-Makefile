@@ -27,11 +27,17 @@ SKETCH_PARTITIONS := $(SKETCH).partitions.bin
 UPLOAD_TOOL = esptool.py
 UPLOAD_FLAGS = --chip esp32 --port $(UPLOAD_PORT) --baud $(UPLOAD_SPEED) --before default_reset --after hard_reset write_flash -z --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) --flash_size detect 0xe000 $(TOOL_DIR)/partitions/boot_app0.bin 0x1000 $(SDK)/bin/bootloader_$(FLASH_MODE)_$(FLASH_FREQ).bin 0x10000 $(SKETCH_BIN) 0x8000 $(SKETCH_PARTITIONS)
 
+PARTITIONS := $(TOOL_DIR)/partitions/default.csv
+SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
+SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
+SPIFFS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
 SPIFFS_DIR := data
+SPIFFS_PAGESIZE := 256
+SPIFFS_BLOCKSIZE := 4096
 
 SIZE_FLAGS = -A
 
 EXTRA_TARGETS := partitions
 
 partitions:
-	$(TOOL_DIR)/gen_esp32part.py -q $(TOOL_DIR)/partitions/default.csv $(SKETCH_PARTITIONS)
+	$(TOOL_DIR)/gen_esp32part.py -q $(PARTITIONS) $(SKETCH_PARTITIONS)
