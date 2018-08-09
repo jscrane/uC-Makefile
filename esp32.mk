@@ -38,6 +38,3 @@ SPIFFS_BLOCKSIZE := 4096
 SIZE_FLAGS = -A
 
 EXTRA_TARGETS := partitions
-
-partitions:
-	$(TOOL_DIR)/gen_esp32part.py -q $(PARTITIONS) $(SKETCH_PARTITIONS)

@@ -84,6 +84,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 %.cpp.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
+%.c.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
 size: $(SKETCH_ELF)
 	$(SIZE) $(SIZE_FLAGS) $<
 
