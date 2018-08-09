@@ -25,6 +25,7 @@ CXXFLAGS += -fno-exceptions $(CFLAGS)
 LDFLAGS = -Os -Wl,--gc-sections $(CPUFLAGS)
 LD = $(COMPILER_FAMILY)-gcc
 OBJCOPY_FLAGS = -O ihex -R .eeprom
+SKETCH_EEP := $(SKETCH:.ino=.eep)
 
 UPLOAD_TOOL ?= $(shell sed -ne "s/$(BOARD).upload.tool=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_SPEED ?= $(shell sed -ne "s/$(BP).upload.speed=\(.*\)/\1/p" $(BOARDS)) 
@@ -37,3 +38,5 @@ ifeq ("$(UPLOAD_TOOL)", "tsb")
 PATH := $(HARDWARE_FAMILY)/tools:$(PATH)
 UPLOAD_FLAGS := $(UPLOAD_PORT):$(UPLOAD_SPEED) fw $(SKETCH_BIN)
 endif
+
+EXTRA_TARGETS := $(SKETCH_EEP) size

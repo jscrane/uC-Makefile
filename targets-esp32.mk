@@ -3,8 +3,8 @@ IMAGE ?= spiffs.img
 $(IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	mkspiffs -c $(SPIFFS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $(IMAGE)
 
-$(SKETCH_PARTITIONS):
-	$(TOOL_DIR)/gen_esp32part.py -q $(PARTITIONS) $(SKETCH_PARTITIONS)
+$(SKETCH_EEP):
+	$(TOOL_DIR)/gen_esp32part.py -q $(PARTITIONS) $(SKETCH_EEP)
 
 .PHONY: fs upload-fs
 

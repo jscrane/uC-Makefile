@@ -10,6 +10,5 @@ CORE := $(IDE_HOME)/hardware/arduino/avr/cores/arduino
 
 LIBRARIES := $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/hardware/arduino/avr/libraries $(IDE_HOME)/libraries
 
-EXTRA_TARGETS := eep size
 include ucmk.mk
 include targets-avr.mk

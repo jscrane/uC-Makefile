@@ -1,7 +1,3 @@
-SKETCH_EEP = $(SKETCH:.ino=.eep)
-
-eep: $(SKETCH_EEP)
-
 $(SKETCH_EEP): $(SKETCH_ELF)
 	$(OBJCOPY) -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 $< $@
 

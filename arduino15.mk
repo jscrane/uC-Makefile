@@ -6,6 +6,5 @@ PLATFORM := arduino
 PLATFORM_HEADER := Arduino.h
 CPPFLAGS += -DARDUINO=10804
 
-EXTRA_TARGETS := eep size
 include ucmk.mk
 include targets-avr.mk

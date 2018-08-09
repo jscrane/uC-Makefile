@@ -90,7 +90,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 size: $(SKETCH_ELF)
 	$(SIZE) $(SIZE_FLAGS) $<
 
-upload: $(SKETCH_BIN)
+upload: $(SKETCH_BIN) $(SKETCH_EEP)
 	$(UPLOAD_TOOL) $(UPLOAD_FLAGS)
 
 nm: $(SKETCH_ELF)
