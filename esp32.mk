@@ -8,7 +8,7 @@ FLASH_MODE = $(shell sed -ne "s/$(BOARD).build.flash_mode=\(.*\)/\1/p" $(BOARDS)
 FLASH_SIZE = $(shell sed -ne "s/$(BOARD).build.flash_size=\(.*\)/\1/p" $(BOARDS))
 FLASH_FREQ ?= 80m
 
-CPPFLAGS += -DESP_PLATFORM -DMBEDTLS_CONFIG_FILE="mbedtls/esp_config.h" -DHAVE_CONFIG_H $(foreach i, $(wildcard $(SDK)/include/*), -I$(i))
+CPPFLAGS += -DESP_PLATFORM -DESP32 -DMBEDTLS_CONFIG_FILE="mbedtls/esp_config.h" -DHAVE_CONFIG_H $(foreach i, $(wildcard $(SDK)/include/*), -I$(i))
 
 CFLAGS = -std=gnu99 -Os -g3 -fstack-protector -ffunction-sections -fdata-sections -fstrict-volatile-bitfields -mlongcalls -nostdlib -Wpointer-arith -w -Wno-error=unused-function -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -Wno-old-style-declaration -MMD
 
