@@ -31,7 +31,7 @@ PARTITIONS := $(TOOL_DIR)/partitions/default.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
 SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
 SPIFFS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
-SPIFFS_DIR := data
+SPIFFS_DIR ?= data
 SPIFFS_PAGESIZE := 256
 SPIFFS_BLOCKSIZE := 4096
 

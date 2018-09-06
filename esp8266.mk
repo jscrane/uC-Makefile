@@ -25,7 +25,7 @@ UPLOAD_TOOL = $(shell sed -ne "s/$(BOARD).upload.tool=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_RESET = $(shell sed -ne "s/$(BOARD).upload.resetmethod=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_FLAGS = -cd $(UPLOAD_RESET) -cb $(UPLOAD_SPEED) -cp $(UPLOAD_PORT) -ca 0x00000 -cf $<
 
-SPIFFS_DIR := data
+SPIFFS_DIR ?= data
 SPIFFS_START = $(shell sed -ne "s/$(FLASH_MENU).spiffs_start=\(.*\)/\1/p" $(BOARDS))
 SPIFFS_END = $(shell sed -ne "s/$(FLASH_MENU).spiffs_end=\(.*\)/\1/p" $(BOARDS))
 SPIFFS_BLOCKSIZE = $(shell sed -ne "s/$(FLASH_MENU).spiffs_blocksize=\(.*\)/\1/p" $(BOARDS))
