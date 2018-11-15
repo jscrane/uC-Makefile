@@ -17,9 +17,9 @@ BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS
 UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
 TERM_SPEED ?= $(UPLOAD_SPEED)
 
-LIBRARIES ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
-REQUIRED_LIBS := $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
-REQUIRED_ROOTS := $(foreach r, $(REQUIRED_LIBS), $(firstword $(foreach d, $(LIBRARIES), $(wildcard $d/$r))))
+LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
+LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
+REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 LIBSUBDIRS := . src src/detail utility $(BUILD_MCU)
 LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
 LIBRARY_SOURCES = $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
