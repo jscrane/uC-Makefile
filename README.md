@@ -39,15 +39,17 @@ means you can simply do:
 Other Settings
 --------------
 
-Some settings it might be necessary to override, and their defaults are:
+Some settings useful to override and their defaults are:
 
 - IDE_HOME (/usr/local/energia or /usr/local/arduino)
 - SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
 - UPLOAD_PORT (/dev/ttyUSB0)
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
-- LOCAL_CPPFLAGS (e.g., local #defines)
+- CPPFLAGS (e.g., local #defines)
 - PROCESSOR_FAMILY (required for Launchpads, defaults to avr for Arduino)
+- LIBRARY_PATH (additions to the default Arduino search-path for libraries)
+- LIBRARIES (any other libraries required, not #included in the sketch)
 
 Credits
 -------
