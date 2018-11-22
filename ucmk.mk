@@ -35,7 +35,7 @@ CORE_LIB := $(BUILD_DIR)/libcore.a
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c))
 CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), $(BUILD_DIR)/$b.o)
 
-CPPFLAGS += $(LOCAL_CPPFLAGS) -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
+CPPFLAGS += -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
 CPPFLAGS += $(foreach d, $(LIBDIRS), -I$d)
 LDLIBS ?= -L$(BUILD_DIR) -lcore -lm -lc -lgcc
 
