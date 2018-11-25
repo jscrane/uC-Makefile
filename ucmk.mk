@@ -1,16 +1,16 @@
+SKETCH ?= $(wildcard *.ino)
+SKETCH_ELF := $(SKETCH).elf
+SKETCH_BIN := $(SKETCH).bin
 BUILD_DIR := .lib
+SOURCES += $(wildcard *.cpp) $(wildcard *.c)
+OBJECTS := $(SKETCH:.ino=.cpp.o) $(foreach s, $(SOURCES), $s.o)
+DEPS := $(OBJECTS:.o=.d)
+
 HARDWARE_FAMILY ?= $(IDE_HOME)/hardware/$(PLATFORM)/$(PROCESSOR_FAMILY)
 BOARDS := $(HARDWARE_FAMILY)/boards.txt
 BOARD ?= $(shell sed -ne "s/\(.*\).name=$(BOARD_NAME)/\1/p" $(BOARDS))
 BP := $(if $(BOARD_CPU),$(BOARD).menu.cpu.$(BOARD_CPU),$(BOARD))
 BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
-
-SKETCH ?= $(wildcard *.ino)
-SOURCES += $(wildcard *.cpp) $(wildcard *.c) $(wildcard $(BUILD_MCU)/*.cpp) $(wildcard $(BUILD_MCU)/*.c)
-OBJECTS := $(SKETCH:.ino=.cpp.o) $(foreach s, $(SOURCES), $s.o)
-DEPS := $(OBJECTS:.o=.d)
-SKETCH_ELF := $(SKETCH).elf
-SKETCH_BIN := $(SKETCH).bin
 
 BUILD_FCPU ?= $(shell sed -ne "s/$(BP).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
