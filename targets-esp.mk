@@ -4,7 +4,7 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 fs: $(SPIFFS_IMAGE)
 
 upload-fs: $(SPIFFS_IMAGE)
-	esptool -cd $(UPLOAD_RESET) -cb $(UPLOAD_SPEED) -cp $(UPLOAD_PORT) -ca $(SPIFFS_START) -cf $(SPIFFS_IMAGE)
+	$(UPLOAD_TOOL) -cd $(UPLOAD_RESET) -cb $(UPLOAD_SPEED) -cp $(UPLOAD_PORT) -ca $(SPIFFS_START) -cf $(SPIFFS_IMAGE)
 
 reset:
-	esptool -cd $(UPLOAD_RESET) -cp $(UPLOAD_PORT) -cr
+	$(UPLOAD_TOOL) -cd $(UPLOAD_RESET) -cp $(UPLOAD_PORT) -cr
