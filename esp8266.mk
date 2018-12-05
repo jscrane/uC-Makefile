@@ -38,6 +38,6 @@ SPIFFS_PAGESIZE != sed -ne "s/$(FLASH_MENU).spiffs_pagesize=\(.*\)/\1/p" $(BOARD
 SPIFFS_SIZE != echo $$(( $(SPIFFS_END) - $(SPIFFS_START) ))
 SPIFFS_IMAGE ?= spiffs.img
 
-SIZE_FLAGS = -A
+SIZE_FLAGS :=
 
 EXTRA_TARGETS := $(SPIFFS_IMAGE)
