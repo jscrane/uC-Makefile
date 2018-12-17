@@ -11,4 +11,4 @@ CPPFLAGS += -DARDUINO=10805
 SKETCH_PRE = $(BUILD_DIR)/local.eagle.app.v6.common.ld
 
 include ucmk.mk
-include targets-esp.mk
+include targets-esp8266.mk
