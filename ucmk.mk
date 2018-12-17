@@ -50,7 +50,7 @@ AS := $(COMPILER_FAMILY)-as
 LDPOST ?= $(OBJCOPY)
 LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
-TARGETS := $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
+TARGETS := $(BUILD_DIR) $(SKETCH_PRE) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
 .PHONY: all upload clean size nm term
 
@@ -77,6 +77,9 @@ $(BUILD_DIR)/%.c.o: %.c
 $(BUILD_DIR)/%.cpp.o: %.cpp
 	mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILD_DIR):
+	mkdir -p $@
 
 %.cpp.o: %.ino
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -include $(CORE)/$(PLATFORM_HEADER) -c -o $@ $<

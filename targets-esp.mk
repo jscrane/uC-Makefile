@@ -1,3 +1,6 @@
+$(BUILD_DIR)/local.eagle.app.v6.common.ld: $(BUILD_DIR)
+	$(CC) -CC -E -P $(VTABLE_FLAGS) $(SDK)/ld/eagle.app.v6.common.ld.h -o $@
+
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	mkspiffs -c $(SPIFFS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $(SPIFFS_IMAGE)
 
