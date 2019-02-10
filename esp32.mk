@@ -1,7 +1,7 @@
 COMPILER_FAMILY := xtensa-esp32-elf
 TOOL_DIR := $(HARDWARE_FAMILY)/tools
 TOOLS := $(TOOL_DIR)/$(COMPILER_FAMILY)
-PATH := $(PATH):$(TOOL_DIR)/mkspiffs
+PATH := $(PATH):$(TOOL_DIR)/mkspiffs:$(TOOL_DIR)/esptool
 
 SDK := $(HARDWARE_FAMILY)/tools/sdk
 FLASH_MODE = $(shell sed -ne "s/$(BOARD).build.flash_mode=\(.*\)/\1/p" $(BOARDS))
