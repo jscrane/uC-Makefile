@@ -50,6 +50,9 @@ AS := $(COMPILER_FAMILY)-as
 LDPOST ?= $(OBJCOPY)
 LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
+TERM ?= minicom
+TERM_FLAGS ?= -D $(UPLOAD_PORT) -b $(TERM_SPEED)
+
 TARGETS := $(BUILD_DIR) $(SKETCH_PRE) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
 .PHONY: all upload clean size nm term
@@ -100,7 +103,7 @@ nm: $(SKETCH_ELF)
 	$(NM) -n $<
 
 term:
-	minicom -D $(UPLOAD_PORT) -b $(TERM_SPEED)
+	$(TERM) $(TERM_FLAGS)
 
 clean:
 	rm -fr $(BUILD_DIR) $(DEPS) $(OBJECTS) $(TARGETS)
