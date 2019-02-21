@@ -15,7 +15,7 @@ BUILD_MCU ?= $(shell sed -ne "s/$(BP).build.mcu=\(.*\)/\1/p" $(BOARDS))
 BUILD_FCPU ?= $(shell sed -ne "s/$(BP).build.f_cpu=\(.*\)/\1/p" $(BOARDS))
 BUILD_VARIANT ?= $(shell sed -ne "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS))
 UPLOAD_PROTOCOL ?= $(shell sed -ne "s/$(BOARD).upload.protocol=\(.*\)/\1/p" $(BOARDS))
-TERM_SPEED ?= $(UPLOAD_SPEED)
+TERMINAL_SPEED ?= $(UPLOAD_SPEED)
 
 LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(HARDWARE_FAMILY)/libraries $(IDE_HOME)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
@@ -50,8 +50,8 @@ AS := $(COMPILER_FAMILY)-as
 LDPOST ?= $(OBJCOPY)
 LDPOST_FLAGS ?= $(OBJCOPY_FLAGS) $< $@
 
-TERM ?= minicom
-TERM_FLAGS ?= -D $(UPLOAD_PORT) -b $(TERM_SPEED)
+TERMINAL ?= minicom
+TERMINAL_FLAGS ?= -D $(UPLOAD_PORT) -b $(TERMINAL_SPEED)
 
 TARGETS := $(BUILD_DIR) $(SKETCH_PRE) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
@@ -103,7 +103,7 @@ nm: $(SKETCH_ELF)
 	$(NM) -n $<
 
 term:
-	$(TERM) $(TERM_FLAGS)
+	$(TERMINAL) $(TERMINAL_FLAGS)
 
 clean:
 	rm -fr $(BUILD_DIR) $(DEPS) $(OBJECTS) $(TARGETS)
