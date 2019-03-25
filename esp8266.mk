@@ -13,6 +13,8 @@ LWIP_INC != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_include=\(.*\)/\
 LWIP_LIB != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_lib=\(.*\)/\1/p" $(BOARDS)
 LWIP_FLAGS != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_flags=\(.*\)/\1/p" $(BOARDS)
 
+VTABLE_FLAGS ?= -DVTABLES_IN_FLASH
+
 CPPFLAGS += -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I$(SDK)/include -I$(SDK)/$(LWIP_INC) -I$(SDK)/libc/$(COMPILER_FAMILY)/include $(LWIP_FLAGS) -DARDUINO_$(BUILD_BOARD) -DARDUINO_ARCH_ESP8266 -DARDUINO_BOARD=\"$(BUILD_BOARD)\" -DESP8266
 
 CFLAGS = -Os -w -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections
@@ -38,6 +40,6 @@ SPIFFS_PAGESIZE != sed -ne "s/$(FLASH_MENU).spiffs_pagesize=\(.*\)/\1/p" $(BOARD
 SPIFFS_SIZE != echo $$(( $(SPIFFS_END) - $(SPIFFS_START) ))
 SPIFFS_IMAGE ?= spiffs.img
 
-SIZE_FLAGS = -A
+SIZE_FLAGS :=
 
 EXTRA_TARGETS := $(SPIFFS_IMAGE)
