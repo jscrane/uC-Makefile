@@ -32,7 +32,7 @@ export PATH := $(TOOLS)/bin:$(PATH)
 
 CORE ?= $(HARDWARE_FAMILY)/cores/$(PLATFORM)
 CORE_LIB := $(BUILD_DIR)/libcore.a
-CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c))
+CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
 CORE_OBJECTS := $(foreach b, $(LIBRARY_SOURCES) $(CORE_SOURCES), $(BUILD_DIR)/$b.o)
 
 CPPFLAGS += -DF_CPU=$(BUILD_FCPU) -I$(CORE) -I$(CORE)/driverlib -I$(HARDWARE_FAMILY)/variants/$(BUILD_VARIANT) -I.
