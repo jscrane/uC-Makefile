@@ -1,7 +1,8 @@
 COMPILER_FAMILY := xtensa-lx106-elf
-TOOL_DIR := $(HARDWARE_FAMILY)/tools
-TOOLS := $(TOOL_DIR)/$(COMPILER_FAMILY)
-PATH := $(PATH):$(TOOL_DIR)/esptool:$(TOOL_DIR)/mkspiffs
+TOOL_VERSION ?= 2.5.0-3-20ed2b9
+TOOL_DIR := $(PLATFORM_PACKAGE)/tools
+PATH := $(PATH):$(TOOL_DIR)/esptool/$(TOOL_VERSION):$(TOOL_DIR)/mkspiffs/$(TOOL_VERSION)
+TOOLS := $(TOOL_DIR)/$(COMPILER_FAMILY)-gcc/$(TOOL_VERSION)
 
 SDK := $(HARDWARE_FAMILY)/tools/sdk
 BUILD_BOARD != sed -ne "s/$(BOARD).build.board=\(.*\)/\1/p" $(BOARDS)
