@@ -56,7 +56,7 @@ CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
 
 TARGETS := $(BUILD_DIR) $(SKETCH_PRE) $(SKETCH_ELF) $(SKETCH_BIN) $(EXTRA_TARGETS)
 
-.PHONY: all upload clean size nm term
+.PHONY: all upload clean size nm term path
 
 all: $(TARGETS)
 
@@ -108,5 +108,8 @@ term:
 
 clean:
 	rm -fr $(BUILD_DIR) $(DEPS) $(OBJECTS) $(TARGETS)
+
+path:
+	echo $(PATH)
 
 -include $(DEPS)
