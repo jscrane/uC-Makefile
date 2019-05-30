@@ -8,6 +8,7 @@ VTABLES ?= flash
 SSL ?= all
 UPLOAD_SPEED ?= 921600
 UPLOAD_ERASE ?= version
+UPLOAD_VERBOSE ?= quiet
 UPLOAD_PORT ?= /dev/ttyUSB0
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
@@ -52,7 +53,7 @@ SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
 UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.erase_cmd = $(UPLOAD_ERASE)
 upload.speed = $(UPLOAD_SPEED)
-upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.verbose)
+upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(UPLOAD_PORT)
 
 build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
@@ -69,7 +70,7 @@ OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 define upload-sketch
 upload: cmd = $$(tools.$(UPLOAD_TOOL).cmd)
 upload: $(SKETCH_BIN)
-	$$(tools.$(UPLOAD_TOOL).upload.pattern)
+	$$(subst "",, $$(tools.$(UPLOAD_TOOL).upload.pattern))
 endef
 
 $(eval $(call upload-sketch))
