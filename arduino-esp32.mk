@@ -62,4 +62,7 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 
 fs: $(SPIFFS_IMAGE)
 
-.PHONY: upload fs
+upload-fs: fs
+	$(runtime.tools.$(UPLOAD_TOOL).path)/$(tools.$(UPLOAD_TOOL).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
+
+.PHONY: upload fs upload-fs
