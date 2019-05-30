@@ -6,10 +6,12 @@ FLASH_FREQ ?= 80
 PROCESSOR_FAMILY := esp32
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PROCESSOR_FAMILY)
 PACKAGE_VERSION := 1.0.2
+COMPILER_FAMILY := xtensa-esp32-elf-gcc
+COMPILER_VERSION := 1.22.0-80-g6c4433a-5.2.0
 
 runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
-runtime.tools.xtensa-esp32-elf-gcc.path := $(PACKAGE_DIR)/tools/xtensa-esp32-elf-gcc/1.22.0-80-g6c4433a-5.2.0
+runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 runtime.tools.python.path := /usr/bin
 runtime.tools.esptool_py.path := $(PACKAGE_DIR)/tools/esptool_py/2.6.1
 

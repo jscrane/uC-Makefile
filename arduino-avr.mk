@@ -6,10 +6,12 @@ PLATFORM := arduino
 PROCESSOR_FAMILY := avr
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PLATFORM)
 PACKAGE_VERSION := 1.6.23
+COMPILER_FAMILY := avr-gcc
+COMPILER_VERSION := 5.4.0-atmel3.6.1-arduino2
 
 runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
-runtime.tools.avr-gcc.path := $(PACKAGE_DIR)/tools/avr-gcc/5.4.0-atmel3.6.1-arduino2
+runtime.tools.avr-gcc.path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino14
 
 -include $(runtime.platform.path)/boards.txt

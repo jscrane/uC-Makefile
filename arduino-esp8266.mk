@@ -13,10 +13,12 @@ UPLOAD_PORT ?= /dev/ttyUSB0
 PROCESSOR_FAMILY := esp8266
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PROCESSOR_FAMILY)
 PACKAGE_VERSION := 2.5.2
+COMPILER_FAMILY := xtensa-lx106-elf-gcc
+COMPILER_VERSION := 2.5.0-3-20ed2b9
 
 runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
-runtime.tools.xtensa-lx106-elf-gcc.path := $(PACKAGE_DIR)/tools/xtensa-lx106-elf-gcc/2.5.0-3-20ed2b9
+runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 runtime.tools.python.path := /usr/bin
 
 -include $(runtime.platform.path)/boards.txt

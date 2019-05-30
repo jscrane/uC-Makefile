@@ -1,9 +1,20 @@
 SKETCH ?= $(wildcard *.ino)
-SKETCH_ELF := $(SKETCH).elf
-SKETCH_BIN := $(SKETCH).bin
+
+build.project_name := $(SKETCH)
+build.path := .build
+SKETCH_ELF := $(build.path)/$(SKETCH).elf
+SKETCH_BIN := $(build.path)/$(SKETCH).bin
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
 DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
+
+TERMINAL ?= minicom
+TERMINAL_FLAGS ?= -D $(UPLOAD_PORT) -b $(TERMINAL_SPEED)
+CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
+
+SIZE := $(COMPILER_FAMILY:-gcc=-size)
+NM := $(COMPILER_FAMILY:-gcc=-n)
+CBIN := $(runtime.tools.$(COMPILER_FAMILY).path)/bin
 
 IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
@@ -15,8 +26,6 @@ LIBSUBDIRS := . src src/detail utility src/utility $(BUILD_MCU)
 LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
 includes += $(foreach d, $(LIBDIRS), -I$d)
 
-build.project_name := $(SKETCH)
-build.path := .build
 BUILD_CORE := $(build.path)/core
 archive_file := libcore.a
 archive_file_path := $(build.path)/$(archive_file)
@@ -152,8 +161,6 @@ endef
 
 $(eval $(call objcopy-eep,$(SKETCH_EEP)))
 
-.PHONY: clean all upload
-
 $(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
 $(archive_file_path): $(ARCHIVE_TARGETS)
@@ -171,5 +178,19 @@ platform.mk: $(runtime.platform.path)/platform.txt
 clean:
 	-rm -f $(OBJECTS) $(DEPS) platform.mk
 	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS)
+
+path:
+	@echo $PATH
+
+term:
+	$(TERMINAL) $(TERMINAL_FLAGS)
+
+size: $(SKETCH_ELF)
+	$(CBIN)/$(SIZE) $(SIZE_FLAGS) $<
+
+nm: $(SKETCH_ELF)
+	$(CBIN)/$(NM) -n $<
+
+.PHONY: clean all upload path term size nm
 
 -include $(DEPS)
