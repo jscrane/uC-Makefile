@@ -17,14 +17,13 @@ Install the makefile fragments in _somedir_.
 
 Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
 
-	PROCESSOR_FAMILY := msp430
 	BOARD := MSP-EXP430FR5739LP
-	include energia.mk
+	include energia-msp430.mk
 
 For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
 	BOARD := uno
-	include arduino15.mk
+	include arduino-avr.mk
 
 Invoke with:
 
@@ -47,7 +46,6 @@ Some settings useful to override and their defaults are:
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
 - CPPFLAGS (e.g., local #defines)
-- PROCESSOR_FAMILY (required for Launchpads, defaults to avr for Arduino)
 - LIBRARY_PATH (additions to the default Arduino search-path for libraries)
 - LIBRARIES (any other libraries required, not #included in the sketch)
 
