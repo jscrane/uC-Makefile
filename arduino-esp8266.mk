@@ -78,3 +78,5 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $(SPIFFS_SIZE) $@
 
 fs: $(SPIFFS_IMAGE)
+
+.PHONY: upload fs

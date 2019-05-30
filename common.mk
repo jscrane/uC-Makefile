@@ -191,6 +191,6 @@ size: $(SKETCH_ELF)
 nm: $(SKETCH_ELF)
 	$(CBIN)/$(NM) -n $<
 
-.PHONY: clean all upload path term size nm
+.PHONY: clean all path term size nm
 
 -include $(DEPS)
