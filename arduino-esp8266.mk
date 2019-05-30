@@ -9,6 +9,8 @@ SSL ?= all
 UPLOAD_SPEED ?= 921600
 UPLOAD_ERASE ?= version
 UPLOAD_PORT ?= /dev/ttyUSB0
+SPIFFS_DIR ?= data
+SPIFFS_IMAGE ?= spiffs.img
 
 PROCESSOR_FAMILY := esp8266
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PROCESSOR_FAMILY)
@@ -20,6 +22,7 @@ runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
 runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 runtime.tools.python.path := /usr/bin
+runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 
 -include $(runtime.platform.path)/boards.txt
 -include platform.mk
@@ -35,13 +38,17 @@ build.debug_level := $($(build.board).menu.lvl.$(DEBUG_LEVEL).build.debug_level)
 build.flash_flags := $($(build.board).build.flash_flags)
 build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_freq := $($(build.board).build.flash_freq)
-build.flash_size := $($(build.board).menu.eesz.$(FLASH_SIZE).build.flash_size)
-build.flash_size_bytes := $($(build.board).menu.eesz.$(FLASH_SIZE).build.flash_size_bytes)
-build.flash_ld := $($(build.board).menu.eesz.$(FLASH_SIZE).build.flash_ld)
-build.spiffs_pagesize := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_pagesize)
-build.spiffs_start := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_start)
-build.spiffs_end := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_end)
-build.spiffs_blocksize := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_blocksize)
+
+FLASH_MENU := $(build.board).menu.eesz.$(FLASH_SIZE)
+build.flash_size := $($(FLASH_MENU).build.flash_size)
+build.flash_size_bytes := $($(FLASH_MENU).build.flash_size_bytes)
+build.flash_ld := $($(FLASH_MENU).build.flash_ld)
+build.spiffs_pagesize := $($(FLASH_MENU).build.spiffs_pagesize)
+build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
+build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
+build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
+SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
+
 UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.erase_cmd = $(UPLOAD_ERASE)
 upload.speed = $(UPLOAD_SPEED)
@@ -66,3 +73,8 @@ upload: $(SKETCH_BIN)
 endef
 
 $(eval $(call upload-sketch))
+
+$(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $(SPIFFS_SIZE) $@
+
+fs: $(SPIFFS_IMAGE)
