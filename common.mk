@@ -64,6 +64,8 @@ endef
 $(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
 
 PLATFORM_H ?= Arduino.h
+COMPILER_WARNINGS ?= default
+compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
 
 define compile-sketch
 $1.cpp.o: source_file = $1
