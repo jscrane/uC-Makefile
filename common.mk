@@ -63,10 +63,12 @@ endef
 
 $(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
 
+PLATFORM_H ?= Arduino.h
+
 define compile-sketch
 $1.cpp.o: source_file = $1
 $1.cpp.o: object_file = $1.cpp.o
-$1.cpp.o: compiler.cpp.extra_flags = -x c++ -include Arduino.h $(CPPFLAGS)
+$1.cpp.o: compiler.cpp.extra_flags = -x c++ -include $(PLATFORM_H) $(CPPFLAGS)
 $1.cpp.o:
 	$$(recipe.cpp.o.pattern)
 endef
