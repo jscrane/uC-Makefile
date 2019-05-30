@@ -20,6 +20,7 @@ runtime.tools.xtensa-lx106-elf-gcc.path := $(PACKAGE_DIR)/tools/xtensa-lx106-elf
 runtime.tools.python.path := /usr/bin
 
 -include $(runtime.platform.path)/boards.txt
+-include platform.mk
 
 build.board := $(BOARD)
 build.arch := $($(build.board).build.mcu)
@@ -40,10 +41,11 @@ build.spiffs_start := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_star
 build.spiffs_end := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_end)
 build.spiffs_blocksize := $($(build.board).menu.eesz.$(FLASH_SIZE).build.spiffs_blocksize)
 UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.erase_cmd = $(UPLOAD_ERASE)
+upload.speed = $(UPLOAD_SPEED)
+upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.verbose)
+serial.port = $(UPLOAD_PORT)
 
--include platform.mk
-
-# these are assigned in platform.txt
 build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
 #build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
 build.vtable_flags := $($(build.board).menu.vt.$(VTABLES).build.vtable_flags)
@@ -71,7 +73,8 @@ includes += $(foreach d, $(LIBDIRS), -I$d)
 build.project_name := $(SKETCH)
 build.path := .build
 BUILD_CORE := $(build.path)/core
-archive_file_path := $(BUILD_CORE)/libcore.a
+archive_file := libcore.a
+archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
@@ -196,10 +199,6 @@ $(eval $(call objcopy-sketch,$(SKETCH_BIN)))
 
 define upload-sketch
 upload: cmd = $$(tools.$(UPLOAD_TOOL).cmd)
-upload: upload.erase_cmd = $(UPLOAD_ERASE)
-upload: upload.speed = $(UPLOAD_SPEED)
-upload: upload.verbose = $$(tools.$(UPLOAD_TOOL).upload.params.verbose)
-upload: serial.port = $(UPLOAD_PORT)
 upload: objcopy
 	$$(tools.$(UPLOAD_TOOL).upload.pattern)
 endef

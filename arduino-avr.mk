@@ -1,5 +1,6 @@
 # default options (settable by user)
 UPLOAD_PORT ?= /dev/ttyUSB0
+UPLOAD_VERBOSE ?= quiet
 
 PLATFORM := arduino
 PROCESSOR_FAMILY := avr
@@ -12,6 +13,7 @@ runtime.tools.avr-gcc.path := $(PACKAGE_DIR)/tools/avr-gcc/5.4.0-atmel3.6.1-ardu
 runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino14
 
 -include $(runtime.platform.path)/boards.txt
+-include platform.mk
 
 build.board := $(BOARD)
 BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
@@ -20,11 +22,10 @@ build.f_cpu := $($(BOARD_CPU_MENU).build.f_cpu)
 CORE := $(runtime.platform.path)/cores/$(PLATFORM)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
 UPLOAD_TOOL := $($(build.board).upload.tool)
-UPLOAD_PROTOCOL := $($(build.board).upload.protocol)
-UPLOAD_SPEED := $($(BOARD_CPU_MENU).upload.speed)
-UPLOAD_VERBOSE ?= quiet
-
--include platform.mk
+upload.protocol := $($(build.board).upload.protocol)
+upload.speed := $($(BOARD_CPU_MENU).upload.speed)
+upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
+serial.port := $(UPLOAD_PORT)
 
 SKETCH ?= $(wildcard *.ino)
 SKETCH_ELF := $(SKETCH).elf
@@ -174,10 +175,6 @@ define upload-sketch
 upload: path = $$(runtime.tools.$(UPLOAD_TOOL).path)
 upload: cmd.path = $$(tools.$(UPLOAD_TOOL).cmd.path)
 upload: config.path = $$(tools.$(UPLOAD_TOOL).config.path)
-upload: upload.speed = $(UPLOAD_SPEED)
-upload: upload.verbose = $$(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
-upload: upload.protocol = $(UPLOAD_PROTOCOL)
-upload: serial.port = $(UPLOAD_PORT)
 upload: objcopy
 	$$(tools.$(UPLOAD_TOOL).upload.pattern)
 endef
