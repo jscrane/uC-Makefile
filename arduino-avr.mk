@@ -35,12 +35,8 @@ SKETCH_EEP := $(SKETCH:.ino=.eep)
 
 -include common.mk
 
-define upload-sketch
-upload: path = $$(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd.path = $$(tools.$(UPLOAD_TOOL).cmd.path)
-upload: config.path = $$(tools.$(UPLOAD_TOOL).config.path)
+upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload: config.path = $(tools.$(UPLOAD_TOOL).config.path)
 upload: $(SKETCH_BIN)
-	$$(tools.$(UPLOAD_TOOL).upload.pattern)
-endef
-
-$(eval $(call upload-sketch))
+	$(tools.$(UPLOAD_TOOL).upload.pattern)

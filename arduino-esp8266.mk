@@ -67,13 +67,9 @@ OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 
 -include common.mk
 
-define upload-sketch
-upload: cmd = $$(tools.$(UPLOAD_TOOL).cmd)
+upload: cmd = $(tools.$(UPLOAD_TOOL).cmd)
 upload: $(SKETCH_BIN)
-	$$(subst "",, $$(tools.$(UPLOAD_TOOL).upload.pattern))
-endef
-
-$(eval $(call upload-sketch))
+	$(subst "",, $(tools.$(UPLOAD_TOOL).upload.pattern))
 
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $(SPIFFS_SIZE) $@

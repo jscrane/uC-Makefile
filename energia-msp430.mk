@@ -32,11 +32,7 @@ upload.protocol := $($(build.board).upload.protocol)
 
 -include common.mk
 
-define upload-sketch
-upload: path = $$(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd.path = $$(tools.$(UPLOAD_TOOL).cmd.path)
+upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
 upload: $(SKETCH_BIN)
-	$$(subst ',, $$(tools.$(UPLOAD_TOOL).upload.pattern))
-endef
-
-$(eval $(call upload-sketch))
+	$(subst ',, $(tools.$(UPLOAD_TOOL).upload.pattern))

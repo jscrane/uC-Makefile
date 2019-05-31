@@ -41,14 +41,10 @@ SKETCH_EEP := $(SKETCH).partitions.bin
 
 -include common.mk
 
-define upload-sketch
-upload: path = $$(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd = $$(tools.$(UPLOAD_TOOL).cmd.linux)
+upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload: cmd = $(tools.$(UPLOAD_TOOL).cmd.linux)
 upload: $(SKETCH_BIN)
-	$$(tools.$(UPLOAD_TOOL).upload.pattern)
-endef
-
-$(eval $(call upload-sketch))
+	$(tools.$(UPLOAD_TOOL).upload.pattern)
 
 PARTITIONS := $(runtime.platform.path)/tools/partitions/default.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
