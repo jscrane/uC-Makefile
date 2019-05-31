@@ -3,9 +3,9 @@ IDE_HOME ?= /usr/local/energia
 SKETCHBOOK ?= $(HOME)/energia
 SERIAL_PORT ?= /dev/ttyACM0
 
-PLATFORM := energia
+VENDOR := energia
 PROCESSOR_FAMILY := tivac
-PACKAGE_DIR := $(HOME)/.energia15/packages/$(PLATFORM)
+PACKAGE_DIR := $(HOME)/.energia15/packages/$(VENDOR)
 PACKAGE_VERSION := 1.0.3
 COMPILER_FAMILY := arm-none-eabi-gcc
 COMPILER_VERSION := 6.3.1-20170620

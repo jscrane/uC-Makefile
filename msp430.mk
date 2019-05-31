@@ -4,9 +4,9 @@ SERIAL_PORT ?= /dev/ttyACM0
 IDE_HOME ?= /usr/local/energia
 SKETCHBOOK ?= $(HOME)/energia
 
-PLATFORM := energia
+VENDOR := energia
 PROCESSOR_FAMILY := msp430
-PACKAGE_DIR := $(HOME)/.energia15/packages/$(PLATFORM)
+PACKAGE_DIR := $(HOME)/.energia15/packages/$(VENDOR)
 PACKAGE_VERSION := 1.0.4
 COMPILER_FAMILY := msp430-gcc
 COMPILER_VERSION := 4.6.6

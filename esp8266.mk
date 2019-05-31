@@ -13,8 +13,9 @@ SERIAL_PORT ?= /dev/ttyUSB0
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 
+VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
-PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PROCESSOR_FAMILY)
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 PACKAGE_VERSION := 2.5.2
 COMPILER_FAMILY := xtensa-lx106-elf-gcc
 COMPILER_VERSION := 2.5.0-3-20ed2b9

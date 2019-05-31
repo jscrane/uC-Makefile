@@ -5,8 +5,9 @@ FLASH_FREQ ?= 80
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 
+VENDOR := esp32
 PROCESSOR_FAMILY := esp32
-PACKAGE_DIR := $(HOME)/.arduino15/packages/$(PROCESSOR_FAMILY)
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 PACKAGE_VERSION := 1.0.2
 COMPILER_FAMILY := xtensa-esp32-elf-gcc
 COMPILER_VERSION := 1.22.0-80-g6c4433a-5.2.0
