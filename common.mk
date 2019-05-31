@@ -9,7 +9,7 @@ OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
 DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
 
 TERMINAL ?= minicom
-TERMINAL_FLAGS ?= -D $(UPLOAD_PORT) -b $(TERMINAL_SPEED)
+TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
 CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
 
 SIZE := $(COMPILER_FAMILY:-gcc=-size)

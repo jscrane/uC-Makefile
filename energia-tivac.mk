@@ -1,6 +1,7 @@
 # default options (settable by user)
 IDE_HOME ?= /usr/local/energia
 SKETCHBOOK ?= $(HOME)/energia
+SERIAL_PORT ?= /dev/ttyACM0
 
 PLATFORM := energia
 PROCESSOR_FAMILY := tivac

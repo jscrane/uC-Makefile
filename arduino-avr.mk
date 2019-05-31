@@ -1,5 +1,5 @@
 # default options (settable by user)
-UPLOAD_PORT ?= /dev/ttyUSB0
+SERIAL_PORT ?= /dev/ttyUSB0
 UPLOAD_VERBOSE ?= quiet
 
 PLATFORM := arduino
@@ -27,7 +27,7 @@ UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(BOARD_CPU_MENU).upload.speed)
 upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
-serial.port := $(UPLOAD_PORT)
+serial.port := $(SERIAL_PORT)
 
 -include common.mk
 

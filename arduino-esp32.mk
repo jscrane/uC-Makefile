@@ -1,6 +1,6 @@
 # default options (settable by user)
 UPLOAD_SPEED ?= 921600
-UPLOAD_PORT ?= /dev/ttyUSB0
+SERIAL_PORT ?= /dev/ttyUSB0
 FLASH_FREQ ?= 80
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
@@ -34,7 +34,7 @@ build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).build.partitions)
 UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.speed = $(UPLOAD_SPEED)
-serial.port = $(UPLOAD_PORT)
+serial.port = $(SERIAL_PORT)
 
 SKETCH ?= $(wildcard *.ino)
 SKETCH_EEP := $(SKETCH).partitions.bin

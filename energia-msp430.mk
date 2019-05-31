@@ -1,6 +1,5 @@
 # default options (settable by user)
-#UPLOAD_PORT ?= /dev/ttyUSB0
-#UPLOAD_VERBOSE ?= quiet
+SERIAL_PORT ?= /dev/ttyACM0
 
 IDE_HOME ?= /usr/local/energia
 SKETCHBOOK ?= $(HOME)/energia

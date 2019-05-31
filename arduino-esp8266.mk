@@ -9,7 +9,7 @@ SSL ?= all
 UPLOAD_SPEED ?= 921600
 UPLOAD_ERASE ?= version
 UPLOAD_VERBOSE ?= quiet
-UPLOAD_PORT ?= /dev/ttyUSB0
+SERIAL_PORT ?= /dev/ttyUSB0
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 
@@ -54,7 +54,7 @@ UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.erase_cmd = $(UPLOAD_ERASE)
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
-serial.port = $(UPLOAD_PORT)
+serial.port = $(SERIAL_PORT)
 
 build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
 #build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
