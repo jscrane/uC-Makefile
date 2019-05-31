@@ -1,7 +1,7 @@
 uC-Makefile
 ===========
 
-A Makefile for popular Microcontrollers supporting Energia (msp430 and lm4f boards) 
+A Makefile for popular Microcontrollers supporting Energia (msp430 and tivac boards) 
 and Arduino-1.8.x (avr, esp8266 and esp32 boards).
 
 If:
@@ -18,12 +18,12 @@ Install the makefile fragments in _somedir_.
 Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
 
 	BOARD := MSP-EXP430FR5739LP
-	include energia-msp430.mk
+	include msp430.mk
 
 For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
 	BOARD := uno
-	include arduino-avr.mk
+	include avr.mk
 
 Invoke with:
 
