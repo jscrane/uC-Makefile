@@ -40,7 +40,6 @@ Other Settings
 
 Some settings useful to override and their defaults are:
 
-- IDE_HOME (/usr/local/energia or /usr/local/arduino)
 - SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
 - SERIAL_PORT (/dev/ttyUSB0)
 - SKETCH (e.g., Blink.ino)

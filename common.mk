@@ -16,10 +16,8 @@ SIZE := $(COMPILER_FAMILY:-gcc=-size)
 NM := $(COMPILER_FAMILY:-gcc=-n)
 CBIN := $(runtime.tools.$(COMPILER_FAMILY).path)/bin
 
-IDE_HOME ?= /usr/local/arduino
 SKETCHBOOK ?= $(HOME)/sketchbook
-
-LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries $(IDE_HOME)/libraries
+LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 LIBSUBDIRS := . src src/detail utility src/utility $(BUILD_MCU)

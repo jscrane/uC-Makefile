@@ -1,7 +1,6 @@
 # default options (settable by user)
 SERIAL_PORT ?= /dev/ttyACM0
 
-IDE_HOME ?= /usr/local/energia
 SKETCHBOOK ?= $(HOME)/energia
 
 VENDOR := energia
