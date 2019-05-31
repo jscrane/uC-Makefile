@@ -1,7 +1,10 @@
 # default options (settable by user)
 SERIAL_PORT ?= /dev/ttyUSB0
-UPLOAD_VERBOSE ?= quiet
 UPLOAD_VERIFY ?= -V
+UPLOAD_VERBOSE ?= quiet
+PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
+ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
+BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
 PROGRAMMER_PROTOCOL ?= arduinoisp
 
 PLATFORM := arduino
@@ -31,11 +34,11 @@ upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(BOARD_CPU_MENU).upload.speed)
 upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(UPLOAD_VERIFY)
-program.verbose := $(PROGRAM_VERBOSE)
+program.verbose := $(tools.$(UPLOAD_TOOL).program.params.$(PROGRAM_VERBOSE))
 program.verify := $(PROGRAM_VERIFY)
 program.extra_params := $(PROGRAM_EXTRA_PARAMS)
-erase.verbose := $(ERASE_VERBOSE)
-bootloader.verbose := $(BOOTLOADER_VERBOSE)
+erase.verbose := $(tools.$(UPLOAD_TOOL).erase.params.$(ERASE_VERBOSE))
+bootloader.verbose := $(tools.$(UPLOAD_TOOL).bootloader.params.$(BOOTLOADER_VERBOSE))
 bootloader.file := $($(BOARD_CPU_MENU).bootloader.file)
 bootloader.low_fuses := $($(BOARD_CPU_MENU).bootloader.low_fuses)
 bootloader.high_fuses := $($(BOARD_CPU_MENU).bootloader.high_fuses)

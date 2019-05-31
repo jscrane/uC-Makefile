@@ -42,7 +42,7 @@ Some settings useful to override and their defaults are:
 
 - IDE_HOME (/usr/local/energia or /usr/local/arduino)
 - SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
-- UPLOAD_PORT (/dev/ttyUSB0)
+- SERIAL_PORT (/dev/ttyUSB0)
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
 - CPPFLAGS (e.g., local #defines)
