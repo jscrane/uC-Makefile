@@ -1,6 +1,7 @@
 # default options (settable by user)
 SERIAL_PORT ?= /dev/ttyUSB0
 UPLOAD_VERBOSE ?= quiet
+UPLOAD_VERIFY ?= -V
 
 PLATFORM := arduino
 PROCESSOR_FAMILY := avr
@@ -28,6 +29,9 @@ upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(BOARD_CPU_MENU).upload.speed)
 upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
 serial.port := $(SERIAL_PORT)
+
+SKETCH ?= $(wildcard *.ino)
+SKETCH_EEP := $(SKETCH:.ino=.eep)
 
 -include common.mk
 
