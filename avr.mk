@@ -5,7 +5,7 @@ UPLOAD_VERBOSE ?= quiet
 PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
 ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
 BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
-PROGRAMMER_PROTOCOL ?= arduinoisp
+PROGRAMMER_PROTOCOL ?= avrisp
 
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
@@ -49,29 +49,19 @@ SKETCH_EEP = $(SKETCH:.elf=.eep)
 
 -include common.mk
 
-upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-upload: config.path = $(tools.$(UPLOAD_TOOL).config.path)
+upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
+
 upload: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).upload.pattern)
 
-program: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-program: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-program: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-program: protocol = $(PROGRAMMER_PROTOCOL)
+program erase bootloader: protocol = $(PROGRAMMER_PROTOCOL)
 program: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).program.pattern)
 
-erase: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-erase: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-erase: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-erase: protocol = $(PROGRAMMER_PROTOCOL)
 erase:
 	$(tools.$(UPLOAD_TOOL).erase.pattern)
 
-bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-bootloader: protocol = $(PROGRAMMER_PROTOCOL)
 bootloader:
 	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
