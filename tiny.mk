@@ -7,7 +7,7 @@ UPLOAD_VERBOSE ?= quiet
 PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
 ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
 BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
-PROGRAMMER_PROTOCOL ?= arduinoisp
+PROGRAMMER_PROTOCOL ?= avrisp
 EESAVE ?= aenable
 BOD ?= 1v8
 
@@ -66,29 +66,39 @@ SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
 
-upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-upload: config.path = $(tools.$(UPLOAD_TOOL).config.path)
+upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
 upload: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).upload.pattern)
 
-program: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-program: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-program: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-program: protocol = $(PROGRAMMER_PROTOCOL)
+program erase bootloader: protocol = $(PROGRAMMER_PROTOCOL)
 program: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).program.pattern)
 
-erase: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-erase: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-erase: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-erase: protocol = $(PROGRAMMER_PROTOCOL)
 erase:
 	$(tools.$(UPLOAD_TOOL).erase.pattern)
 
-bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-bootloader: protocol = $(PROGRAMMER_PROTOCOL)
 bootloader:
 	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
+
+# FIXME: programmers.txt
+PROGRAMMER_FLAGS := -P $(SERIAL_PORT) -c $(PROGRAMMER_PROTOCOL) -b 19200 -p $(build.mcu)
+
+read-fuses read-flash read-eeprom write-fuses write-eeprom: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+read-fuses read-flash read-eeprom write-fuses write-eeprom: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+
+read-fuses:
+	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:r:-:h -U hfuse:r:-:h -U efuse:r:-:h -q -q
+
+read-flash:
+	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U flash:r:$(SKETCH_BIN)
+
+read-eeprom:
+	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:r:$(SKETCH_EEP)
+
+write-fuses:
+	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:w:$(bootloader.low_fuses) -U hfuse:w:$(bootloader.high_fuses) -U efuse:w:$(bootloader.extended_fuses)
+
+write-eeprom:
+	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:w:$(SKETCH_EEP)
