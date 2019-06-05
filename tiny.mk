@@ -65,46 +65,5 @@ bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
--include $(runtime.platform.path)/programmers.txt
-
-program.protocol := $($(PROGRAMMER).program.protocol)
-program.speed := $($(PROGRAMMER).program.speed)
-program.extra_params := $(subst {program.speed},$(program.speed), \
-				$(subst {serial.port},$(serial.port), \
-					$($(PROGRAMMER).program.extra_params)))
-
-upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-upload: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).upload.pattern)
-
-program erase bootloader: protocol = $(program.protocol)
-program: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).program.pattern)
-
-erase:
-	$(tools.$(UPLOAD_TOOL).erase.pattern)
-
-bootloader:
-	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
-
-PROGRAMMER_FLAGS := -p$(build.mcu) -c$(program.protocol) $(program.extra_params)
-
-read-fuses read-flash read-eeprom write-fuses write-eeprom: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-read-fuses read-flash read-eeprom write-fuses write-eeprom: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-
-read-fuses:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:r:-:h -U hfuse:r:-:h -U efuse:r:-:h -q -q
-
-read-flash:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U flash:r:$(SKETCH_BIN)
-
-read-eeprom:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:r:$(SKETCH_EEP)
-
-write-fuses:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:w:$(bootloader.low_fuses) -U hfuse:w:$(bootloader.high_fuses) -U efuse:w:$(bootloader.extended_fuses)
-
-write-eeprom:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:w:$(SKETCH_EEP)
+-include programmers.mk
+-include $(UPLOAD_TOOL).mk

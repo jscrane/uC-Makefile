@@ -5,7 +5,7 @@ UPLOAD_VERBOSE ?= quiet
 PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
 ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
 BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
-PROGRAMMER_PROTOCOL ?= avrisp
+PROGRAMMER ?= arduinoasisp
 
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
@@ -45,23 +45,7 @@ bootloader.high_fuses := $($(BOARD_CPU_MENU).bootloader.high_fuses)
 bootloader.extended_fuses := $($(BOARD_CPU_MENU).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 
-SKETCH_EEP = $(SKETCH:.elf=.eep)
+SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
-
-upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-
-upload: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).upload.pattern)
-
-program erase bootloader: protocol = $(PROGRAMMER_PROTOCOL)
-program: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).program.pattern)
-
-erase:
-	$(tools.$(UPLOAD_TOOL).erase.pattern)
-
-bootloader:
-	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
+-include programmers.mk
