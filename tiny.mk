@@ -7,7 +7,7 @@ UPLOAD_VERBOSE ?= quiet
 PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
 ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
 BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
-PROGRAMMER_PROTOCOL ?= avrisp
+PROGRAMMER ?= arduinoasisp
 EESAVE ?= aenable
 BOD ?= 1v8
 
@@ -65,6 +65,13 @@ bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
+-include $(runtime.platform.path)/programmers.txt
+
+program.protocol := $($(PROGRAMMER).program.protocol)
+program.speed := $($(PROGRAMMER).program.speed)
+program.extra_params := $(subst {program.speed},$(program.speed), \
+				$(subst {serial.port},$(serial.port), \
+					$($(PROGRAMMER).program.extra_params)))
 
 upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
 upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
@@ -72,7 +79,7 @@ upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.pat
 upload: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).upload.pattern)
 
-program erase bootloader: protocol = $(PROGRAMMER_PROTOCOL)
+program erase bootloader: protocol = $(program.protocol)
 program: $(SKETCH_BIN)
 	$(tools.$(UPLOAD_TOOL).program.pattern)
 
@@ -82,8 +89,7 @@ erase:
 bootloader:
 	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
 
-# FIXME: programmers.txt
-PROGRAMMER_FLAGS := -P $(SERIAL_PORT) -c $(PROGRAMMER_PROTOCOL) -b 19200 -p $(build.mcu)
+PROGRAMMER_FLAGS := -p$(build.mcu) -c$(program.protocol) $(program.extra_params)
 
 read-fuses read-flash read-eeprom write-fuses write-eeprom: path = $(runtime.tools.$(UPLOAD_TOOL).path)
 read-fuses read-flash read-eeprom write-fuses write-eeprom: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
