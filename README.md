@@ -1,8 +1,8 @@
 uC-Makefile
 ===========
 
-A Makefile for popular Microcontrollers supporting Energia (msp430 and lm4f boards) 
-and Arduino-1.8.x (avr, esp8266 and esp32 boards).
+A Makefile for popular Microcontrollers supporting Energia (msp430 and 
+tivac boards) and Arduino-1.8.x (avr, attiny, esp8266 and esp32 boards).
 
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
@@ -17,14 +17,13 @@ Install the makefile fragments in _somedir_.
 
 Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
 
-	PROCESSOR_FAMILY := msp430
 	BOARD := MSP-EXP430FR5739LP
-	include energia.mk
+	include msp430.mk
 
 For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent would be:
 
 	BOARD := uno
-	include arduino15.mk
+	include avr.mk
 
 Invoke with:
 
@@ -41,13 +40,11 @@ Other Settings
 
 Some settings useful to override and their defaults are:
 
-- IDE_HOME (/usr/local/energia or /usr/local/arduino)
 - SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
-- UPLOAD_PORT (/dev/ttyUSB0)
+- SERIAL_PORT (/dev/ttyUSB0)
 - SKETCH (e.g., Blink.ino)
 - SOURCES (e.g., foo.cpp bar.c)
 - CPPFLAGS (e.g., local #defines)
-- PROCESSOR_FAMILY (required for Launchpads, defaults to avr for Arduino)
 - LIBRARY_PATH (additions to the default Arduino search-path for libraries)
 - LIBRARIES (any other libraries required, not #included in the sketch)
 
@@ -55,3 +52,4 @@ Credits
 -------
 
 - elpaso's [Makefile](https://github.com/elpaso/energia-makefile) for msp430 provided inspiration.
+- attiny support is largely due to SpenceKonde's [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore)

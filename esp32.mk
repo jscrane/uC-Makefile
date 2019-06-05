@@ -1,41 +1,65 @@
-COMPILER_FAMILY := xtensa-esp32-elf
-TOOL_DIR := $(HARDWARE_FAMILY)/tools
-TOOLS := $(TOOL_DIR)/$(COMPILER_FAMILY)
-PATH := $(PATH):$(TOOL_DIR)/mkspiffs:$(TOOL_DIR)/esptool
+# default options (settable by user)
+UPLOAD_SPEED ?= 921600
+SERIAL_PORT ?= /dev/ttyUSB0
+FLASH_FREQ ?= 80
+SPIFFS_DIR ?= data
+SPIFFS_IMAGE ?= spiffs.img
 
-SDK := $(HARDWARE_FAMILY)/tools/sdk
-FLASH_MODE = $(shell sed -ne "s/$(BOARD).build.flash_mode=\(.*\)/\1/p" $(BOARDS))
-FLASH_SIZE = $(shell sed -ne "s/$(BOARD).build.flash_size=\(.*\)/\1/p" $(BOARDS))
-FLASH_FREQ ?= 80m
+VENDOR := esp32
+PROCESSOR_FAMILY := esp32
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
+PACKAGE_VERSION := 1.0.2
+COMPILER_FAMILY := xtensa-esp32-elf-gcc
+COMPILER_VERSION := 1.22.0-80-g6c4433a-5.2.0
 
-CPPFLAGS += -DESP_PLATFORM -DESP32 -DMBEDTLS_CONFIG_FILE="mbedtls/esp_config.h" -DHAVE_CONFIG_H $(foreach i, $(wildcard $(SDK)/include/*), -I$(i))
+runtime.ide.version := 10809
+runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+runtime.tools.python.path := /usr/bin
+runtime.tools.esptool_py.path := $(PACKAGE_DIR)/tools/esptool_py/2.6.1
+tools.mkspiffs.cmd := mkspiffs
+tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/0.2.3
 
-CFLAGS += -std=gnu99 -Os -g3 -fstack-protector -ffunction-sections -fdata-sections -fstrict-volatile-bitfields -mlongcalls -nostdlib -Wpointer-arith -w -Wno-error=unused-function -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -Wno-old-style-declaration -MMD
+-include $(runtime.platform.path)/boards.txt
+-include platform.mk
 
-CXXFLAGS += -std=gnu++11 -fno-exceptions -Os -g3 -Wpointer-arith -fexceptions -fstack-protector -ffunction-sections -fdata-sections -fstrict-volatile-bitfields -mlongcalls -nostdlib -w -Wno-error=unused-function -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -fno-rtti -MMD
+build.board := $(BOARD)
+build.arch := $($(build.board).build.mcu)
+CORE := $(runtime.platform.path)/cores/$(build.arch)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.board)
+build.f_cpu := $($(build.board).build.f_cpu)
+build.flash_mode := $($(build.board).build.flash_mode)
+build.flash_size := $($(build.board).build.flash_size)
+build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
+build.boot := $($(build.board).build.boot)
+build.partitions := $($(build.board).build.partitions)
+UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.speed = $(UPLOAD_SPEED)
+serial.port = $(SERIAL_PORT)
 
-LD := $(COMPILER_FAMILY)-gcc
-LDFLAGS := -nostdlib -L$(SDK)/lib -L$(SDK)/ld -L$(BUILD_DIR) -T esp32_out.ld -T esp32.common.ld -T esp32.rom.ld -T esp32.peripherals.ld -T esp32.rom.spiram_incompatible_fns.ld -u ld_include_panic_highint_hdl -u call_user_start_cpu0 -Wl,--gc-sections -Wl,-static -Wl,--undefined=uxTopUsedPriority  -u __cxa_guard_dummy -u __cxx_fatal_exception  -Wl,--start-group
-
-LDLIBS := $(BUILD_DIR)/libcore.a -lgcc -lopenssl -lbtdm_app -lfatfs -lwps -lcoexist -lwear_levelling -lhal -lnewlib -ldriver -lesp_ringbuf -lbootloader_support -lpp -lmesh -lsmartconfig -lsmartconfig_ack -ljsmn -lwpa -lethernet -lphy -lapp_trace -lconsole -lulp -lwpa_supplicant -lfreertos -lbt -lmicro-ecc -lcxx -lxtensa-debug-module -lmdns -lvfs -lsoc -lcore -lsdmmc -lcoap -ltcpip_adapter -lc_nano -lrtc -lspi_flash -lwpa2 -lesp32 -lapp_update -lnghttp -lspiffs -lespnow -lnvs_flash -lesp_adc_cal -llog -lexpat -lm -lc -lheap -lmbedtls -llwip -lnet80211 -lpthread -ljson -lstdc++ -Wl,--end-group
-
-LDPOST := esptool.py
-LDPOST_FLAGS = --chip esp32 elf2image --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) --flash_size $(FLASH_SIZE) -o $@ $<
-
+SKETCH ?= $(wildcard *.ino)
 SKETCH_EEP := $(SKETCH).partitions.bin
 
-UPLOAD_TOOL = esptool.py
-UPLOAD_FLAGS = --chip esp32 --port $(UPLOAD_PORT) --baud $(UPLOAD_SPEED) --before default_reset --after hard_reset write_flash -z --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) --flash_size detect 0xe000 $(TOOL_DIR)/partitions/boot_app0.bin 0x1000 $(SDK)/bin/bootloader_$(FLASH_MODE)_$(FLASH_FREQ).bin 0x10000 $(SKETCH_BIN) 0x8000 $(SKETCH_EEP)
+-include common.mk
 
-PARTITIONS := $(TOOL_DIR)/partitions/default.csv
+upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload: cmd = $(tools.$(UPLOAD_TOOL).cmd.linux)
+upload: $(SKETCH_BIN)
+	$(tools.$(UPLOAD_TOOL).upload.pattern)
+
+PARTITIONS := $(runtime.platform.path)/tools/partitions/default.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
 SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
 SPIFFS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
-SPIFFS_DIR ?= data
 SPIFFS_PAGESIZE := 256
 SPIFFS_BLOCKSIZE := 4096
-SPIFFS_IMAGE ?= spiffs.img
 
-SIZE_FLAGS =
+$(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
 
-EXTRA_TARGETS := $(SKETCH_EEP) $(SPIFFS_IMAGE)
+fs: $(SPIFFS_IMAGE)
+
+upload-fs: fs
+	$(runtime.tools.$(UPLOAD_TOOL).path)/$(tools.$(UPLOAD_TOOL).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
+
+.PHONY: upload fs upload-fs

@@ -1,46 +1,83 @@
-COMPILER_FAMILY := xtensa-lx106-elf
-TOOL_VERSION ?= 2.5.0-3-20ed2b9
-TOOL_DIR := $(PLATFORM_PACKAGE)/tools
-PATH := $(PATH):$(TOOL_DIR)/esptool/$(TOOL_VERSION):$(TOOL_DIR)/mkspiffs/$(TOOL_VERSION)
-TOOLS := $(TOOL_DIR)/$(COMPILER_FAMILY)-gcc/$(TOOL_VERSION)
-
-SDK := $(HARDWARE_FAMILY)/tools/sdk
-BUILD_BOARD != sed -ne "s/$(BOARD).build.board=\(.*\)/\1/p" $(BOARDS)
-FLASH_MENU = $(BOARD).menu.eesz.$(FLASH_SIZE).build
-FLASH_LD != sed -ne "s/$(FLASH_MENU).flash_ld=\(.*\)/\1/p" $(BOARDS)
-
+# default options (settable by user)
 LWIP_OPTS ?= lm2f
-LWIP_INC != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_include=\(.*\)/\1/p" $(BOARDS)
-LWIP_LIB != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_lib=\(.*\)/\1/p" $(BOARDS)
-LWIP_FLAGS != sed -ne "s/$(BOARD).menu.ip.$(LWIP_OPTS).build.lwip_flags=\(.*\)/\1/p" $(BOARDS)
-
-VTABLE_FLAGS ?= -DVTABLES_IN_FLASH
-
-CPPFLAGS += -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I$(SDK)/include -I$(SDK)/$(LWIP_INC) -I$(SDK)/libc/$(COMPILER_FAMILY)/include $(LWIP_FLAGS) -DARDUINO_$(BUILD_BOARD) -DARDUINO_ARCH_ESP8266 -DARDUINO_BOARD=\"$(BUILD_BOARD)\" -DESP8266
-
-CFLAGS = -Os -w -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections
-
-CXXFLAGS = -Os -w -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections
-
-LD := $(COMPILER_FAMILY)-gcc
-LDFLAGS := -Os -w -nostdlib -Wl,--no-check-sections -u call_user_start -u _printf_float -u _scanf_float -Wl,-static -L$(SDK)/lib -L$(SDK)/ld -L$(SDK)/libc/$(COMPILER_FAMILY)/lib -L$(BUILD_DIR) -T$(FLASH_LD) -Wl,--gc-sections -Wl,-wrap,system_restart_local -Wl,-wrap,spi_flash_read -Wl,--start-group
-LDLIBS := -lcore -lhal -lphy -lpp -lnet80211 $(LWIP_LIB) -lwpa -lcrypto -lmain -lwps -laxtls -lespnow -lsmartconfig -lairkiss -lwpa2 -lstdc++ -lm -lc -lgcc -Wl,--end-group
-
-LDPOST := esptool
-LDPOST_FLAGS = -eo $(HARDWARE_FAMILY)/bootloaders/eboot/eboot.elf -bo $@ -bm dio -bf 40 -bz 4M -bs .text -bp 4096 -ec -eo $<  -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
-
-UPLOAD_TOOL != sed -ne "s/$(BOARD).upload.tool=\(.*\)/\1/p" $(BOARDS)
-UPLOAD_RESET != sed -ne "s/$(BOARD).upload.resetmethod=\(.*\)/\1/p" $(BOARDS)
-UPLOAD_FLAGS = -cd $(UPLOAD_RESET) -cb $(UPLOAD_SPEED) -cp $(UPLOAD_PORT) -ca 0x00000 -cf $<
-
+F_CPU ?= 80
+DEBUG_PORT ?= Disabled
+DEBUG_LEVEL ?= None____
+EXCEPTIONS ?= disabled
+VTABLES ?= flash
+SSL ?= all
+UPLOAD_SPEED ?= 921600
+UPLOAD_ERASE ?= version
+UPLOAD_VERBOSE ?= quiet
+SERIAL_PORT ?= /dev/ttyUSB0
 SPIFFS_DIR ?= data
-SPIFFS_START != sed -ne "s/$(FLASH_MENU).spiffs_start=\(.*\)/\1/p" $(BOARDS)
-SPIFFS_END != sed -ne "s/$(FLASH_MENU).spiffs_end=\(.*\)/\1/p" $(BOARDS)
-SPIFFS_BLOCKSIZE != sed -ne "s/$(FLASH_MENU).spiffs_blocksize=\(.*\)/\1/p" $(BOARDS)
-SPIFFS_PAGESIZE != sed -ne "s/$(FLASH_MENU).spiffs_pagesize=\(.*\)/\1/p" $(BOARDS)
-SPIFFS_SIZE != echo $$(( $(SPIFFS_END) - $(SPIFFS_START) ))
 SPIFFS_IMAGE ?= spiffs.img
 
-SIZE_FLAGS :=
+VENDOR := esp8266
+PROCESSOR_FAMILY := esp8266
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
+PACKAGE_VERSION := 2.5.2
+COMPILER_FAMILY := xtensa-lx106-elf-gcc
+COMPILER_VERSION := 2.5.0-3-20ed2b9
 
-EXTRA_TARGETS := $(SPIFFS_IMAGE)
+runtime.ide.version := 10809
+runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+runtime.tools.python.path := /usr/bin
+runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
+
+-include $(runtime.platform.path)/boards.txt
+-include platform.mk
+
+build.board := $(BOARD)
+build.arch := $($(build.board).build.mcu)
+CORE := $(runtime.platform.path)/cores/$(build.arch)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.board) \
+	-I$(runtime.platform.path)/tools/sdk/$($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_include)
+build.f_cpu := $($(build.board).menu.xtal.$(F_CPU).build.f_cpu)
+build.debug_port := $($(build.board).menu.dbg.$(DEBUG_PORT).build.debug_port)
+build.debug_level := $($(build.board).menu.lvl.$(DEBUG_LEVEL).build.debug_level)
+build.flash_flags := $($(build.board).build.flash_flags)
+build.flash_mode := $($(build.board).build.flash_mode)
+build.flash_freq := $($(build.board).build.flash_freq)
+
+FLASH_MENU := $(build.board).menu.eesz.$(FLASH_SIZE)
+build.flash_size := $($(FLASH_MENU).build.flash_size)
+build.flash_size_bytes := $($(FLASH_MENU).build.flash_size_bytes)
+build.flash_ld := $($(FLASH_MENU).build.flash_ld)
+build.spiffs_pagesize := $($(FLASH_MENU).build.spiffs_pagesize)
+build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
+build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
+build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
+SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
+
+UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.erase_cmd = $(UPLOAD_ERASE)
+upload.speed = $(UPLOAD_SPEED)
+upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
+serial.port = $(SERIAL_PORT)
+
+build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
+#build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
+build.vtable_flags := $($(build.board).menu.vt.$(VTABLES).build.vtable_flags)
+build.ssl_flags := $($(build.board).menu.ssl.$(SSL).build.ssl_flags)
+build.exception_flags := $($(build.board).menu.exception.$(EXCEPTIONS).build.exception_flags)
+build.stdcpp_lib := $($(build.board).menu.exception.$(EXCEPTIONS).build.stdcpp_lib)
+
+OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
+
+-include common.mk
+
+upload: cmd = $(tools.$(UPLOAD_TOOL).cmd)
+upload: $(SKETCH_BIN)
+	$(subst "",, $(tools.$(UPLOAD_TOOL).upload.pattern))
+
+$(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $(SPIFFS_SIZE) $@
+
+fs: $(SPIFFS_IMAGE)
+
+upload-fs: $(SPIFFS_IMAGE)
+	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $(SPIFFS_IMAGE) --end
+
+.PHONY: upload fs upload-fs

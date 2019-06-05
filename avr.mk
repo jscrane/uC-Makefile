@@ -1,42 +1,67 @@
-# device ids for avr include files: add more as needed
-P_atmega328p := __AVR_ATmega328P__
-P_atmega168 := __AVR_ATmega168__
-P_atmega2560 := __AVR_ATmega2560__
-P_atmega1280 := __AVR_ATmega1280__
-P_atmega32u4 := __AVR_ATmega32U4__
-P_atmega8 := __AVR_ATmega8__
-P_attiny84 := __AVR_ATtiny84__
-P_attiny85 := __AVR_ATtiny85__
+# default options (settable by user)
+SERIAL_PORT ?= /dev/ttyUSB0
+UPLOAD_VERIFY ?= -V
+UPLOAD_VERBOSE ?= quiet
+PROGRAM_VERBOSE ?= $(UPLOAD_VERBOSE)
+ERASE_VERBOSE ?= $(UPLOAD_VERBOSE)
+BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
+PROGRAMMER_PROTOCOL ?= avrisp
 
-# avrdude part ids: add more here as needed
-U_atmega328p := m328p
-U_atmega168 := m168
-U_atmega2560 := m2560
-U_atmega1280 := m1281
-U_atmega32u4 := m32u4
-U_atmega8 := m8
-U_attiny84 := t84
-U_attiny85 := t85
+VENDOR := arduino
+PROCESSOR_FAMILY := avr
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
+PACKAGE_VERSION := 1.6.23
+COMPILER_FAMILY := avr-gcc
+COMPILER_VERSION := 5.4.0-atmel3.6.1-arduino2
 
-CPPFLAGS += -D${P_${BUILD_MCU}}
-CPUFLAGS += -mmcu=$(BUILD_MCU)
-CFLAGS += -Os -w -ffunction-sections -fdata-sections $(CPUFLAGS)
-CXXFLAGS += -fno-exceptions $(CFLAGS)
-LDFLAGS = -Os -Wl,--gc-sections $(CPUFLAGS)
-LD = $(COMPILER_FAMILY)-gcc
-OBJCOPY_FLAGS = -O ihex -R .eeprom
-SKETCH_EEP := $(SKETCH:.ino=.eep)
+runtime.ide.version := 10809
+runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino14
 
-UPLOAD_TOOL ?= $(shell sed -ne "s/$(BOARD).upload.tool=\(.*\)/\1/p" $(BOARDS))
-UPLOAD_SPEED ?= $(shell sed -ne "s/$(BP).upload.speed=\(.*\)/\1/p" $(BOARDS)) 
+-include $(runtime.platform.path)/boards.txt
+-include platform.mk
 
-ifeq ("$(UPLOAD_TOOL)", "avrdude")
-UPLOAD_FLAGS := -C $(TOOLS)/etc/avrdude.conf -b $(UPLOAD_SPEED) -c $(UPLOAD_PROTOCOL) -P $(UPLOAD_PORT) -p ${U_${BUILD_MCU}} -D -Uflash:w:$(SKETCH_BIN):i
-endif
+build.board := $(BOARD)
+BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
+build.mcu := $($(BOARD_CPU_MENU).build.mcu)
+build.f_cpu := $($(BOARD_CPU_MENU).build.f_cpu)
+CORE := $(runtime.platform.path)/cores/$(VENDOR)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
+UPLOAD_TOOL := $($(build.board).upload.tool)
+serial.port := $(SERIAL_PORT)
+upload.protocol := $($(build.board).upload.protocol)
+upload.speed := $($(BOARD_CPU_MENU).upload.speed)
+upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
+upload.verify := $(UPLOAD_VERIFY)
+program.verbose := $(tools.$(UPLOAD_TOOL).program.params.$(PROGRAM_VERBOSE))
+program.verify := $(PROGRAM_VERIFY)
+program.extra_params := $(PROGRAM_EXTRA_PARAMS)
+erase.verbose := $(tools.$(UPLOAD_TOOL).erase.params.$(ERASE_VERBOSE))
+bootloader.verbose := $(tools.$(UPLOAD_TOOL).bootloader.params.$(BOOTLOADER_VERBOSE))
+bootloader.file := $($(BOARD_CPU_MENU).bootloader.file)
+bootloader.low_fuses := $($(BOARD_CPU_MENU).bootloader.low_fuses)
+bootloader.high_fuses := $($(BOARD_CPU_MENU).bootloader.high_fuses)
+bootloader.extended_fuses := $($(BOARD_CPU_MENU).bootloader.extended_fuses)
+bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 
-ifeq ("$(UPLOAD_TOOL)", "tsb")
-PATH := $(HARDWARE_FAMILY)/tools:$(PATH)
-UPLOAD_FLAGS := $(UPLOAD_PORT):$(UPLOAD_SPEED) fw $(SKETCH_BIN)
-endif
+SKETCH_EEP = $(SKETCH:.elf=.eep)
 
-EXTRA_TARGETS := $(SKETCH_EEP)
+-include common.mk
+
+upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
+upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
+
+upload: $(SKETCH_BIN)
+	$(tools.$(UPLOAD_TOOL).upload.pattern)
+
+program erase bootloader: protocol = $(PROGRAMMER_PROTOCOL)
+program: $(SKETCH_BIN)
+	$(tools.$(UPLOAD_TOOL).program.pattern)
+
+erase:
+	$(tools.$(UPLOAD_TOOL).erase.pattern)
+
+bootloader:
+	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
