@@ -1,5 +1,5 @@
 # default options (settable by user)
-BOARD_PINMAPPING ?= old
+BOARD_PINMAPPING ?= anew
 SERIAL_PORT ?= /dev/ttyUSB0
 UPLOAD_VERIFY ?= noverify
 PROGRAM_VERIFY ?= $(UPLOAD_VERIFY)
