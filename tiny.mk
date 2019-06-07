@@ -11,6 +11,13 @@ PROGRAMMER ?= arduinoasisp
 EESAVE ?= aenable
 BOD ?= 1v8
 
+ifndef BOARD_CHIP
+$(error BOARD_CHIP required)
+endif
+ifndef BOARD_CLOCK
+$(error BOARD_CLOCK required)
+endif
+
 VENDOR := ATTinyCore
 PROCESSOR_FAMILY := avr
 PACKAGES := $(HOME)/.arduino15/packages
@@ -34,7 +41,14 @@ build.mcu := $($(BOARD_CPU_MENU).build.mcu)
 build.core := $($(build.board).build.core)
 BOARD_CLOCK_MENU := $(build.board).menu.clock.$(BOARD_CLOCK)
 build.f_cpu := $($(BOARD_CLOCK_MENU).build.f_cpu)
+
+ifeq ($(BOARD_CHIP),85)
+build.variant := $($(build.board).build.variant)
+endif
+ifeq ($(BOARD_CHIP),84)
 build.variant := $($(build.board).menu.pinmapping.$(BOARD_PINMAPPING).build.variant)
+endif
+
 CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 UPLOAD_TOOL := $($(build.board).upload.tool)
