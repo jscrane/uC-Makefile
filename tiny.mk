@@ -1,5 +1,5 @@
 # default options (settable by user)
-BOARD_PINMAPPING ?= old
+BOARD_PINMAPPING ?= anew
 SERIAL_PORT ?= /dev/ttyUSB0
 UPLOAD_VERIFY ?= noverify
 PROGRAM_VERIFY ?= $(UPLOAD_VERIFY)
@@ -10,6 +10,13 @@ BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
 PROGRAMMER ?= arduinoasisp
 EESAVE ?= aenable
 BOD ?= 1v8
+
+ifndef BOARD_CHIP
+$(error BOARD_CHIP required)
+endif
+ifndef BOARD_CLOCK
+$(error BOARD_CLOCK required)
+endif
 
 VENDOR := ATTinyCore
 PROCESSOR_FAMILY := avr
@@ -34,7 +41,14 @@ build.mcu := $($(BOARD_CPU_MENU).build.mcu)
 build.core := $($(build.board).build.core)
 BOARD_CLOCK_MENU := $(build.board).menu.clock.$(BOARD_CLOCK)
 build.f_cpu := $($(BOARD_CLOCK_MENU).build.f_cpu)
+
+ifeq ($(BOARD_CHIP),85)
+build.variant := $($(build.board).build.variant)
+endif
+ifeq ($(BOARD_CHIP),84)
 build.variant := $($(build.board).menu.pinmapping.$(BOARD_PINMAPPING).build.variant)
+endif
+
 CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 UPLOAD_TOOL := $($(build.board).upload.tool)
@@ -65,46 +79,5 @@ bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
--include $(runtime.platform.path)/programmers.txt
-
-program.protocol := $($(PROGRAMMER).program.protocol)
-program.speed := $($(PROGRAMMER).program.speed)
-program.extra_params := $(subst {program.speed},$(program.speed), \
-				$(subst {serial.port},$(serial.port), \
-					$($(PROGRAMMER).program.extra_params)))
-
-upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-upload program erase bootloader: config.path = $(tools.$(UPLOAD_TOOL).config.path)
-upload: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).upload.pattern)
-
-program erase bootloader: protocol = $(program.protocol)
-program: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).program.pattern)
-
-erase:
-	$(tools.$(UPLOAD_TOOL).erase.pattern)
-
-bootloader:
-	$(tools.$(UPLOAD_TOOL).bootloader.pattern)
-
-PROGRAMMER_FLAGS := -p$(build.mcu) -c$(program.protocol) $(program.extra_params)
-
-read-fuses read-flash read-eeprom write-fuses write-eeprom: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-read-fuses read-flash read-eeprom write-fuses write-eeprom: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
-
-read-fuses:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:r:-:h -U hfuse:r:-:h -U efuse:r:-:h -q -q
-
-read-flash:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U flash:r:$(SKETCH_BIN)
-
-read-eeprom:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:r:$(SKETCH_EEP)
-
-write-fuses:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U lfuse:w:$(bootloader.low_fuses) -U hfuse:w:$(bootloader.high_fuses) -U efuse:w:$(bootloader.extended_fuses)
-
-write-eeprom:
-	$(cmd.path) -C $(tools.$(UPLOAD_TOOL).config.path) $(PROGRAMMER_FLAGS) -U eeprom:w:$(SKETCH_EEP)
+-include programmers.mk
+-include $(UPLOAD_TOOL).mk
