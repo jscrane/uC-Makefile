@@ -20,7 +20,7 @@ SKETCHBOOK ?= $(HOME)/sketchbook
 LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
-LIBSUBDIRS := . src src/detail utility src/utility $(BUILD_MCU)
+LIBSUBDIRS := . src src/detail utility src/utility
 LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
 includes += $(foreach d, $(LIBDIRS), -I$d)
 
