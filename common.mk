@@ -13,8 +13,8 @@ TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
 CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
 
 SIZE := $(COMPILER_FAMILY:-gcc=-size)
-NM := $(COMPILER_FAMILY:-gcc=-n)
-CBIN := $(runtime.tools.$(COMPILER_FAMILY).path)/bin
+NM := $(COMPILER_FAMILY:-gcc=-nm)
+CBIN := $(COMPILER_PATH)/bin
 
 SKETCHBOOK ?= $(HOME)/sketchbook
 LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries

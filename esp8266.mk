@@ -19,10 +19,11 @@ PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 PACKAGE_VERSION := 2.5.2
 COMPILER_FAMILY := xtensa-lx106-elf-gcc
 COMPILER_VERSION := 2.5.0-3-20ed2b9
+COMPILER_PATH := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 
 runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
-runtime.tools.$(COMPILER_FAMILY).path := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 

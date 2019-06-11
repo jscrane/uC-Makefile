@@ -26,10 +26,11 @@ ARDUINO_TOOLS := $(PACKAGES)/arduino/tools
 PACKAGE_VERSION := 1.2.4
 COMPILER_FAMILY := avr-gcc
 COMPILER_VERSION := 5.4.0-atmel3.6.1-arduino2
+COMPILER_PATH := $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 
 runtime.ide.version := 10809
 runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
-runtime.tools.$(COMPILER_FAMILY).path := $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
 
 -include $(runtime.platform.path)/boards.txt
