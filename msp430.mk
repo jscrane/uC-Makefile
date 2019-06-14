@@ -27,12 +27,12 @@ build.arch := $(PROCESSOR_FAMILY)
 build.f_cpu := $($(build.board).build.f_cpu)
 CORE := $(runtime.platform.path)/cores/$(PROCESSOR_FAMILY)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
-UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 
 -include common.mk
 
-upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload: path = $(runtime.tools.$(upload.tool).path)
+upload: cmd.path = $(tools.$(upload.tool).cmd.path)
 upload: $(SKETCH_BIN)
-	$(subst ',, $(tools.$(UPLOAD_TOOL).upload.pattern))
+	$(subst ',, $(tools.$(upload.tool).upload.pattern))

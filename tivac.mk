@@ -30,13 +30,13 @@ build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 CORE := $(runtime.platform.path)/cores/$(PROCESSOR_FAMILY)
 includes := -I$(CORE) -I$(build.variant.path) -I$(runtime.platform.path)/system
-UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 
 -include common.mk
 
 upload: path = $(runtime.tools.dslite-7.2.0.2096.path)
 upload: config.path = $(path)
-upload: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
+upload: cmd.path = $(tools.$(upload.tool).cmd.path)
 upload: $(SKETCH_BIN)
-	$(subst ',, $(tools.$(UPLOAD_TOOL).upload.pattern))
+	$(subst ',, $(tools.$(upload.tool).upload.pattern))

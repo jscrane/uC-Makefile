@@ -52,18 +52,18 @@ endif
 
 CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
-UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(build.board).upload.speed)
 upload.speed ?= $($(BOARD_CLOCK_MENU).upload.speed)
-upload.verbose := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
-upload.verify := $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERIFY))
-program.verbose := $(tools.$(UPLOAD_TOOL).program.params.$(PROGRAM_VERBOSE))
-program.verify := $(tools.$(UPLOAD_TOOL).programs.params.$(PROGRAM_VERIFY))
+upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
+upload.verify := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERIFY))
+program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))
+program.verify := $(tools.$(upload.tool).programs.params.$(PROGRAM_VERIFY))
 program.extra_params := $(PROGRAM_EXTRA_PARAMS)
-erase.verbose := $(tools.$(UPLOAD_TOOL).erase.params.$(ERASE_VERBOSE))
-bootloader.verbose := $(tools.$(UPLOAD_TOOL).bootloader.params.$(BOOTLOADER_VERBOSE))
+erase.verbose := $(tools.$(upload.tool).erase.params.$(ERASE_VERBOSE))
+bootloader.verbose := $(tools.$(upload.tool).bootloader.params.$(BOOTLOADER_VERBOSE))
 bootloader.file := $($(build.board).bootloader.file)
 bootloader.low_fuses := $($(BOARD_CLOCK_MENU).bootloader.low_fuses)
 bootloader.bod_bits := $($(build.board).menu.bod.$(BOD).bootloader.bod_bits)
@@ -76,4 +76,4 @@ SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
 
 -include common.mk
 -include programmers.mk
--include $(UPLOAD_TOOL).mk
+-include $(upload.tool).mk
