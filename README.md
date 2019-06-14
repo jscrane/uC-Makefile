@@ -35,9 +35,11 @@ means you can simply do:
 
 ## Variables and Targets
 
-Variables are make macros which can be (optionally) set in the user Makefile.
+Variables are make macros which can be (optionally) set in the user Makefile. They are in uppercase, words separated by underscore. A colon separates the name of the variable from its default value. Parentheses indicate valid alternative values.
 
-### Common Variables and Targets
+Targets are in lowercase. 
+
+### Common
 
 - SKETCH
 - SKETCHBOOK: ~/sketchbook
@@ -45,9 +47,9 @@ Variables are make macros which can be (optionally) set in the user Makefile.
 - TERMINAL_FLAGS: -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
 - LIBRARY_PATH
 - COMPILER_WARNINGS: default
-- SERIAL_PORT: /dev/ttyUSB0 (for Arduino on Linux)
+- SERIAL_PORT: /dev/ttyUSB0
 
-Targets:
+targets:
 - all: default target, compiles and links sketch
 - upload
 - clean
@@ -56,13 +58,13 @@ Targets:
 - path
 - term: starts terminal on SERIAL_PORT
 
-### avr and attiny Variables and Targets
+### avr and attiny variables and targets
 
 - program: writes sketch using a programmer
 - erase
 - bootloader
 
-`avrdude` targets:
+When the programmer is `avrdude` there are some extra targets:
 - read-fuses
 - read-flash
 - read-eeprom
@@ -71,6 +73,7 @@ Targets:
 
 ### attiny-specific Variables:
 
+These variables correspond to menu options in the IDE:
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
 - UPLOAD_VERBOSE: quiet (verbose)
@@ -78,7 +81,7 @@ Targets:
 - EESAVE: aenable (disable)
 - BOD: 1v8 (2v7, 4v3)
 
-### ESP8266 Variables and Targets
+### esp8266 variables and targets
 
 These variables mostly correspond to menu options in the IDE:
 - LWIP_OPTS: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
@@ -94,22 +97,22 @@ These variables mostly correspond to menu options in the IDE:
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 
-Targets:
+targets:
 - fs: creates $(SPIFFS_IMAGE)
 - upload-fs: writes $(SPIFFS_IMAGE) to flash
 
-### esp32 Variables and Targets
+### esp32 variables and targets
 
 - UPLOAD_SPEED: 921600
 - FLASH_FREQ: 80
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 
-Targets:
+targets:
 - fs
 - upload-fs
 
-### msp430 and tivac Variables
+### msp430 and tivac variables
 
 - SKETCHBOOK: ~/Energia
 - SERIAL_PORT: /dev/ttyACM0
