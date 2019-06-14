@@ -41,6 +41,7 @@ Targets are in lowercase.
 
 ### Common
 
+variables:
 - SKETCH
 - SKETCHBOOK: ~/sketchbook
 - TERMINAL: minicom
@@ -58,22 +59,23 @@ targets:
 - path
 - term: starts terminal on SERIAL_PORT
 
-### avr and attiny variables and targets
+### avr and attiny
 
+targets:
 - program: writes sketch using a programmer
 - erase
 - bootloader
 
-When the programmer is `avrdude` there are some extra targets:
+when the programmer is `avrdude` there are some extra targets:
 - read-fuses
 - read-flash
 - read-eeprom
 - write-fuses
 - write-eeprom
 
-### attiny-specific Variables:
+### attiny-specific
 
-These variables correspond to menu options in the IDE:
+these variables correspond to menu options in the IDE:
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
 - UPLOAD_VERBOSE: quiet (verbose)
@@ -81,9 +83,9 @@ These variables correspond to menu options in the IDE:
 - EESAVE: aenable (disable)
 - BOD: 1v8 (2v7, 4v3)
 
-### esp8266 variables and targets
+### esp8266
 
-These variables mostly correspond to menu options in the IDE:
+these variables mostly correspond to menu options in the IDE:
 - LWIP_OPTS: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
 - F_CPU: 80 (160)
 - DEBUG_PORT: Disabled (Serial, Serial1)
@@ -101,8 +103,9 @@ targets:
 - fs: creates $(SPIFFS_IMAGE)
 - upload-fs: writes $(SPIFFS_IMAGE) to flash
 
-### esp32 variables and targets
+### esp32
 
+variables:
 - UPLOAD_SPEED: 921600
 - FLASH_FREQ: 80
 - SPIFFS_DIR: data
@@ -112,8 +115,9 @@ targets:
 - fs
 - upload-fs
 
-### msp430 and tivac variables
+### msp430 and tivac
 
+variables:
 - SKETCHBOOK: ~/Energia
 - SERIAL_PORT: /dev/ttyACM0
 
