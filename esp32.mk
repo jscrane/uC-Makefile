@@ -34,7 +34,7 @@ build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).build.partitions)
-UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.tool := $($(build.board).upload.tool)
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
@@ -43,10 +43,17 @@ SKETCH_EEP := $(SKETCH).partitions.bin
 
 -include common.mk
 
-upload: path = $(runtime.tools.$(UPLOAD_TOOL).path)
-upload: cmd = $(tools.$(UPLOAD_TOOL).cmd.linux)
+upload: path = $(runtime.tools.$(upload.tool).path)
+upload: cmd = $(tools.$(upload.tool).cmd.linux)
 upload: $(SKETCH_BIN)
-	$(tools.$(UPLOAD_TOOL).upload.pattern)
+	$(tools.$(upload.tool).upload.pattern)
+
+ota: network_cmd = $(tools.$(upload.tool).network_cmd)
+ota: serial.port = $(OTA_HOST)
+ota: network.port = $(OTA_PORT)
+ota: network.password = $(OTA_PASSWORD)
+ota: $(SKETCH_BIN)
+	$(tools.$(upload.tool).upload.network_pattern)
 
 PARTITIONS := $(runtime.platform.path)/tools/partitions/default.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
@@ -61,6 +68,6 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 fs: $(SPIFFS_IMAGE)
 
 upload-fs: fs
-	$(runtime.tools.$(UPLOAD_TOOL).path)/$(tools.$(UPLOAD_TOOL).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
+	$(runtime.tools.$(upload.tool).path)/$(tools.$(upload.tool).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
-.PHONY: upload fs upload-fs
+.PHONY: upload fs upload-fs ota

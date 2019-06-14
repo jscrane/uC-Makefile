@@ -52,10 +52,10 @@ build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
 build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
 build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
 
-UPLOAD_TOOL := $($(build.board).upload.tool)
+upload.tool := $($(build.board).upload.tool)
 upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
 upload.speed = $(UPLOAD_SPEED)
-upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
+upload.verbose = $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(SERIAL_PORT)
 
 build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
@@ -69,9 +69,16 @@ OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 
 -include common.mk
 
-upload: cmd = $(tools.$(UPLOAD_TOOL).cmd)
+upload: cmd = $(tools.$(upload.tool).cmd)
 upload: $(SKETCH_BIN)
-	$(subst "",, $(tools.$(UPLOAD_TOOL).upload.pattern))
+	$(subst "",, $(tools.$(upload.tool).upload.pattern))
+
+ota: network_cmd = $(tools.$(upload.tool).network_cmd)
+ota: serial.port = $(OTA_HOST)
+ota: network.port = $(OTA_PORT)
+ota: network.password = $(OTA_PASSWORD)
+ota: $(SKETCH_BIN)
+	$(tools.$(upload.tool).upload.network_pattern)
 
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
@@ -81,4 +88,4 @@ fs: $(SPIFFS_IMAGE)
 upload-fs: $(SPIFFS_IMAGE)
 	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $(SPIFFS_IMAGE) --end
 
-.PHONY: upload fs upload-fs
+.PHONY: upload fs upload-fs ota

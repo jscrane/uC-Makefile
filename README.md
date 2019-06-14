@@ -98,10 +98,14 @@ these variables mostly correspond to menu options in the IDE:
 - UPLOAD_VERBOSE: quiet
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
+- OTA_HOST: the hostname for OTA upload
+- OTA_PORT: the OTA listening port
+- OTA_PASSWORD: the auth password for OTA
 
 targets:
 - fs: creates $(SPIFFS_IMAGE)
 - upload-fs: writes $(SPIFFS_IMAGE) to flash
+- ota
 
 ### esp32
 
@@ -110,10 +114,14 @@ variables:
 - FLASH_FREQ: 80
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
+- OTA_HOST
+- OTA_PORT
+- OTA_PASSWORD
 
 targets:
 - fs
 - upload-fs
+- ota
 
 ### msp430 and tivac
 
