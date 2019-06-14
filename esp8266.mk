@@ -27,7 +27,7 @@ runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 
--include $(runtime.platform.path)/boards.txt
+-include boards.txt.mk
 -include platform.txt.mk
 
 build.board := $(BOARD)
@@ -54,8 +54,7 @@ build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
 SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
 
 UPLOAD_TOOL := $($(build.board).upload.tool)
-$(eval upload.erase_cmd := $(subst {,$${,\
-	$($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)))
+upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(SERIAL_PORT)

@@ -33,7 +33,7 @@ runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_V
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
 
--include $(runtime.platform.path)/boards.txt
+-include boards.txt.mk
 -include platform.txt.mk
 
 build.board := $(BOARD)
@@ -64,11 +64,11 @@ program.verify := $(tools.$(UPLOAD_TOOL).programs.params.$(PROGRAM_VERIFY))
 program.extra_params := $(PROGRAM_EXTRA_PARAMS)
 erase.verbose := $(tools.$(UPLOAD_TOOL).erase.params.$(ERASE_VERBOSE))
 bootloader.verbose := $(tools.$(UPLOAD_TOOL).bootloader.params.$(BOOTLOADER_VERBOSE))
-$(eval bootloader.file := $(subst {,$${,$($(build.board).bootloader.file)))
+bootloader.file := $($(build.board).bootloader.file)
 bootloader.low_fuses := $($(BOARD_CLOCK_MENU).bootloader.low_fuses)
 bootloader.bod_bits := $($(build.board).menu.bod.$(BOD).bootloader.bod_bits)
 bootloader.eesave_bit := $($(build.board).menu.eesave.$(EESAVE).bootloader.eesave_bit)
-$(eval bootloader.high_fuses := $(subst {,$${,$($(build.board).bootloader.high_fuses)))
+bootloader.high_fuses := $($(build.board).bootloader.high_fuses)
 bootloader.extended_fuses := $($(build.board).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 
