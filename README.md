@@ -47,6 +47,7 @@ Variables are make macros which can be (optionally) set in the user Makefile.
 - COMPILER_WARNINGS: default
 - SERIAL_PORT: /dev/ttyUSB0 (for Arduino on Linux)
 
+Targets:
 - all: default target, compiles and links sketch
 - upload
 - clean
@@ -55,20 +56,20 @@ Variables are make macros which can be (optionally) set in the user Makefile.
 - path
 - term: starts terminal on SERIAL_PORT
 
-### AVR and ATTiny Variables and Targets
+### avr and attiny Variables and Targets
 
 - program: writes sketch using a programmer
 - erase
 - bootloader
 
-`avrdude` specific targets:
+`avrdude` targets:
 - read-fuses
 - read-flash
 - read-eeprom
 - write-fuses
 - write-eeprom
 
-ATTiny-specific Variables:
+### attiny-specific Variables:
 
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
@@ -79,8 +80,7 @@ ATTiny-specific Variables:
 
 ### ESP8266 Variables and Targets
 
-These variables correspond to menu options in the IDE:
-
+These variables mostly correspond to menu options in the IDE:
 - LWIP_OPTS: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
 - F_CPU: 80 (160)
 - DEBUG_PORT: Disabled (Serial, Serial1)
@@ -94,18 +94,25 @@ These variables correspond to menu options in the IDE:
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 
+Targets:
 - fs: creates $(SPIFFS_IMAGE)
 - upload-fs: writes $(SPIFFS_IMAGE) to flash
 
-### ESP32 Variables and Targets
+### esp32 Variables and Targets
 
 - UPLOAD_SPEED: 921600
 - FLASH_FREQ: 80
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 
+Targets:
 - fs
 - upload-fs
+
+### msp430 and tivac Variables
+
+- SKETCHBOOK: ~/Energia
+- SERIAL_PORT: /dev/ttyACM0
 
 ## Credits
 
