@@ -174,11 +174,11 @@ $(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
 $(BUILD_CORE):
 	-mkdir -p $@
 
-platform.mk: $(runtime.platform.path)/platform.txt
+%.txt.mk: $(runtime.platform.path)/%.txt
 	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' < $< > $@
 
 clean:
-	-rm -f $(OBJECTS) $(DEPS) platform.mk
+	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
 	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS)
 
 path:

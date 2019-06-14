@@ -34,7 +34,7 @@ runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
 
 -include $(runtime.platform.path)/boards.txt
--include platform.mk
+-include platform.txt.mk
 
 build.board := $(BOARD)
 BOARD_CPU_MENU := $(build.board).menu.chip.$(BOARD_CHIP)

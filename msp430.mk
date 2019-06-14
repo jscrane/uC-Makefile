@@ -19,7 +19,7 @@ runtime.tools.mspdebug.path := $(PACKAGE_DIR)/tools/mspdebug/0.24
 runtime.tools.dslite-8.2.0.1400.path := $(PACKAGE_DIR)/tools/8.2.0.1400
 
 -include $(runtime.platform.path)/boards.txt
--include platform.mk
+-include platform.txt.mk
 
 build.board := $(BOARD)
 build.mcu := $($(build.board).build.mcu)

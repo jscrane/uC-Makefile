@@ -1,8 +1,8 @@
--include $(runtime.platform.path)/programmers.txt
+-include programmers.txt.mk
 
 program.protocol := $($(PROGRAMMER).program.protocol)
 program.speed := $($(PROGRAMMER).program.speed)
-$(eval program.extra_params := $(subst {,$${,$($(PROGRAMMER).program.extra_params)))
+program.extra_params := $($(PROGRAMMER).program.extra_params)
 
 upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
 upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)

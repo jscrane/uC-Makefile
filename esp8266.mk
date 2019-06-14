@@ -28,7 +28,7 @@ runtime.tools.python.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 
 -include $(runtime.platform.path)/boards.txt
--include platform.mk
+-include platform.txt.mk
 
 build.board := $(BOARD)
 build.arch := $($(build.board).build.mcu)
