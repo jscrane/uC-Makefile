@@ -6,8 +6,8 @@ DEBUG_LEVEL ?= None____
 EXCEPTIONS ?= disabled
 VTABLES ?= flash
 SSL ?= all
+WIPE ?= none
 UPLOAD_SPEED ?= 921600
-UPLOAD_WIPE ?= none
 UPLOAD_VERBOSE ?= quiet
 SERIAL_PORT ?= /dev/ttyUSB0
 SPIFFS_DIR ?= data
@@ -54,8 +54,8 @@ build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
 SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
 
 UPLOAD_TOOL := $($(build.board).upload.tool)
-upload.erase_cmd = $(subst "{build.rfcal_addr}", $(build.rfcal_addr), \
-	$($(build.board).menu.wipe.$(UPLOAD_WIPE).upload.erase_cmd))
+$(eval upload.erase_cmd := $(subst {,$${,\
+	$($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)))
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(UPLOAD_TOOL).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(SERIAL_PORT)

@@ -2,9 +2,7 @@
 
 program.protocol := $($(PROGRAMMER).program.protocol)
 program.speed := $($(PROGRAMMER).program.speed)
-program.extra_params := $(subst {program.speed},$(program.speed), \
-				$(subst {serial.port},$(serial.port), \
-					$($(PROGRAMMER).program.extra_params)))
+$(eval program.extra_params := $(subst {,$${,$($(PROGRAMMER).program.extra_params)))
 
 upload program erase bootloader: path = $(runtime.tools.$(UPLOAD_TOOL).path)
 upload program erase bootloader: cmd.path = $(tools.$(UPLOAD_TOOL).cmd.path)
