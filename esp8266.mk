@@ -51,7 +51,6 @@ build.spiffs_pagesize := $($(FLASH_MENU).build.spiffs_pagesize)
 build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
 build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
 build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
-SPIFFS_SIZE != echo $$(( $(build.spiffs_end) - $(build.spiffs_start) ))
 
 UPLOAD_TOOL := $($(build.board).upload.tool)
 upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
@@ -75,7 +74,7 @@ upload: $(SKETCH_BIN)
 	$(subst "",, $(tools.$(UPLOAD_TOOL).upload.pattern))
 
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
-	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $(SPIFFS_SIZE) $@
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
 
 fs: $(SPIFFS_IMAGE)
 
