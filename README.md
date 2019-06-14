@@ -1,5 +1,4 @@
-uC-Makefile
-===========
+# uC-Makefile
 
 A Makefile for popular Microcontrollers supporting Energia (msp430 and 
 tivac boards) and Arduino-1.8.x (avr, attiny, esp8266 and esp32 boards).
@@ -11,8 +10,7 @@ If:
 - You want more control over the build process than it gives you (e.g., compiler optimisation levels)
 - ... then this is for you!
 
-Configuration
--------------
+## Configuration
 Install the makefile fragments in _somedir_.
 
 Create a Makefile in your sketch directory, such as this, for a [TI Launchpad](https://en.wikipedia.org/wiki/TI_MSP430):
@@ -35,21 +33,81 @@ means you can simply do:
 
 	make
 
-Other Settings
---------------
+## Variables and Targets
 
-Some settings useful to override and their defaults are:
+Variables are make macros which can be (optionally) set in the user Makefile.
 
-- SKETCHBOOK (~/energia/sketchbook or ~/sketchbook)
-- SERIAL_PORT (/dev/ttyUSB0)
-- SKETCH (e.g., Blink.ino)
-- SOURCES (e.g., foo.cpp bar.c)
-- CPPFLAGS (e.g., local #defines)
-- LIBRARY_PATH (additions to the default Arduino search-path for libraries)
-- LIBRARIES (any other libraries required, not #included in the sketch)
+### Common Variables and Targets
 
-Credits
--------
+- SKETCH
+- SKETCHBOOK: ~/sketchbook
+- TERMINAL: minicom
+- TERMINAL_FLAGS: -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
+- LIBRARY_PATH
+- COMPILER_WARNINGS: default
+- SERIAL_PORT: /dev/ttyUSB0 (for Arduino on Linux)
+
+- all: default target, compiles and links sketch
+- upload
+- clean
+- size
+- nm
+- path
+- term: starts terminal on SERIAL_PORT
+
+### AVR and ATTiny Variables and Targets
+
+- program: writes sketch using a programmer
+- erase
+- bootloader
+
+`avrdude` specific targets:
+- read-fuses
+- read-flash
+- read-eeprom
+- write-fuses
+- write-eeprom
+
+ATTiny-specific Variables:
+
+- BOARD_PINMAPPING: anew (old)
+- UPLOAD_VERIFY: noverify
+- UPLOAD_VERBOSE: quiet (verbose)
+- PROGRAMMER: arduinoasisp (avrisp, avrispmkii, usbtinyisp, usbasp, parallel, arduinoasispatmega32u4, usbtinyisp2, dragon, ponyser, stk500)
+- EESAVE: aenable (disable)
+- BOD: 1v8 (2v7, 4v3)
+
+### ESP8266 Variables and Targets
+
+These variables correspond to menu options in the IDE:
+
+- LWIP_OPTS: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
+- F_CPU: 80 (160)
+- DEBUG_PORT: Disabled (Serial, Serial1)
+- DEBUG_LEVEL: None____ (SSL, TLS_MEM, HTTP_CLIENT, HTTP_SERVER, ..., CORE, WIFI, UPDATER, OTA, OOM, ...)
+- EXCEPTIONS: disabled (enabled)
+- VTABLES: flash (heap, iram)
+- SSL: all (basic)
+- WIPE: none  (sdk, all)
+- UPLOAD_SPEED: 921600 (9600, 57600, 115200, 230400, 460800, 512000)
+- UPLOAD_VERBOSE: quiet
+- SPIFFS_DIR: data
+- SPIFFS_IMAGE: spiffs.img
+
+- fs: creates $(SPIFFS_IMAGE)
+- upload-fs: writes $(SPIFFS_IMAGE) to flash
+
+### ESP32 Variables and Targets
+
+- UPLOAD_SPEED: 921600
+- FLASH_FREQ: 80
+- SPIFFS_DIR: data
+- SPIFFS_IMAGE: spiffs.img
+
+- fs
+- upload-fs
+
+## Credits
 
 - elpaso's [Makefile](https://github.com/elpaso/energia-makefile) for msp430 provided inspiration.
 - attiny support is largely due to SpenceKonde's [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore)
