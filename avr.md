@@ -12,13 +12,22 @@ when the programmer is `avrdude` there are some extra targets:
 - write-fuses
 - write-eeprom
 
-### attiny-specific
+### avr variables
+
+- UPLOAD_VERIFY: -V
+- UPLOAD_VERBOSE: quiet
+- PROGRAM_VERBOSE
+- ERASE_VERBOSE
+- BOOTLOADER_VERBOSE
+- PROGRAMMER: arduinoasisp (avrisp, avrispmkii, usbtinyisp, usbasp, parallel, arduinoasispatmega32u4, usbtinyisp2, dragon, ponyser, stk500)
+
+### attiny variables
 
 these variables correspond to menu options in the IDE:
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
 - UPLOAD_VERBOSE: quiet (verbose)
-- PROGRAMMER: arduinoasisp (avrisp, avrispmkii, usbtinyisp, usbasp, parallel, arduinoasispatmega32u4, usbtinyisp2, dragon, ponyser, stk500)
+- PROGRAMMER: arduinoasisp
 - EESAVE: aenable (disable)
 - BOD: 1v8 (2v7, 4v3)
 
