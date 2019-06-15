@@ -31,3 +31,28 @@ these variables correspond to menu options in the IDE:
 - EESAVE: aenable (disable)
 - BOD: 1v8 (2v7, 4v3)
 
+### examples
+
+Uno:
+```
+BOARD := uno
+TERMINAL_SPEED := 115200
+include avr.mk
+```
+
+Pro/Pro Mini with 8MHz CPU:
+```
+BOARD := pro
+BOARD_CPU := 8MHzatmega328
+TERMINAL_SPEED := 115200
+include avr.mk
+```
+
+ATTiny84 with Optiboot and 8MHz internal clock:
+```
+BOARD := attinyx4opti
+BOARD_CHIP := 84
+BOARD_CLOCK := 8internal
+TERMINAL_SPEED := 19200
+include tiny.mk
+```
