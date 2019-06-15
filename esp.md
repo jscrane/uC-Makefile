@@ -37,3 +37,23 @@ targets:
 - fs
 - upload-fs
 - ota
+
+### examples
+
+WeMos D1 Mini:
+```
+BOARD := d1_mini
+UPLOAD_SPEED := 921600
+TERMINAL_SPEED := 115200
+FLASH_SIZE := 4M1M
+F_CPU := 80
+include esp8266.mk
+```
+
+Node32s:
+```
+BOARD := node32s
+UPLOAD_SPEED := 921600
+TERMINAL_SPEED := 115200
+include esp32.mk
+```
