@@ -14,6 +14,7 @@ when the programmer is `avrdude` there are some extra targets:
 
 ### avr variables
 
+- BOARD_CPU: the clock speed of the cpu, if required
 - UPLOAD_VERIFY: -V
 - UPLOAD_VERBOSE: quiet
 - PROGRAM_VERBOSE
@@ -23,7 +24,9 @@ when the programmer is `avrdude` there are some extra targets:
 
 ### attiny variables
 
-these variables correspond to menu options in the IDE:
+these correspond to menu options in the IDE:
+- BOARD_CHIP: _mandatory_
+- BOARD_CLOCK: _mandatory_
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
 - UPLOAD_VERBOSE: quiet (verbose)
