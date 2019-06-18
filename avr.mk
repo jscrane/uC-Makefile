@@ -20,25 +20,31 @@ runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_V
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino14
 
--include $(runtime.platform.path)/boards.txt
+-include boards.txt.mk
 -include platform.txt.mk
 
 build.board := $(BOARD)
+BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
+
 build.mcu := $($(BOARD).build.mcu)
+ifndef build.mcu
+build.mcu := $($(BOARD_CPU_MENU).build.mcu)
+endif
 build.f_cpu := $($(BOARD).build.f_cpu)
+ifndef build.f_cpu
+build.f_cpu := $($(BOARD_CPU_MENU).build.f_cpu)
+endif
 build.core := $($(build.board).build.core)
 
-BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
-build.mcu ?= $($(BOARD_CPU_MENU).build.mcu)
-build.f_cpu ?= $($(BOARD_CPU_MENU).build.f_cpu)
-
-CORE := $(runtime.platform.path)/cores/$(VENDOR)
+CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
 upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(BOARD).upload.speed)
-upload.speed ?= $($(BOARD_CPU_MENU).upload.speed)
+ifndef upload.speed
+upload.speed := $($(BOARD_CPU_MENU).upload.speed)
+endif
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(UPLOAD_VERIFY)
 program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))
