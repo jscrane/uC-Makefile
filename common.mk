@@ -29,7 +29,7 @@ archive_file := libcore.a
 archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
-CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
+CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/$(build.core)/, *.c *.cpp))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
 LIBRARY_SOURCES := $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
@@ -108,7 +108,7 @@ endef
 
 $(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
 
-ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS), $(archive_file_path)($(notdir $o)))
+ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
 define library-compile-targets
 $(BUILD_LIBS)/$1.o: source_file = $1

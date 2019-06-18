@@ -26,6 +26,7 @@ runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino14
 build.board := $(BOARD)
 build.mcu := $($(BOARD).build.mcu)
 build.f_cpu := $($(BOARD).build.f_cpu)
+build.core := $($(build.board).build.core)
 
 BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
 build.mcu ?= $($(BOARD_CPU_MENU).build.mcu)

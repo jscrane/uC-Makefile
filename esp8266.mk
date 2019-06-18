@@ -32,7 +32,9 @@ runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 
 build.board := $(BOARD)
 build.arch := $($(build.board).build.mcu)
-CORE := $(runtime.platform.path)/cores/$(build.arch)
+build.core := $($(build.board).build.core)
+
+CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.board) \
 	-I$(runtime.platform.path)/tools/sdk/$($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_include)
 build.f_cpu := $($(build.board).menu.xtal.$(F_CPU).build.f_cpu)
