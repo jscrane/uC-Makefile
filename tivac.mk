@@ -21,6 +21,7 @@ runtime.tools.dslite-7.2.0.2096.path := $(PACKAGE_DIR)/tools/dslite/7.2.0.2096
 -include platform.txt.mk
 
 build.board := $(BOARD)
+build.core := $($(build.board).build.core)
 build.mcu := $($(build.board).build.mcu)
 build.arch := $(PROCESSOR_FAMILY)
 build.f_cpu := $($(build.board).build.f_cpu)
@@ -28,7 +29,7 @@ build.system.path := $(runtime.platform.path)/system
 build.ldscript := $($(build.board).build.ldscript)
 build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
-CORE := $(runtime.platform.path)/cores/$(PROCESSOR_FAMILY)
+CORE := $(runtime.platform.path)/cores/$(build.core)
 includes := -I$(CORE) -I$(build.variant.path) -I$(runtime.platform.path)/system
 upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
