@@ -71,8 +71,6 @@ build.variant := $($(build.board).menu.pinmapping.$(board.pinmapping).build.vari
 endif
 endif
 
-CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)

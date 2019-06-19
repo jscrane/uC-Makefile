@@ -22,13 +22,14 @@ LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p"
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 LIBSUBDIRS := . src src/detail utility src/utility
 LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
-includes += $(foreach d, $(LIBDIRS), -I$d)
 
 BUILD_CORE := $(build.path)/core
 archive_file := libcore.a
 archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
+CORE := $(runtime.platform.path)/cores/$(build.core)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach d, $(LIBDIRS), -I$d)
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 

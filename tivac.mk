@@ -30,8 +30,6 @@ build.ldscript := $($(build.board).build.ldscript)
 build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 build.system.path := $(runtime.platform.path)/system
-CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(build.variant.path)
 upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 

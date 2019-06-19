@@ -37,8 +37,6 @@ endif
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
-CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)

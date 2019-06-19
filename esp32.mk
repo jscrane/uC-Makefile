@@ -29,8 +29,6 @@ build.arch := $($(build.board).build.mcu)
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
-CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 build.f_cpu := $($(build.board).build.f_cpu)
 build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_size := $($(build.board).build.flash_size)
