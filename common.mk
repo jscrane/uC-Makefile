@@ -42,13 +42,13 @@ $1.o: source_file = $1
 $1.o: object_file = $1.o
 
 ifeq ($(suffix $1),.c)
-$1.o: compiler.c.extra_flags = $(CPPFLAGS)
+$1.o: compiler.c.extra_flags += $(CPPFLAGS)
 $1.o:
 	$$(recipe.c.o.pattern)
 endif
 
 ifeq ($(suffix $1),.cpp)
-$1.o: compiler.cpp.extra_flags = $(CPPFLAGS)
+$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
 $1.o:
 	$$(recipe.cpp.o.pattern)
 endif
@@ -68,7 +68,7 @@ compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
 define compile-sketch
 $1.cpp.o: source_file = $1
 $1.cpp.o: object_file = $1.cpp.o
-$1.cpp.o: compiler.cpp.extra_flags = -x c++ -include $(PLATFORM_H) $(CPPFLAGS)
+$1.cpp.o: compiler.cpp.extra_flags += -x c++ -include $(PLATFORM_H) $(CPPFLAGS)
 $1.cpp.o:
 	$$(recipe.cpp.o.pattern)
 endef
@@ -115,14 +115,14 @@ $(BUILD_LIBS)/$1.o: source_file = $1
 $(BUILD_LIBS)/$1.o: object_file = $(BUILD_LIBS)/$1.o
 
 ifeq ($(suffix $1),.c)
-$(BUILD_LIBS)/$1.o: compiler.c.extra_flags = $(CPPFLAGS)
+$(BUILD_LIBS)/$1.o: compiler.c.extra_flags += $(CPPFLAGS)
 $(BUILD_LIBS)/$1.o:
 	mkdir -p $$(dir $$@)
 	$$(recipe.c.o.pattern)
 endif
 
 ifeq ($(suffix $1),.cpp)
-$(BUILD_LIBS)/$1.o: compiler.cpp.extra_flags = $(CPPFLAGS)
+$(BUILD_LIBS)/$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
 $(BUILD_LIBS)/$1.o:
 	mkdir -p $$(dir $$@)
 	$$(recipe.cpp.o.pattern)
