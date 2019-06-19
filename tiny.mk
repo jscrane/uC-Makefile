@@ -27,40 +27,48 @@ runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
 
 -include boards.txt.mk
-include boards.local.txt.mk
+-include boards.local.txt.mk
 -include platform.txt.mk
-
-build.board := $(BOARD)
-board.chip := $($(build.board).chip)
-board.chip ?= $(BOARD_CHIP)
-build.mcu := $($(build.board).build.mcu)
-BOARD_CPU_MENU := $(build.board).menu.chip.$(board.chip)
-build.mcu ?= $($(BOARD_CPU_MENU).build.mcu)
-build.core := $($(build.board).build.core)
-board.clock := $($(build.board).clock)
-board.clock ?= $(BOARD_CLOCK)
-build.f_cpu ?= $($(build.board).build.f_cpu)
-BOARD_CLOCK_MENU := $(build.board).menu.clock.$(board.clock)
-build.f_cpu ?= $($(BOARD_CLOCK_MENU).build.f_cpu)
 
 ifndef BOARD
 $(error BOARD required)
 endif
+build.board := $(BOARD)
+build.core := $($(build.board).build.core)
+board.chip := $($(build.board).chip)
 ifndef board.chip
-$(error BOARD_CHIP required)
+board.chip := $(BOARD_CHIP)
 endif
+
+build.mcu := $($(build.board).build.mcu)
+ifndef build.mcu
+BOARD_CHIP_MENU := $(build.board).menu.chip.$(board.chip)
+build.mcu := $($(BOARD_CHIP_MENU).build.mcu)
+endif
+
+board.clock := $($(build.board).clock)
 ifndef board.clock
-$(error BOARD_CLOCK required)
+board.clock := $(BOARD_CLOCK)
+endif
+BOARD_CLOCK_MENU := $(build.board).menu.clock.$(board.clock)
+build.f_cpu := $($(build.board).build.f_cpu)
+ifndef build.f_cpu
+build.f_cpu := $($(BOARD_CLOCK_MENU).build.f_cpu)
 endif
 
 ifeq ($(board.chip),85)
 build.variant := $($(build.board).build.variant)
 endif
+
 ifeq ($(board.chip),84)
 board.pinmapping := $($(build.board).pinmapping)
+ifndef board.pinmapping
+board.pinmapping := $(BOARD_PINMAPPING)
+endif
 build.variant := $($(build.board).build.variant)
-board.pinmapping ?= $(BOARD_PINMAPPING)
-build.variant ?= $($(build.board).menu.pinmapping.$(board.pinmapping).build.variant)
+ifndef build.variant
+build.variant := $($(build.board).menu.pinmapping.$(board.pinmapping).build.variant)
+endif
 endif
 
 CORE := $(runtime.platform.path)/cores/$(build.core)
@@ -69,7 +77,9 @@ upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(build.board).upload.speed)
-upload.speed ?= $($(BOARD_CLOCK_MENU).upload.speed)
+ifndef upload.speed
+upload.speed := $($(BOARD_CLOCK_MENU).upload.speed)
+endif
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERIFY))
 program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))
@@ -79,7 +89,9 @@ erase.verbose := $(tools.$(upload.tool).erase.params.$(ERASE_VERBOSE))
 bootloader.verbose := $(tools.$(upload.tool).bootloader.params.$(BOOTLOADER_VERBOSE))
 bootloader.file := $($(build.board).bootloader.file)
 bootloader.low_fuses := $($(build.board).bootloader.low_fuses)
-bootloader.low_fuses ?= $($(BOARD_CLOCK_MENU).bootloader.low_fuses)
+ifndef bootloader.low_fuses
+bootloader.low_fuses := $($(BOARD_CLOCK_MENU).bootloader.low_fuses)
+endif
 bootloader.bod_bits := $($(build.board).menu.bod.$(BOD).bootloader.bod_bits)
 bootloader.eesave_bit := $($(build.board).menu.eesave.$(EESAVE).bootloader.eesave_bit)
 bootloader.high_fuses := $($(build.board).bootloader.high_fuses)
