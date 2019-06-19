@@ -71,7 +71,6 @@ build.variant := $($(build.board).menu.pinmapping.$(board.pinmapping).build.vari
 endif
 endif
 
-upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(build.board).upload.speed)

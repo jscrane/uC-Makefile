@@ -37,7 +37,6 @@ endif
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
-upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
 upload.speed := $($(BOARD).upload.speed)

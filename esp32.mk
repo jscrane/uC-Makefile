@@ -35,7 +35,6 @@ build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).build.partitions)
-upload.tool := $($(build.board).upload.tool)
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 

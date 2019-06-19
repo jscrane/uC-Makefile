@@ -30,7 +30,6 @@ build.ldscript := $($(build.board).build.ldscript)
 build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 build.system.path := $(runtime.platform.path)/system
-upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 
 -include common.mk

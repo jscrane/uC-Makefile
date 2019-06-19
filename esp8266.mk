@@ -52,7 +52,6 @@ build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
 build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
 build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
 
-upload.tool := $($(build.board).upload.tool)
 upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))

@@ -2,6 +2,7 @@ SKETCH ?= $(wildcard *.ino)
 
 build.project_name := $(SKETCH)
 build.path := .build
+upload.tool := $($(build.board).upload.tool)
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SKETCH_BIN := $(build.path)/$(SKETCH).bin
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
