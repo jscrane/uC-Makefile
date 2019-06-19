@@ -36,8 +36,7 @@ build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
 CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant) \
-	-I$(runtime.platform.path)/tools/sdk/$($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_include)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 build.f_cpu := $($(build.board).menu.xtal.$(F_CPU).build.f_cpu)
 build.debug_port := $($(build.board).menu.dbg.$(DEBUG_PORT).build.debug_port)
 build.debug_level := $($(build.board).menu.lvl.$(DEBUG_LEVEL).build.debug_level)
