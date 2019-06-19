@@ -23,11 +23,12 @@ runtime.tools.dslite-8.2.0.1400.path := $(PACKAGE_DIR)/tools/8.2.0.1400
 
 build.board := $(BOARD)
 build.core := $($(build.board).build.core)
+build.variant := $($(build.board).build.variant)
 build.mcu := $($(build.board).build.mcu)
 build.arch := $(PROCESSOR_FAMILY)
 build.f_cpu := $($(build.board).build.f_cpu)
 CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 

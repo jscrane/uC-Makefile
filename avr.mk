@@ -35,9 +35,10 @@ ifndef build.f_cpu
 build.f_cpu := $($(BOARD_CPU_MENU).build.f_cpu)
 endif
 build.core := $($(build.board).build.core)
+build.variant := $($(build.board).build.variant)
 
 CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$($(build.board).build.variant)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant)
 upload.tool := $($(build.board).upload.tool)
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
