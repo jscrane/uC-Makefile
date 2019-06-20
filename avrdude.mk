@@ -13,7 +13,7 @@ read-eeprom:
 	$(cmd.path) -C $(tools.$(upload.tool).config.path) $(PROGRAMMER_FLAGS) -U eeprom:r:$(SKETCH_EEP)
 
 write-fuses:
-	$(cmd.path) -C $(tools.$(upload.tool).config.path) $(PROGRAMMER_FLAGS) -U lfuse:w:$(bootloader.low_fuses) -U hfuse:w:$(bootloader.high_fuses) -U efuse:w:$(bootloader.extended_fuses)
+	$(cmd.path) -C $(tools.$(upload.tool).config.path) $(PROGRAMMER_FLAGS) -U lfuse:w:$(bootloader.low_fuses):m -U hfuse:w:$(bootloader.high_fuses):m -U efuse:w:$(bootloader.extended_fuses):m
 
 write-eeprom:
 	$(cmd.path) -C $(tools.$(upload.tool).config.path) $(PROGRAMMER_FLAGS) -U eeprom:w:$(SKETCH_EEP)
