@@ -10,9 +10,9 @@ PROGRAMMER ?= arduinoasisp
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-PACKAGE_VERSION := 1.6.23
+PACKAGE_VERSION := 1.8.1
 COMPILER_FAMILY := avr-gcc
-COMPILER_VERSION := 5.4.0-atmel3.6.1-arduino2
+COMPILER_VERSION := 7.3.0-atmel3.6.1-arduino5
 COMPILER_PATH := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
 
 runtime.ide.version := 10809
