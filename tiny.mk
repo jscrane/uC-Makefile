@@ -16,13 +16,11 @@ PROCESSOR_FAMILY := avr
 PACKAGES := $(HOME)/.arduino15/packages
 PACKAGE_DIR := $(PACKAGES)/$(VENDOR)
 ARDUINO_TOOLS := $(PACKAGES)/arduino/tools
-PACKAGE_VERSION := 1.3.2
 COMPILER_FAMILY := avr-gcc
-COMPILER_VERSION := 7.3.0-atmel3.6.1-arduino5
-COMPILER_PATH := $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+COMPILER_PATH := $(wildcard $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/*)
 
 runtime.ide.version := 10809
-runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
 

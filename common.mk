@@ -198,6 +198,10 @@ size: $(SKETCH_ELF)
 nm: $(SKETCH_ELF)
 	$(CBIN)/$(NM) -n $<
 
-.PHONY: clean all path term size nm
+version:
+	@echo $(VENDOR) $(PROCESSOR_FAMILY) $(notdir $(runtime.platform.path))
+	@echo $(COMPILER_FAMILY) $(notdir $(COMPILER_PATH))
+
+.PHONY: clean all path term size nm version
 
 -include $(DEPS)

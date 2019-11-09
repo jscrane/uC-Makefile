@@ -6,14 +6,13 @@ SKETCHBOOK ?= $(HOME)/energia
 VENDOR := energia
 PROCESSOR_FAMILY := msp430
 PACKAGE_DIR := $(HOME)/.energia15/packages/$(VENDOR)
-PACKAGE_VERSION := 1.0.4
 COMPILER_FAMILY := msp430-gcc
-COMPILER_VERSION := 4.6.6
-COMPILER_PATH := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
+COMPILER_VERSION := $(notdir $(COMPILER_PATH))
 PLATFORM_H = Energia.h
 
 runtime.ide.version := 10809
-runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY)-$(COMPILER_VERSION).path := $(COMPILER_PATH)
 runtime.tools.mspdebug.path := $(PACKAGE_DIR)/tools/mspdebug/0.24
 runtime.tools.dslite-8.2.0.1400.path := $(PACKAGE_DIR)/tools/8.2.0.1400

@@ -8,13 +8,11 @@ SPIFFS_IMAGE ?= spiffs.img
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-PACKAGE_VERSION := 1.0.4
 COMPILER_FAMILY := xtensa-esp32-elf-gcc
-COMPILER_VERSION := 1.22.0-80-g6c4433a-5.2.0
-COMPILER_PATH := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 
 runtime.ide.version := 10809
-runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python.path := /usr/bin
 runtime.tools.esptool_py.path := $(PACKAGE_DIR)/tools/esptool_py/2.6.1

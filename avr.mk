@@ -10,13 +10,11 @@ PROGRAMMER ?= arduinoasisp
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-PACKAGE_VERSION := 1.8.1
 COMPILER_FAMILY := avr-gcc
-COMPILER_VERSION := 7.3.0-atmel3.6.1-arduino5
-COMPILER_PATH := $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/$(COMPILER_VERSION)
+COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 
 runtime.ide.version := 10809
-runtime.platform.path := $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/$(PACKAGE_VERSION)
+runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino17
 
