@@ -84,6 +84,6 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 fs: $(SPIFFS_IMAGE)
 
 upload-fs: $(SPIFFS_IMAGE)
-	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $(SPIFFS_IMAGE) --end
+	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $(SPIFFS_IMAGE)
 
 .PHONY: upload fs upload-fs ota
