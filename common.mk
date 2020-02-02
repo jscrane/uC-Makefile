@@ -184,7 +184,7 @@ $(BUILD_CORE):
 
 clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
-	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS)
+	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
 
 path:
 	@echo $PATH

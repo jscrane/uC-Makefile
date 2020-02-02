@@ -78,6 +78,8 @@ ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
+BUILD_EXTRAS := $(SPIFFS_IMAGE)
+
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
 
