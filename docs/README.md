@@ -7,7 +7,7 @@ Variables are make macros which can be (optionally) set in the user Makefile. Th
 - SKETCHBOOK: ~/sketchbook
 - TERMINAL: minicom
 - TERMINAL_FLAGS: -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
-- LIBRARY_PATH
+- LOCAL_LIBRARY_PATH
 - LIBRARIES
 - COMPILER_WARNINGS: default
 - SERIAL_PORT: /dev/ttyUSB0

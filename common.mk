@@ -18,7 +18,7 @@ NM := $(COMPILER_FAMILY:-gcc=-nm)
 CBIN := $(COMPILER_PATH)/bin
 
 SKETCHBOOK ?= $(HOME)/sketchbook
-LIBRARY_PATH ?= $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
+LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 LIBSUBDIRS := . src src/detail utility src/utility
