@@ -22,7 +22,7 @@ COMPILER_PATH := $(wildcard $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/*)
 runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
-runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino14
+runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino17
 
 -include boards.txt.mk
 -include boards.local.txt.mk
@@ -52,6 +52,10 @@ BOARD_CLOCK_MENU := $(build.board).menu.clock.$(board.clock)
 build.f_cpu := $($(build.board).build.f_cpu)
 ifndef build.f_cpu
 build.f_cpu := $($(BOARD_CLOCK_MENU).build.f_cpu)
+endif
+build.clocksource := $($(build.board).build.clocksource)
+ifndef build.clocksource
+build.clocksource := $($(BOARD_CLOCK_MENU).build.clocksource)
 endif
 
 ifeq ($(board.chip),85)
