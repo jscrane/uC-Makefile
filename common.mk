@@ -21,8 +21,6 @@ SKETCHBOOK ?= $(HOME)/sketchbook
 LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
-LIBSUBDIRS := . src src/detail utility src/utility
-LIBDIRS := $(foreach r, $(REQUIRED_ROOTS), $(foreach s, $(LIBSUBDIRS), $(wildcard $r/$s)))
 
 BUILD_CORE := $(build.path)/core
 archive_file := libcore.a
@@ -30,11 +28,13 @@ archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
 CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach d, $(LIBDIRS), -I$d)
+includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
 CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
-LIBRARY_SOURCES := $(foreach d, $(LIBDIRS), $(wildcard $d/*.c) $(wildcard $d/*.cpp))
+LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))
+LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r/src/*/*.c $r/src/*/*.cpp))
+LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
 all: $(SKETCH_BIN)

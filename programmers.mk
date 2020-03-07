@@ -19,3 +19,5 @@ erase:
 
 bootloader:
 	$(tools.$(upload.tool).bootloader.pattern)
+
+.PHONY: upload program erase bootloader
