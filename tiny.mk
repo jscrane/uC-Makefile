@@ -10,6 +10,7 @@ BOOTLOADER_VERBOSE ?= $(UPLOAD_VERBOSE)
 PROGRAMMER ?= arduinoasisp
 EESAVE ?= aenable
 BOD ?= 1v8
+LTO ?= enable
 
 VENDOR := ATTinyCore
 PROCESSOR_FAMILY := avr
@@ -72,6 +73,11 @@ ifndef build.variant
 build.variant := $($(build.board).menu.pinmapping.$(board.pinmapping).build.variant)
 endif
 endif
+
+ltocflags := $($(build.board).menu.LTO.$(LTO).ltocflags)
+ltocppflags := $($(build.board).menu.LTO.$(LTO).ltocppflags)
+ltoelfflags := $($(build.board).menu.LTO.$(LTO).ltoelfflags)
+ltoarcmd := $($(build.board).menu.LTO.$(LTO).ltoarcmd)
 
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
