@@ -41,8 +41,7 @@ endif
 
 build.mcu := $($(build.board).build.mcu)
 ifndef build.mcu
-BOARD_CHIP_MENU := $(build.board).menu.chip.$(board.chip)
-build.mcu := $($(BOARD_CHIP_MENU).build.mcu)
+build.mcu := $($(build.board).menu.chip.$(board.chip).build.mcu)
 endif
 
 board.clock := $($(build.board).clock)
@@ -74,10 +73,22 @@ build.variant := $($(build.board).menu.pinmapping.$(board.pinmapping).build.vari
 endif
 endif
 
+ltocflags := $($(build.board).ltocflags)
+ifndef ltocflags
 ltocflags := $($(build.board).menu.LTO.$(LTO).ltocflags)
+endif
+ltocppflags := $($(build.board).ltocppflags)
+ifndef ltocppflags
 ltocppflags := $($(build.board).menu.LTO.$(LTO).ltocppflags)
+endif
+ltoelfflags := $($(build.board).ltoelfflags)
+ifndef ltoelfflags
 ltoelfflags := $($(build.board).menu.LTO.$(LTO).ltoelfflags)
+endif
+ltoarcmd := $($(build.board).ltoarcmd)
+ifndef ltoarcmd
 ltoarcmd := $($(build.board).menu.LTO.$(LTO).ltoarcmd)
+endif
 
 serial.port := $(SERIAL_PORT)
 upload.protocol := $($(build.board).upload.protocol)
