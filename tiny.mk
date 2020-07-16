@@ -18,12 +18,12 @@ PACKAGES := $(HOME)/.arduino15/packages
 PACKAGE_DIR := $(PACKAGES)/$(VENDOR)
 ARDUINO_TOOLS := $(PACKAGES)/arduino/tools
 COMPILER_FAMILY := avr-gcc
-COMPILER_PATH := $(wildcard $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/*)
+COMPILER_PATH := $(lastword $(wildcard $(ARDUINO_TOOLS)/$(COMPILER_FAMILY)/*))
 
 runtime.ide.version := 10809
-runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
+runtime.platform.path := $(lastword $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*))
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
-runtime.tools.avrdude.path := $(ARDUINO_TOOLS)/avrdude/6.3.0-arduino17
+runtime.tools.avrdude.path := $(lastword $(wildcard $(ARDUINO_TOOLS)/avrdude/*))
 
 -include boards.txt.mk
 -include boards.local.txt.mk
