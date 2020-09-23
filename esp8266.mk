@@ -10,8 +10,9 @@ WIPE ?= none
 UPLOAD_SPEED ?= 921600
 UPLOAD_VERBOSE ?= quiet
 SERIAL_PORT ?= /dev/ttyUSB0
-SPIFFS_DIR ?= data
+FS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
+LITTLEFS_IMAGE ?= littlefs.img
 
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
@@ -25,6 +26,7 @@ runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python3.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
+runtime.tools.mklittlefs.path := $(PACKAGE_DIR)/tools/mklittlefs/2.5.0-4-fe5bb56
 
 -include boards.txt.mk
 -include platform.txt.mk
@@ -78,14 +80,22 @@ ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
-BUILD_EXTRAS := $(SPIFFS_IMAGE)
+BUILD_EXTRAS := $(SPIFFS_IMAGE) $(LITTLEFS_IMAGE)
 
-$(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
-	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
+$(SPIFFS_IMAGE): $(wildcard $(FS_DIR)/*)
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(FS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
 
-fs: $(SPIFFS_IMAGE)
+spiffs: $(SPIFFS_IMAGE)
 
-upload-fs: $(SPIFFS_IMAGE)
-	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $(SPIFFS_IMAGE)
+upload-spiffs: $(SPIFFS_IMAGE)
+	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $<
+
+$(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
+	$(runtime.tools.mklittlefs.path)/$(tools.mklittlefs.cmd) -c $(FS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
+
+fs: $(LITTLEFS_IMAGE)
+
+upload-fs: $(LITTLEFS_IMAGE)
+	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $<
 
 .PHONY: upload fs upload-fs ota
