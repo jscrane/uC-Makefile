@@ -1,10 +1,14 @@
 SKETCH ?= $(wildcard *.ino)
 
+SUFFIX_HEX ?= hex
+SUFFIX_EEP ?= eep
+
 build.project_name := $(SKETCH)
 build.path := .build
 upload.tool := $($(build.board).upload.tool)
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SKETCH_BIN := $(build.path)/$(SKETCH).bin
+SKETCH_EEP := $(build.path)/$(SKETCH).$(SUFFIX_EEP)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
 DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
@@ -151,7 +155,7 @@ endef
 
 $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS)))
 
-OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.pattern)
+OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.$(SUFFIX_HEX).pattern)
 
 define objcopy-sketch
 $1: tools.esptool_py.cmd = $(tools.esptool_py.cmd.linux)
@@ -163,7 +167,9 @@ $(eval $(call objcopy-sketch,$(SKETCH_BIN)))
 
 define objcopy-eep
 $1:
-	$$(recipe.objcopy.eep.pattern)
+	$$(recipe.hooks.prebuild.1.pattern)
+	$$(recipe.hooks.prebuild.2.pattern)
+	$$(recipe.objcopy.$(SUFFIX_EEP).pattern)
 endef
 
 $(eval $(call objcopy-eep,$(SKETCH_EEP)))

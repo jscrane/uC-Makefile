@@ -115,8 +115,6 @@ bootloader.extended_fuses := $($(build.board).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 bootloader.unlock_bits := $($(build.board).bootloader.unlock_bits)
 
-SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
-
 -include common.mk
 -include programmers.mk
 -include $(upload.tool).mk

@@ -15,9 +15,9 @@ runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python.path := /usr/bin
-runtime.tools.esptool_py.path := $(PACKAGE_DIR)/tools/esptool_py/2.6.1
+runtime.tools.esptool_py.path := $(wildcard $(PACKAGE_DIR)/tools/esptool_py/*)
 tools.mkspiffs.cmd := mkspiffs
-tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/0.2.3
+tools.mkspiffs.path := $(wildcard $(PACKAGE_DIR)/tools/mkspiffs/*)
 
 -include $(runtime.platform.path)/boards.txt
 -include platform.txt.mk
@@ -36,8 +36,8 @@ build.partitions := $($(build.board).build.partitions)
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
-SKETCH ?= $(wildcard *.ino)
-SKETCH_EEP := $(SKETCH).partitions.bin
+SUFFIX_HEX := bin
+SUFFIX_EEP := partitions.bin
 
 -include common.mk
 

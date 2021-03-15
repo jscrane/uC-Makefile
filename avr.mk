@@ -54,7 +54,5 @@ bootloader.high_fuses := $($(BOARD_CPU_MENU).bootloader.high_fuses)
 bootloader.extended_fuses := $($(BOARD_CPU_MENU).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 
-SKETCH_EEP = $(SKETCH_ELF:.elf=.eep)
-
 -include common.mk
 -include programmers.mk
