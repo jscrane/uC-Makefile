@@ -204,9 +204,16 @@ term:
 size: $(SKETCH_ELF)
 	$(CBIN)/$(SIZE) $(SIZE_FLAGS) $<
 
+MAX_FLASH_SIZE ?= $($(build.board).upload.maximum_size)
+MAX_DATA_SIZE ?= $($(build.board).upload.maximum_data_size)
+
 build-summary: $(SKETCH_ELF)
-	@echo -n "data:  " && $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex.data)" | paste -sd "+" | bc
-	@echo -n "flash: " && $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc
+	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
+	$(eval FLASH_PC = $(shell echo $(FLASH_SIZE) "* 100 /" $(MAX_FLASH_SIZE) | bc))
+	@echo program: $(FLASH_SIZE) / $(MAX_FLASH_SIZE) bytes \($(FLASH_PC)%\)
+	$(eval DATA_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex.data)" | paste -sd "+" | bc))
+	$(eval DATA_PC = $(shell echo $(DATA_SIZE) "* 100 /" $(MAX_DATA_SIZE) | bc))
+	@echo data: $(DATA_SIZE) / $(MAX_DATA_SIZE) bytes \($(DATA_PC)%\)
 
 nm: $(SKETCH_ELF)
 	$(CBIN)/$(NM) -n $<
