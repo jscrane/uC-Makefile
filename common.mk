@@ -41,7 +41,7 @@ LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r
 LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
-all: $(SKETCH_BIN)
+all: prebuild $(SKETCH_BIN) build-summary
 
 define compile-sources
 $1.o: source_file = $1
@@ -167,8 +167,6 @@ $(eval $(call objcopy-sketch,$(SKETCH_BIN)))
 
 define objcopy-eep
 $1:
-	$$(recipe.hooks.prebuild.1.pattern)
-	$$(recipe.hooks.prebuild.2.pattern)
 	$$(recipe.objcopy.$(SUFFIX_EEP).pattern)
 endef
 
@@ -188,6 +186,11 @@ $(BUILD_CORE):
 %.txt.mk: $(runtime.platform.path)/%.txt
 	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' < $< > $@
 
+prebuild:
+	-mkdir -p $(build.path)
+	$(recipe.hooks.prebuild.1.pattern)
+	$(recipe.hooks.prebuild.2.pattern)
+
 clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
 	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
@@ -201,6 +204,10 @@ term:
 size: $(SKETCH_ELF)
 	$(CBIN)/$(SIZE) $(SIZE_FLAGS) $<
 
+build-summary: $(SKETCH_ELF)
+	@echo -n "data:  " && $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex.data)" | paste -sd "+" | bc
+	@echo -n "flash: " && $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc
+
 nm: $(SKETCH_ELF)
 	$(CBIN)/$(NM) -n $<
 
@@ -208,6 +215,6 @@ version:
 	@echo $(VENDOR) $(PROCESSOR_FAMILY) $(notdir $(runtime.platform.path))
 	@echo $(COMPILER_FAMILY) $(notdir $(COMPILER_PATH))
 
-.PHONY: clean all path term size nm version
+.PHONY: clean all path term size nm version build-summary prebuild
 
 -include $(DEPS)
