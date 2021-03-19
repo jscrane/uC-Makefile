@@ -4,6 +4,7 @@ SERIAL_PORT ?= /dev/ttyUSB0
 FLASH_FREQ ?= 80
 SPIFFS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
+PARTITION_SCHEME ?= default
 
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
@@ -32,7 +33,8 @@ build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
-build.partitions := $($(build.board).build.partitions)
+build.partitions := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).build.partitions)
+upload.maximum_size := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
