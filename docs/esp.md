@@ -11,15 +11,18 @@ these variables mostly correspond to menu options in the IDE:
 - WIPE: none  (sdk, all)
 - UPLOAD_SPEED: 921600 (9600, 57600, 115200, 230400, 460800, 512000)
 - UPLOAD_VERBOSE: quiet
-- SPIFFS_DIR: data
+- FS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
+- LITTLEFS_IMAGE: littlefs.img
 - OTA_HOST: the hostname for OTA upload
 - OTA_PORT: the OTA listening port
 - OTA_PASSWORD: the auth password for OTA
 
 targets:
-- fs: creates $(SPIFFS_IMAGE)
-- upload-fs: writes $(SPIFFS_IMAGE) to flash
+- spiffs: creates $(SPIFFS_IMAGE)
+- upload-spiffs: writes $(SPIFFS_IMAGE) to flash
+- fs: creates $(LITTLEFS_IMAGE)
+- upload-fs: writes $(FS_IMAGE) to flash
 - ota
 
 ### esp32
@@ -29,6 +32,7 @@ variables:
 - FLASH_FREQ: 80
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
+- PARTITION_SCHEME: default
 - OTA_HOST
 - OTA_PORT
 - OTA_PASSWORD
