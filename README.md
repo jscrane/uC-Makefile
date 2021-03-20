@@ -23,6 +23,8 @@ For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent woul
 	BOARD := uno
 	include avr.mk
 
+A minimal Makefile must specify a BOARD and include only one core. See core documentation below for core-specific options.
+
 Invoke with:
 
 	make -I somedir
@@ -38,7 +40,7 @@ See the [documentation](docs/README.md).
 ## Supported Cores
 
  - Arduino [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.3
- - [ATTiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
+ - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
  - Arduino [esp8266](https://github.com/esp8266/Arduino), 2.7.4
  - Arduino [esp32](https://github.com/espressif/arduino-esp32), 1.0.5
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.3
