@@ -23,7 +23,7 @@ For an [Arduino Uno](https://en.wikipedia.org/wiki/Arduino), the equivalent woul
 	BOARD := uno
 	include avr.mk
 
-A minimal Makefile must specify a BOARD and include only one core. See core documentation below for core-specific options.
+A minimal Makefile must specify a BOARD and include only one core. See the [documentation](docs/README.md) for core-specific options.
 
 Invoke with:
 
