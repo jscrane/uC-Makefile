@@ -150,6 +150,9 @@ define link-sketch
 $1: object_files = $2
 $1:
 	$$(recipe.hooks.linking.prelink.1.pattern)
+	$$(recipe.hooks.linking.prelink.2.pattern)
+	$$(recipe.hooks.linking.prelink.3.pattern)
+	$$(recipe.hooks.linking.prelink.4.pattern)
 	$$(recipe.c.combine.pattern)
 endef
 

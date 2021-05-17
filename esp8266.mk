@@ -13,6 +13,7 @@ SERIAL_PORT ?= /dev/ttyUSB0
 FS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 LITTLEFS_IMAGE ?= littlefs.img
+MMU ?= 3232
 
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
@@ -53,17 +54,20 @@ build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
 build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
 build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
 
+upload.maximum_size := $($(FLASH_MENU).upload.maximum_size)
 upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(SERIAL_PORT)
 
 build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
-#build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
+build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
+build.lwip_include := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_include)
 build.vtable_flags := $($(build.board).menu.vt.$(VTABLES).build.vtable_flags)
 build.ssl_flags := $($(build.board).menu.ssl.$(SSL).build.ssl_flags)
 build.exception_flags := $($(build.board).menu.exception.$(EXCEPTIONS).build.exception_flags)
 build.stdcpp_lib := $($(build.board).menu.exception.$(EXCEPTIONS).build.stdcpp_lib)
+build.mmuflags := $($(build.board).menu.mmu.$(MMU).build.mmuflags)
 
 OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 
