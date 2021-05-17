@@ -41,7 +41,7 @@ See the [documentation](docs/README.md).
 
  - Arduino [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.3
  - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
- - Arduino [esp8266](https://github.com/esp8266/Arduino), 2.7.4
+ - Arduino [esp8266](https://github.com/esp8266/Arduino), 3.0.0
  - Arduino [esp32](https://github.com/espressif/arduino-esp32), 1.0.5
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.3
  - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
