@@ -27,7 +27,7 @@ runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python3.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
-runtime.tools.mklittlefs.path := $(PACKAGE_DIR)/tools/mklittlefs/2.5.0-4-fe5bb56
+runtime.tools.mklittlefs.path := $(wildcard $(PACKAGE_DIR)/tools/mklittlefs/*)
 
 -include boards.txt.mk
 -include platform.txt.mk
