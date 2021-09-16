@@ -189,12 +189,12 @@ $(BUILD_CORE):
 %.txt.mk: $(runtime.platform.path)/%.txt
 	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' < $< > $@
 
-prebuild:
+prebuild: $(PREBUILD)
 	-mkdir -p $(build.path)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
 
-clean:
+clean: $(CLEAN)
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
 	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
 
