@@ -36,7 +36,15 @@ build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
 serial.port := $(SERIAL_PORT)
-upload.protocol := $($(build.board).upload.protocol)
+upload.maximum_size := $($(BOARD).upload.maximum_size)
+ifndef upload.maximum_size
+upload.maximum_size := $($(BOARD_CPU_MENU).upload.maximum_size)
+endif
+upload.maximum_data_size := $($(BOARD).upload.maximum_data_size)
+ifndef upload.maximum_data_size
+upload.maximum_data_size := $($(BOARD_CPU_MENU).upload.maximum_data_size)
+endif
+upload.protocol := $($(BOARD).upload.protocol)
 upload.speed := $($(BOARD).upload.speed)
 ifndef upload.speed
 upload.speed := $($(BOARD_CPU_MENU).upload.speed)
