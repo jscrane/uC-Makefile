@@ -14,7 +14,7 @@ when the programmer is `avrdude` there are some extra targets:
 
 ### avr variables
 
-- BOARD_CPU: the clock speed of the cpu, if required
+- BOARD_CPU: the chip (and clock speed) of the cpu, if required by the chosen board
 - UPLOAD_VERIFY: -V
 - UPLOAD_VERBOSE: quiet
 - PROGRAM_VERBOSE
@@ -24,15 +24,20 @@ when the programmer is `avrdude` there are some extra targets:
 
 ### attiny variables
 
-these correspond to menu options in the IDE:
+these correspond to menu options in the IDE (see boards.txt):
 - BOARD_CHIP: _mandatory_
 - BOARD_CLOCK: _mandatory_
 - BOARD_PINMAPPING: anew (old)
 - UPLOAD_VERIFY: noverify
+- PROGRAM_VERIFY: same as UPLOAD_VERIFY
 - UPLOAD_VERBOSE: quiet (verbose)
+- PROGRAM_VERBOSE: same as UPLOAD_VERBOSE
+- ERASE_VERBOSE: same as UPLOAD_VERBOSE
+- BOOTLOADER_VERBOSE: same as UPLOAD_VERBOSE
 - PROGRAMMER: arduinoasisp
 - EESAVE: aenable (disable)
 - BOD: 1v8 (2v7, 4v3)
+- LTO: enable (disable)
 
 ### examples
 
