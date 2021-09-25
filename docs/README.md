@@ -11,6 +11,8 @@ Variables are make macros which can be (optionally) set in the user Makefile. Th
 - LIBRARIES
 - COMPILER_WARNINGS: default
 - SERIAL_PORT: /dev/ttyUSB0
+- CLEAN: per-sketch clean target
+- PREBUILD: per-sketch prebuild target
 
 Targets are in lowercase.
 
