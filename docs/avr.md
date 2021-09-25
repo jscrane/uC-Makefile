@@ -48,6 +48,13 @@ TERMINAL_SPEED := 115200
 include avr.mk
 ```
 
+Nano:
+```
+BOARD := nano
+BOARD_CPU := atmega168
+include avr.mk
+```
+
 Pro/Pro Mini with 8MHz CPU:
 ```
 BOARD := pro
