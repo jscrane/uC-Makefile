@@ -193,6 +193,7 @@ prebuild: $(PREBUILD)
 	-mkdir -p $(build.path)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
+	$(recipe.hooks.prebuild.3.pattern)
 
 clean: $(CLEAN)
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk

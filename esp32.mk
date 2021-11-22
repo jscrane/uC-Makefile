@@ -12,6 +12,8 @@ PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 COMPILER_FAMILY := xtensa-esp32-elf-gcc
 COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 
+build.tarch := xtensa
+build.target := esp32
 runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
@@ -24,7 +26,8 @@ tools.mkspiffs.path := $(wildcard $(PACKAGE_DIR)/tools/mkspiffs/*)
 -include platform.txt.mk
 
 build.board := $(BOARD)
-build.arch := $($(build.board).build.mcu)
+build.mcu := $($(build.board).build.mcu)
+build.arch := $(build.mcu)
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
@@ -34,7 +37,8 @@ build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).build.partitions)
-upload.maximum_size := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
+upload.maximum_size := $($(build.mcu).upload.maximum_size)
+upload.maximum_size ?= $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
