@@ -5,6 +5,7 @@ SUFFIX_EEP ?= eep
 
 build.project_name := $(SKETCH)
 build.path := .build
+build.source.path ?= .
 upload.tool := $($(build.board).upload.tool)
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SKETCH_BIN := $(build.path)/$(SKETCH).bin
@@ -194,6 +195,9 @@ prebuild: $(PREBUILD)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
 	$(recipe.hooks.prebuild.3.pattern)
+	$(recipe.hooks.prebuild.4.pattern)
+	$(recipe.hooks.prebuild.5.pattern)
+	$(recipe.hooks.prebuild.6.pattern)
 
 clean: $(CLEAN)
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk

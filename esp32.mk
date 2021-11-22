@@ -2,7 +2,7 @@
 UPLOAD_SPEED ?= 921600
 SERIAL_PORT ?= /dev/ttyUSB0
 FLASH_FREQ ?= 80
-SPIFFS_DIR ?= data
+FS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 PARTITION_SCHEME ?= default
 
@@ -37,8 +37,10 @@ build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).build.partitions)
+upload.maximum_size := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
+ifndef upload.maximum_size
 upload.maximum_size := $($(build.mcu).upload.maximum_size)
-upload.maximum_size ?= $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
+endif
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
@@ -59,7 +61,7 @@ ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
-PARTITIONS := $(runtime.platform.path)/tools/partitions/default.csv
+PARTITIONS := $(build.path)/partitions.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
 SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
 SPIFFS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
@@ -67,11 +69,9 @@ SPIFFS_PAGESIZE := 256
 SPIFFS_BLOCKSIZE := 4096
 
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
-	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(SPIFFS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
+	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(FS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
 
-fs: $(SPIFFS_IMAGE)
-
-upload-fs: fs
+upload-fs:  $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(tools.$(upload.tool).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
-.PHONY: upload fs upload-fs ota
+.PHONY: upload upload-fs ota
