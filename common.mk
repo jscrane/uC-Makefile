@@ -188,7 +188,7 @@ $(BUILD_CORE):
 	-mkdir -p $@
 
 %.txt.mk: $(runtime.platform.path)/%.txt
-	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' < $< > $@
+	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' -e 's/-D\([A-Z_]*\)="\([a-zA-Z0-9$${}/_.-]*\)"/-D\1=\\"\2\\"/g' < $< > $@
 
 prebuild: $(PREBUILD)
 	-mkdir -p $(build.path)
