@@ -47,6 +47,8 @@ serial.port = $(SERIAL_PORT)
 SUFFIX_HEX := bin
 SUFFIX_EEP := partitions.bin
 
+prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
+
 -include common.mk
 
 upload: path = $(runtime.tools.$(upload.tool).path)
