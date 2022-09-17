@@ -12,6 +12,8 @@ PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 COMPILER_FAMILY := xtensa-esp32-elf-gcc
 COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 
+PREBUILD := esp32-prebuild
+
 build.tarch := xtensa
 build.target := esp32
 runtime.ide.version := 10809
@@ -47,9 +49,16 @@ serial.port = $(SERIAL_PORT)
 SUFFIX_HEX := bin
 SUFFIX_EEP := partitions.bin
 
-prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
-
 -include common.mk
+
+esp32-prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
+esp32-prebuild:
+	$(recipe.hooks.prebuild.1.pattern)
+	$(recipe.hooks.prebuild.2.pattern)
+	$(recipe.hooks.prebuild.3.pattern)
+	$(recipe.hooks.prebuild.4.pattern)
+	$(recipe.hooks.prebuild.5.pattern)
+	$(recipe.hooks.prebuild.6.pattern)
 
 upload: path = $(runtime.tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd.linux)
@@ -70,7 +79,6 @@ SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
 SPIFFS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
 SPIFFS_PAGESIZE := 256
 SPIFFS_BLOCKSIZE := 4096
-
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(tools.mkspiffs.path)/$(tools.mkspiffs.cmd) -c $(FS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
 

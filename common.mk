@@ -190,14 +190,10 @@ $(BUILD_CORE):
 %.txt.mk: $(runtime.platform.path)/%.txt
 	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' -e 's/-D\([A-Z_]*\)="\([a-zA-Z0-9$${}/_.-]*\)"/-D\1=\\"\2\\"/g' < $< > $@
 
-prebuild: $(PREBUILD)
+$(build.path):
 	-mkdir -p $(build.path)
-	$(recipe.hooks.prebuild.1.pattern)
-	$(recipe.hooks.prebuild.2.pattern)
-	$(recipe.hooks.prebuild.3.pattern)
-	$(recipe.hooks.prebuild.4.pattern)
-	$(recipe.hooks.prebuild.5.pattern)
-	$(recipe.hooks.prebuild.6.pattern)
+
+prebuild: $(build.path) $(PREBUILD)
 
 clean: $(CLEAN)
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
