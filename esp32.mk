@@ -20,7 +20,7 @@ runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python.path := /usr/bin
-runtime.tools.esptool_py.path := $(wildcard $(PACKAGE_DIR)/tools/esptool_py/*)
+tools.esptool_py.path := $(wildcard $(PACKAGE_DIR)/tools/esptool_py/*)
 tools.mkspiffs.cmd := mkspiffs
 tools.mkspiffs.path := $(wildcard $(PACKAGE_DIR)/tools/mkspiffs/*)
 
