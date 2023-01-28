@@ -29,6 +29,8 @@ runtime.tools.python3.path := /usr/bin
 runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
 runtime.tools.mklittlefs.path := $(wildcard $(PACKAGE_DIR)/tools/mklittlefs/*)
 
+PREBUILD := esp8266-prebuild
+
 -include boards.txt.mk
 -include platform.txt.mk
 
@@ -83,6 +85,11 @@ ota: network.port = $(OTA_PORT)
 ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
+
+esp8266-prebuild: build.core.path := $(BUILD_CORE)
+esp8266-prebuild:
+	$(recipe.hooks.prebuild.1.pattern)
+	$(recipe.hooks.prebuild.2.pattern)
 
 BUILD_EXTRAS := $(SPIFFS_IMAGE) $(LITTLEFS_IMAGE)
 
