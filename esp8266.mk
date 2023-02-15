@@ -22,7 +22,8 @@ COMPILER_FAMILY := xtensa-lx106-elf-gcc
 COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 COMPILER_VERSION := $(notdir $(COMPILER_PATH))
 
-runtime.ide.version := 10809
+runtime.ide.path := /usr/local/arduino
+runtime.ide.version := 10815
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.python3.path := /usr/bin
@@ -86,7 +87,7 @@ ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
-esp8266-prebuild: build.core.path := $(BUILD_CORE)
+esp8266-prebuild: build.core.path := $(CORE)
 esp8266-prebuild:
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
