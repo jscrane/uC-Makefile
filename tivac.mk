@@ -1,10 +1,9 @@
 # default options (settable by user)
-SKETCHBOOK ?= $(HOME)/energia
 SERIAL_PORT ?= /dev/ttyACM0
 
 VENDOR := energia
 PROCESSOR_FAMILY := tivac
-PACKAGE_DIR := $(HOME)/.energia15/packages/$(VENDOR)
+PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 COMPILER_FAMILY := arm-none-eabi-gcc
 COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
 COMPILER_VERSION := $(notdir $(COMPILER_PATH))
@@ -13,8 +12,8 @@ PLATFORM_H = Energia.h
 runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY)-$(COMPILER_VERSION).path := $(COMPILER_PATH)
-runtime.tools.mspdebug.path := $(PACKAGE_DIR)/tools/mspdebug/0.24
-runtime.tools.dslite-7.2.0.2096.path := $(PACKAGE_DIR)/tools/dslite/7.2.0.2096
+runtime.tools.mspdebug.path := $(wildcard $(PACKAGE_DIR)/tools/mspdebug/*)
+runtime.tools.dslite-9.3.0.1863.path := $(wildcard $(PACKAGE_DIR)/tools/dslite/*)
 
 -include $(runtime.platform.path)/boards.txt
 -include platform.txt.mk
