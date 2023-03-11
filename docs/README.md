@@ -3,7 +3,7 @@
 Variables are make macros which can be (optionally) set in the user Makefile. They are in uppercase, words separated by underscore. 
 A colon separates the name of the variable from its default value. Parentheses indicate valid alternative values.
 
-- BOARD: _mandatory_ see `boards.txt`
+- BOARD: _mandatory_ (see `boards.txt`)
 - SKETCH
 - SKETCHBOOK: `~/Arduino`
 - TERMINAL: `minicom`
@@ -11,9 +11,9 @@ A colon separates the name of the variable from its default value. Parentheses i
 - LOCAL_LIBRARY_PATH
 - LIBRARIES
 - COMPILER_WARNINGS: `default`
-- SERIAL_PORT: `/dev/ttyUSB0
-- CLEAN: per-sketch clean target
-- PREBUILD: per-sketch prebuild target
+- SERIAL_PORT: `/dev/ttyUSB0`
+- CLEAN: per-sketch `clean` target
+- PREBUILD: per-sketch `prebuild` target
 
 Targets are in lowercase.
 
@@ -25,7 +25,7 @@ Targets are in lowercase.
 - path
 - term: starts terminal on `SERIAL_PORT`
 
-### Platform-specific
+### Platform-specific`
 - [avr and attiny](avr.md)
 - [esp8266 and esp32](esp.md)
 - [msp430 and tivac](msp.md)
