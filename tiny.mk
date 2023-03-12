@@ -96,6 +96,8 @@ upload.speed := $($(build.board).upload.speed)
 ifndef upload.speed
 upload.speed := $($(BOARD_CLOCK_MENU).upload.speed)
 endif
+upload.maximum_size := $($(build.board).menu.chip.$(board.chip).upload.maximum_size)
+upload.maximum_data_size := $($(build.board).menu.chip.$(board.chip).upload.maximum_data_size)
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERIFY))
 program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))
