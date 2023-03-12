@@ -212,7 +212,6 @@ upload.maximum_size ?= $($(build.board).upload.maximum_size)
 upload.maximum_data_size ?= $($(build.board).upload.maximum_data_size)
 
 build-summary: $(SKETCH_ELF)
-	echo "chip: $(board.chip)"
 	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
 	$(eval FLASH_PC = $(shell echo $(FLASH_SIZE) "* 100 /" $(upload.maximum_size) | bc))
 	@echo program: $(FLASH_SIZE) / $(upload.maximum_size) bytes \($(FLASH_PC)%\)
