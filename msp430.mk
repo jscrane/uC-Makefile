@@ -13,7 +13,8 @@ runtime.tools.msp430-gcc.path := $(COMPILER_PATH)
 runtime.tools.mspdebug.path := $(wildcard $(PACKAGE_DIR)/tools/mspdebug/*)
 runtime.tools.dslite-9.3.0.1863.path := $(wildcard $(PACKAGE_DIR)/tools/*)
 
--include $(runtime.platform.path)/boards.txt
+-include boards.txt.mk
+-include boards.local.txt.mk
 -include platform.txt.mk
 
 build.board := $(BOARD)
