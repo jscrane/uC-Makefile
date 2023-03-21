@@ -18,8 +18,7 @@ runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino17
 
--include boards.txt.mk
--include platform.txt.mk
+-include hardware.mk
 
 build.board := $(BOARD)
 BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
@@ -62,5 +61,5 @@ bootloader.high_fuses := $($(BOARD_CPU_MENU).bootloader.high_fuses)
 bootloader.extended_fuses := $($(BOARD_CPU_MENU).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 
--include common.mk
+-include build-targets.mk
 -include programmers.mk

@@ -1,5 +1,3 @@
--include programmers.txt.mk
-
 program.protocol := $($(PROGRAMMER).program.protocol)
 program.speed := $($(PROGRAMMER).program.speed)
 program.extra_params := $($(PROGRAMMER).program.extra_params)

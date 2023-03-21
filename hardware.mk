@@ -1,0 +1,5 @@
+-include boards.txt.mk
+-include boards.local.txt.mk
+-include platform.txt.mk
+-include platform.local.txt.mk
+-include programmers.txt.mk

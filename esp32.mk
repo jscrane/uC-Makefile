@@ -25,8 +25,7 @@ tools.esptool_py.path := ${runtime.tools.esptool_py.path}
 tools.mkspiffs.cmd := mkspiffs
 tools.mkspiffs.path := $(wildcard $(PACKAGE_DIR)/tools/mkspiffs/*)
 
--include $(runtime.platform.path)/boards.txt
--include platform.txt.mk
+-include hardware.mk
 
 build.board := $(BOARD)
 build.mcu := $($(build.board).build.mcu)
@@ -50,7 +49,7 @@ serial.port = $(SERIAL_PORT)
 SUFFIX_HEX := bin
 SUFFIX_EEP := partitions.bin
 
--include common.mk
+-include build-targets.mk
 
 esp32-prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
 esp32-prebuild:

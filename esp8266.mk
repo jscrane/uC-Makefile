@@ -32,8 +32,7 @@ runtime.tools.mklittlefs.path := $(wildcard $(PACKAGE_DIR)/tools/mklittlefs/*)
 
 PREBUILD := esp8266-prebuild
 
--include boards.txt.mk
--include platform.txt.mk
+-include hardware.mk
 
 build.board := $(BOARD)
 build.arch := $($(build.board).build.mcu)
@@ -73,7 +72,7 @@ build.mmuflags := $($(build.board).menu.mmu.$(MMU).build.mmuflags)
 
 OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 
--include common.mk
+-include build-targets.mk
 
 upload: cmd = $(tools.$(upload.tool).cmd)
 upload: $(SKETCH_BIN)

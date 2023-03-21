@@ -12,11 +12,9 @@ PLATFORM_H = Energia.h
 runtime.ide.version := 10809
 runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
 runtime.tools.$(COMPILER_FAMILY)-$(COMPILER_VERSION).path := $(COMPILER_PATH)
-runtime.tools.mspdebug.path := $(wildcard $(PACKAGE_DIR)/tools/mspdebug/*)
 runtime.tools.dslite-9.3.0.1863.path := $(wildcard $(PACKAGE_DIR)/tools/dslite/*)
 
--include $(runtime.platform.path)/boards.txt
--include platform.txt.mk
+-include hardware.mk
 
 build.board := $(BOARD)
 build.core := $($(build.board).build.core)
@@ -28,11 +26,11 @@ build.ldscript := $($(build.board).build.ldscript)
 build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 build.system.path := $(runtime.platform.path)/system
-upload.protocol := $($(build.board).upload.protocol)
+upload.tool := $($(build.board).upload.tool)
 
--include common.mk
+-include build-targets.mk
 
-upload: path = $(runtime.tools.dslite-7.2.0.2096.path)
+upload: path = $(runtime.tools.dslite-9.3.0.1863.path)
 upload: config.path = $(path)
 upload: cmd.path = $(tools.$(upload.tool).cmd.path)
 upload: $(SKETCH_BIN)

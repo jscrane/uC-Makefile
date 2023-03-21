@@ -13,9 +13,7 @@ runtime.tools.msp430-gcc.path := $(COMPILER_PATH)
 runtime.tools.mspdebug.path := $(wildcard $(PACKAGE_DIR)/tools/mspdebug/*)
 runtime.tools.dslite-9.3.0.1863.path := $(wildcard $(PACKAGE_DIR)/tools/*)
 
--include boards.txt.mk
--include boards.local.txt.mk
--include platform.txt.mk
+-include hardware.mk
 
 build.board := $(BOARD)
 build.core := $($(build.board).build.core)
@@ -26,7 +24,10 @@ build.f_cpu := $($(build.board).build.f_cpu)
 upload.tool := $($(build.board).upload.tool)
 upload.protocol := $($(build.board).upload.protocol)
 
--include common.mk
+-include build-targets.mk
+
+tools.boot430load.cmd.path := /usr/local/bin/boot430load
+tools.boot430load.upload.pattern := $(tools.boot430load.cmd.path) $(build.path)/$(build.project_name).hex
 
 upload: path = $(runtime.tools.$(upload.tool).path)
 upload: cmd.path = $(tools.$(upload.tool).cmd.path)

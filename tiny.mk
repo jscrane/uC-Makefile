@@ -25,9 +25,7 @@ runtime.platform.path := $(lastword $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESS
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 runtime.tools.avrdude.path := $(lastword $(wildcard $(ARDUINO_TOOLS)/avrdude/*))
 
--include boards.txt.mk
--include boards.local.txt.mk
--include platform.txt.mk
+-include hardware.mk
 
 ifndef BOARD
 $(error BOARD required)
@@ -117,6 +115,6 @@ bootloader.extended_fuses := $($(build.board).bootloader.extended_fuses)
 bootloader.lock_bits := $($(build.board).bootloader.lock_bits)
 bootloader.unlock_bits := $($(build.board).bootloader.unlock_bits)
 
--include common.mk
+-include build-targets.mk
 -include programmers.mk
 -include $(upload.tool).mk
