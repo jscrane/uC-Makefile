@@ -8,7 +8,6 @@ PARTITION_SCHEME ?= default
 
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
-PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 PREBUILD := esp32-prebuild
 
 build.tarch := xtensa
@@ -17,12 +16,6 @@ build.target := esp32
 -include hardware.mk
 tools.esptool_py.path := ${runtime.tools.esptool_py.path}
 
-build.board := $(BOARD)
-build.mcu := $($(build.board).build.mcu)
-build.arch := $(build.mcu)
-build.core := $($(build.board).build.core)
-build.variant := $($(build.board).build.variant)
-build.f_cpu := $($(build.board).build.f_cpu)
 build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)

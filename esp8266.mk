@@ -16,15 +16,9 @@ MMU ?= 3232
 
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
-PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 PREBUILD := esp8266-prebuild
 
 -include hardware.mk
-
-build.board := $(BOARD)
-build.arch := $($(build.board).build.mcu)
-build.core := $($(build.board).build.core)
-build.variant := $($(build.board).build.variant)
 
 build.f_cpu := $($(build.board).menu.xtal.$(F_CPU).build.f_cpu)
 build.debug_port := $($(build.board).menu.dbg.$(DEBUG_PORT).build.debug_port)
@@ -72,7 +66,6 @@ ota: network.password = $(OTA_PASSWORD)
 ota: $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
-esp8266-prebuild: build.core.path := $(CORE)
 esp8266-prebuild:
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)

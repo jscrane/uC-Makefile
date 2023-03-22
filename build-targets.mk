@@ -32,9 +32,9 @@ archive_file := libcore.a
 archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
-CORE := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(CORE) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
-CORE_SOURCES := $(wildcard $(addprefix $(CORE)/, *.c *.cpp *.S) $(addprefix $(CORE)/*/, *.c *.cpp))
+build.core.path := $(runtime.platform.path)/cores/$(build.core)
+includes := -I$(build.core.path) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
+CORE_SOURCES := $(wildcard $(addprefix $(build.core.path)/, *.c *.cpp *.S) $(addprefix $(build.core.path)/*/, *.c *.cpp))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
 LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))

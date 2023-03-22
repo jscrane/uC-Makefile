@@ -8,23 +8,19 @@ PROGRAMMER ?= arduinoasisp
 
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
-PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 
 -include hardware.mk
 
-build.board := $(BOARD)
 BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
 
-build.mcu := $(firstword $($(BOARD).build.mcu) $($(BOARD_CPU_MENU).build.mcu))
-build.f_cpu := $(firstword $($(BOARD).build.f_cpu) $($(BOARD_CPU_MENU).build.f_cpu))
-build.core := $($(build.board).build.core)
-build.variant := $($(build.board).build.variant)
+build.mcu := $(firstword $(build.mcu) $($(BOARD_CPU_MENU).build.mcu))
+build.f_cpu := $(firstword $(build.f_cpu) $($(BOARD_CPU_MENU).build.f_cpu))
 
 serial.port := $(SERIAL_PORT)
-upload.maximum_size := $(firstword $($(BOARD).upload.maximum_size) $($(BOARD_CPU_MENU).upload.maximum_size))
-upload.maximum_data_size := $(firstword $($(BOARD).upload.maximum_data_size) $($(BOARD_CPU_MENU).upload.maximum_data_size))
-upload.protocol := $($(BOARD).upload.protocol)
-upload.speed := $(firstword $($(BOARD).upload.speed) $($(BOARD_CPU_MENU).upload.speed))
+upload.maximum_size := $(firstword $($(build.board).upload.maximum_size) $($(BOARD_CPU_MENU).upload.maximum_size))
+upload.maximum_data_size := $(firstword $($(build.board).upload.maximum_data_size) $($(BOARD_CPU_MENU).upload.maximum_data_size))
+upload.protocol := $($(build.board).upload.protocol)
+upload.speed := $(firstword $($(build.board).upload.speed) $($(BOARD_CPU_MENU).upload.speed))
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(UPLOAD_VERIFY)
 program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))

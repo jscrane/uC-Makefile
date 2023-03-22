@@ -14,7 +14,6 @@ LTO ?= enable
 VENDOR := ATTinyCore
 PROCESSOR_FAMILY := avr
 PACKAGES := $(HOME)/.arduino15/packages
-PACKAGE_DIR := $(PACKAGES)/$(VENDOR)
 COMPILER_FAMILY := avr-gcc
 COMPILER_PATH := $(lastword $(wildcard $(PACKAGES)/arduino/tools/$(COMPILER_FAMILY)/*))
 
@@ -22,17 +21,12 @@ runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 
 -include hardware.mk
 
-ifndef BOARD
-$(error BOARD required)
-endif
-build.board := $(BOARD)
-build.core := $($(build.board).build.core)
 board.chip := $(firstword $($(build.board).chip) $(BOARD_CHIP))
 build.mcu := $(firstword $($(build.board).build.mcu) $($(build.board).menu.chip.$(board.chip).build.mcu))
 
 board.clock := $(firstword $($(build.board).clock) $(BOARD_CLOCK))
 BOARD_CLOCK_MENU := $(build.board).menu.clock.$(board.clock)
-build.f_cpu := $(firstword $($(build.board).build.f_cpu) $($(BOARD_CLOCK_MENU).build.f_cpu))
+build.f_cpu := $(firstword $(build.f_cpu) $($(BOARD_CLOCK_MENU).build.f_cpu))
 build.clocksource := $(firstword $($(build.board).build.clocksource) $($(BOARD_CLOCK_MENU).build.clocksource))
 
 ifeq ($(board.chip),85)
