@@ -9,40 +9,27 @@ PARTITION_SCHEME ?= default
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-COMPILER_FAMILY := xtensa-esp32-elf-gcc
-COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
-
 PREBUILD := esp32-prebuild
 
 build.tarch := xtensa
 build.target := esp32
-runtime.ide.version := 10809
-runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
-runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
-runtime.tools.python.path := /usr/bin
-runtime.tools.esptool_py.path := $(wildcard $(PACKAGE_DIR)/tools/esptool_py/*)
-tools.esptool_py.path := ${runtime.tools.esptool_py.path}
-tools.mkspiffs.cmd := mkspiffs
-tools.mkspiffs.path := $(wildcard $(PACKAGE_DIR)/tools/mkspiffs/*)
 
 -include hardware.mk
+tools.esptool_py.path := ${runtime.tools.esptool_py.path}
 
 build.board := $(BOARD)
 build.mcu := $($(build.board).build.mcu)
 build.arch := $(build.mcu)
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
-
 build.f_cpu := $($(build.board).build.f_cpu)
 build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_size := $($(build.board).build.flash_size)
 build.flash_freq := $($(build.board).menu.FlashFreq.$(FLASH_FREQ).build.flash_freq)
 build.boot := $($(build.board).build.boot)
 build.partitions := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).build.partitions)
-upload.maximum_size := $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size)
-ifndef upload.maximum_size
-upload.maximum_size := $($(build.mcu).upload.maximum_size)
-endif
+
+upload.maximum_size := $(firstword $($(build.board).menu.PartitionScheme.$(PARTITION_SCHEME).upload.maximum_size) $($(build.mcu).upload.maximum_size))
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
@@ -85,4 +72,4 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 upload-fs:  $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(tools.$(upload.tool).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
-.PHONY: upload upload-fs ota
+.PHONY: esp32-prebuild upload upload-fs ota

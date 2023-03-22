@@ -1,4 +1,3 @@
-# default options (settable by user)
 SERIAL_PORT ?= /dev/ttyUSB0
 UPLOAD_VERIFY ?= -V
 UPLOAD_VERBOSE ?= quiet
@@ -10,44 +9,22 @@ PROGRAMMER ?= arduinoasisp
 VENDOR := arduino
 PROCESSOR_FAMILY := avr
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-COMPILER_FAMILY := avr-gcc
-COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
-
-runtime.ide.version := 10809
-runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
-runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
-runtime.tools.avrdude.path := $(PACKAGE_DIR)/tools/avrdude/6.3.0-arduino17
 
 -include hardware.mk
 
 build.board := $(BOARD)
 BOARD_CPU_MENU := $(build.board).menu.cpu.$(BOARD_CPU)
 
-build.mcu := $($(BOARD).build.mcu)
-ifndef build.mcu
-build.mcu := $($(BOARD_CPU_MENU).build.mcu)
-endif
-build.f_cpu := $($(BOARD).build.f_cpu)
-ifndef build.f_cpu
-build.f_cpu := $($(BOARD_CPU_MENU).build.f_cpu)
-endif
+build.mcu := $(firstword $($(BOARD).build.mcu) $($(BOARD_CPU_MENU).build.mcu))
+build.f_cpu := $(firstword $($(BOARD).build.f_cpu) $($(BOARD_CPU_MENU).build.f_cpu))
 build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 
 serial.port := $(SERIAL_PORT)
-upload.maximum_size := $($(BOARD).upload.maximum_size)
-ifndef upload.maximum_size
-upload.maximum_size := $($(BOARD_CPU_MENU).upload.maximum_size)
-endif
-upload.maximum_data_size := $($(BOARD).upload.maximum_data_size)
-ifndef upload.maximum_data_size
-upload.maximum_data_size := $($(BOARD_CPU_MENU).upload.maximum_data_size)
-endif
+upload.maximum_size := $(firstword $($(BOARD).upload.maximum_size) $($(BOARD_CPU_MENU).upload.maximum_size))
+upload.maximum_data_size := $(firstword $($(BOARD).upload.maximum_data_size) $($(BOARD_CPU_MENU).upload.maximum_data_size))
 upload.protocol := $($(BOARD).upload.protocol)
-upload.speed := $($(BOARD).upload.speed)
-ifndef upload.speed
-upload.speed := $($(BOARD_CPU_MENU).upload.speed)
-endif
+upload.speed := $(firstword $($(BOARD).upload.speed) $($(BOARD_CPU_MENU).upload.speed))
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(UPLOAD_VERIFY)
 program.verbose := $(tools.$(upload.tool).program.params.$(PROGRAM_VERBOSE))

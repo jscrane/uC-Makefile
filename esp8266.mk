@@ -1,4 +1,3 @@
-# default options (settable by user)
 LWIP_OPTS ?= lm2f
 F_CPU ?= 80
 DEBUG_PORT ?= Disabled
@@ -18,18 +17,6 @@ MMU ?= 3232
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
-COMPILER_FAMILY := xtensa-lx106-elf-gcc
-COMPILER_PATH := $(wildcard $(PACKAGE_DIR)/tools/$(COMPILER_FAMILY)/*)
-COMPILER_VERSION := $(notdir $(COMPILER_PATH))
-
-runtime.ide.path := /usr/local/arduino
-runtime.ide.version := 10815
-runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
-runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
-runtime.tools.python3.path := /usr/bin
-runtime.tools.mkspiffs.path := $(PACKAGE_DIR)/tools/mkspiffs/$(COMPILER_VERSION)
-runtime.tools.mklittlefs.path := $(wildcard $(PACKAGE_DIR)/tools/mklittlefs/*)
-
 PREBUILD := esp8266-prebuild
 
 -include hardware.mk
@@ -108,4 +95,4 @@ fs: $(LITTLEFS_IMAGE)
 upload-fs: $(LITTLEFS_IMAGE)
 	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $<
 
-.PHONY: upload fs upload-fs ota
+.PHONY: esp8266-prebuild upload ota spiffs fs upload-fs
