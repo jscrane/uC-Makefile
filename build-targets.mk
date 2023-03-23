@@ -68,14 +68,13 @@ endef
 
 $(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
 
-PLATFORM_H ?= Arduino.h
 COMPILER_WARNINGS ?= default
 compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
 
 define compile-sketch
 $1.cpp.o: source_file = $1
 $1.cpp.o: object_file = $1.cpp.o
-$1.cpp.o: compiler.cpp.extra_flags += -x c++ -include $(PLATFORM_H) $(CPPFLAGS)
+$1.cpp.o: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
 $1.cpp.o:
 	$$(recipe.cpp.o.pattern)
 endef
@@ -113,10 +112,7 @@ $(archive_file_path)($(notdir $1)):
 	$$(recipe.ar.pattern)
 endef
 
-# hack
-ifdef build.core
 $(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
-endif
 
 ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
@@ -193,7 +189,14 @@ $(BUILD_CORE):
 $(build.path):
 	-mkdir -p $(build.path)
 
-prebuild: $(build.path) $(PREBUILD)
+prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
+prebuild: $(build.path)
+	$(recipe.hooks.prebuild.1.pattern)
+	$(recipe.hooks.prebuild.2.pattern)
+	$(recipe.hooks.prebuild.3.pattern)
+	$(recipe.hooks.prebuild.4.pattern)
+	$(recipe.hooks.prebuild.5.pattern)
+	$(recipe.hooks.prebuild.6.pattern)
 
 clean: $(CLEAN)
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
@@ -207,9 +210,6 @@ term:
 
 size: $(SKETCH_ELF)
 	$(CBIN)/$(SIZE) $(SIZE_FLAGS) $<
-
-upload.maximum_size ?= $($(build.board).upload.maximum_size)
-upload.maximum_data_size ?= $($(build.board).upload.maximum_data_size)
 
 build-summary: $(SKETCH_ELF)
 	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))

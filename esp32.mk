@@ -8,7 +8,6 @@ PARTITION_SCHEME ?= default
 
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
-PREBUILD := esp32-prebuild
 
 build.tarch := xtensa
 build.target := esp32
@@ -30,15 +29,6 @@ SUFFIX_HEX := bin
 SUFFIX_EEP := partitions.bin
 
 -include build-targets.mk
-
-esp32-prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
-esp32-prebuild:
-	$(recipe.hooks.prebuild.1.pattern)
-	$(recipe.hooks.prebuild.2.pattern)
-	$(recipe.hooks.prebuild.3.pattern)
-	$(recipe.hooks.prebuild.4.pattern)
-	$(recipe.hooks.prebuild.5.pattern)
-	$(recipe.hooks.prebuild.6.pattern)
 
 upload: path = $(runtime.tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd.linux)

@@ -35,3 +35,6 @@ build.core := $($(build.board).build.core)
 build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 build.system.path := $(runtime.platform.path)/system
+
+upload.maximum_size := $($(build.board).upload.maximum_size)
+upload.maximum_data_size := $($(build.board).upload.maximum_data_size)
