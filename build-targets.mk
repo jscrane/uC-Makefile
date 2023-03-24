@@ -223,8 +223,7 @@ nm: $(SKETCH_ELF)
 	$(CBIN)/$(NM) -n $<
 
 version:
-	@echo $(VENDOR) $(PROCESSOR_FAMILY) $(notdir $(runtime.platform.path))
-	@echo $(COMPILER_FAMILY) $(notdir $(COMPILER_PATH))
+	@echo "$(name) $(notdir $(runtime.platform.path))"
 
 .PHONY: clean all path term size nm version build-summary prebuild
 
