@@ -45,6 +45,7 @@ See the [documentation](docs/README.md).
  - Arduino [esp32](https://github.com/espressif/arduino-esp32), 2.0.6
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4 (requires editing SD.h for Stellarpad)
  - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
+ - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.4.0 (experimental)
 
 Note: Energia is no longer developed. Its cores are now integrated with Arduino via
 [this repository](https://github.com/Andy4495/TI_Platform_Cores_For_Arduino).
