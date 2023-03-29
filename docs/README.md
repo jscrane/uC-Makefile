@@ -13,15 +13,12 @@ A colon separates the name of the variable from its default value. Parentheses i
 - COMPILER_WARNINGS: `default`
 - SERIAL_PORT: `/dev/ttyUSB0`
 - CLEAN: per-sketch `clean` target
-- PREBUILD: per-sketch `prebuild` target
 
 Targets are in lowercase.
 
 - all: default target, compiles and links sketch
 - upload
 - clean
-- size
-- nm
 - path
 - term: starts terminal on `SERIAL_PORT`
 
@@ -29,4 +26,5 @@ Targets are in lowercase.
 - [avr and attiny](avr.md)
 - [esp8266 and esp32](esp.md)
 - [msp430 and tivac](msp.md)
+- stm32
 
