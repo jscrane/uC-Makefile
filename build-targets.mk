@@ -18,10 +18,6 @@ TERMINAL ?= minicom
 TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED)
 CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
 
-SIZE := $(COMPILER_FAMILY:-gcc=-size)
-NM := $(COMPILER_FAMILY:-gcc=-nm)
-CBIN := $(COMPILER_PATH)/bin
-
 SKETCHBOOK ?= $(HOME)/Arduino
 LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
@@ -33,8 +29,9 @@ archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
 build.core.path := $(runtime.platform.path)/cores/$(build.core)
-includes := -I$(build.core.path) -I$(runtime.platform.path)/variants/$(build.variant) $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
-CORE_SOURCES := $(wildcard $(addprefix $(build.core.path)/, *.c *.cpp *.S) $(addprefix $(build.core.path)/*/, *.c *.cpp))
+build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
+includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
+CORE_SOURCES := $(wildcard $(addprefix $(build.core.path)/, *.c *.cpp *.S) $(addprefix $(build.core.path)/*/, *.c *.cpp) $(addprefix $(build.variant.path)/, *.c *.cpp))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
 LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))
@@ -87,19 +84,19 @@ $(BUILD_CORE)/$1.o: object_file = $(BUILD_CORE)/$1.o
 
 ifeq ($(suffix $1),.c)
 $(BUILD_CORE)/$1.o:
-	mkdir -p $$(dir $$@)
+	mkdir -p "$$(dir $$@)"
 	$$(recipe.c.o.pattern)
 endif
 
 ifeq ($(suffix $1),.cpp)
 $(BUILD_CORE)/$1.o:
-	mkdir -p $$(dir $$@)
+	mkdir -p "$$(dir $$@)"
 	$$(recipe.cpp.o.pattern)
 endif
 
 ifeq ($(suffix $1),.S)
 $(BUILD_CORE)/$1.o:
-	mkdir -p $$(dir $$@)
+	mkdir -p "$$(dir $$@)"
 	$$(recipe.S.o.pattern)
 endif
 endef
@@ -112,7 +109,9 @@ $(archive_file_path)($(notdir $1)):
 	$$(recipe.ar.pattern)
 endef
 
+ifdef build.core
 $(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
+endif
 
 ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
@@ -208,9 +207,6 @@ path:
 term:
 	$(TERMINAL) $(TERMINAL_FLAGS)
 
-size: $(SKETCH_ELF)
-	$(CBIN)/$(SIZE) $(SIZE_FLAGS) $<
-
 build-summary: $(SKETCH_ELF)
 	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
 	$(eval FLASH_PC = $(shell echo $(FLASH_SIZE) "* 100 /" $(upload.maximum_size) | bc))
@@ -219,12 +215,9 @@ build-summary: $(SKETCH_ELF)
 	$(eval DATA_PC = $(shell echo $(DATA_SIZE) "* 100 /" $(upload.maximum_data_size) | bc))
 	@echo data: $(DATA_SIZE) / $(upload.maximum_data_size) bytes \($(DATA_PC)%\)
 
-nm: $(SKETCH_ELF)
-	$(CBIN)/$(NM) -n $<
-
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
 
-.PHONY: clean all path term size nm version build-summary prebuild
+.PHONY: clean all path term version build-summary prebuild
 
 -include $(DEPS)

@@ -29,13 +29,9 @@ BOARD_CLOCK_MENU := $(build.board).menu.clock.$(board.clock)
 build.f_cpu := $(firstword $(build.f_cpu) $($(BOARD_CLOCK_MENU).build.f_cpu))
 build.clocksource := $(firstword $($(build.board).build.clocksource) $($(BOARD_CLOCK_MENU).build.clocksource))
 
-ifeq ($(board.chip),85)
-build.variant := $($(build.board).build.variant)
-endif
-
 ifeq ($(board.chip),84)
 board.pinmapping := $(firstword $($(build.board).pinmapping) $(BOARD_PINMAPPING))
-build.variant := $(firstword $($(build.board).build.variant) $($(build.board).menu.pinmapping.$(board.pinmapping).build.variant))
+build.variant := $(firstword $(build.variant) $($(build.board).menu.pinmapping.$(board.pinmapping).build.variant))
 endif
 
 ltocflags := $(firstword $($(build.board).ltocflags) $($(build.board).menu.LTO.$(LTO).ltocflags))
