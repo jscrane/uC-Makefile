@@ -13,7 +13,9 @@ build.tarch := xtensa
 build.target := esp32
 
 -include hardware.mk
+
 tools.esptool_py.path := ${runtime.tools.esptool_py.path}
+tools.esptool_py.cmd = $(tools.esptool_py.cmd.linux)
 
 build.flash_mode := $($(build.board).build.flash_mode)
 build.flash_size := $($(build.board).build.flash_size)
@@ -25,7 +27,6 @@ upload.maximum_size := $(firstword $($(build.board).menu.PartitionScheme.$(PARTI
 upload.speed = $(UPLOAD_SPEED)
 serial.port = $(SERIAL_PORT)
 
-SUFFIX_HEX := bin
 SUFFIX_EEP := partitions.bin
 
 -include build-targets.mk
@@ -55,4 +56,4 @@ $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 upload-fs:  $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(tools.$(upload.tool).cmd.linux) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
-.PHONY: esp32-prebuild upload upload-fs ota
+.PHONY: upload upload-fs ota

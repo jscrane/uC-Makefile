@@ -1,6 +1,7 @@
 SKETCH ?= $(wildcard *.ino)
 
 SUFFIX_HEX ?= hex
+SUFFIX_BIN ?= bin
 SUFFIX_EEP ?= eep
 
 build.project_name := $(SKETCH)
@@ -8,7 +9,8 @@ build.path := .build
 build.source.path ?= .
 upload.tool := $($(build.board).upload.tool)
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
-SKETCH_BIN := $(build.path)/$(SKETCH).bin
+SKETCH_BIN := $(build.path)/$(SKETCH).$(SUFFIX_BIN)
+SKETCH_HEX := $(build.path)/$(SKETCH).$(SUFFIX_HEX)
 SKETCH_EEP := $(build.path)/$(SKETCH).$(SUFFIX_EEP)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
@@ -39,7 +41,7 @@ LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r
 LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
-all: prebuild $(SKETCH_BIN) build-summary
+all: prebuild $(SKETCH_BIN) $(SKETCH_HEX) build-summary
 
 define compile-sources
 $1.o: source_file = $1
@@ -156,13 +158,19 @@ $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS)))
 
 OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.$(SUFFIX_HEX).pattern)
 
-define objcopy-sketch
-$1: tools.esptool_py.cmd = $(tools.esptool_py.cmd.linux)
+define objcopy-hex
 $1:
 	$$(OBJCOPY_HEX_PATTERN)
 endef
 
-$(eval $(call objcopy-sketch,$(SKETCH_BIN)))
+$(eval $(call objcopy-hex,$(SKETCH_HEX)))
+
+define objcopy-bin
+$1:
+	$$(recipe.objcopy.$(SUFFIX_BIN).pattern)
+endef
+
+$(eval $(call objcopy-bin,$(SKETCH_BIN)))
 
 define objcopy-eep
 $1:
@@ -188,7 +196,6 @@ $(BUILD_CORE):
 $(build.path):
 	-mkdir -p $(build.path)
 
-prebuild: tools.esptool_py.cmd := $(tools.esptool_py.cmd.linux)
 prebuild: $(build.path)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
