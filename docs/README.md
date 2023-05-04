@@ -22,9 +22,9 @@ Targets are in lowercase.
 - path
 - term: starts terminal on `SERIAL_PORT`
 
-### Platform-specific`
+### Platform-specific
 - [avr and attiny](avr.md)
 - [esp8266 and esp32](esp.md)
 - [msp430 and tivac](msp.md)
-- stm32
+- stm32 (beta)
 
