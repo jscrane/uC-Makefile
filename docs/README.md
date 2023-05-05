@@ -26,5 +26,5 @@ Targets are in lowercase.
 - [avr and attiny](avr.md)
 - [esp8266 and esp32](esp.md)
 - [msp430 and tivac](msp.md)
-- stm32 (beta)
+- [stm32](stm32.md)
 

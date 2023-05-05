@@ -8,7 +8,10 @@ MENU_OPT ?= osstd
 MENU_DBG ?= none
 MENU_RTLIB ?= nano
 MENU_UPLOAD_METHOD ?= serialMethod
-MENU_SERIAL_PORT ?= /dev/ttyUSB0
+MENU_SERIAL_PORT ?= $(firstword $(SERIAL_PORT) /dev/ttyUSB0)
+STM_TOOLS ?= /usr/local
+
+export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 
 -include hardware.mk
 
