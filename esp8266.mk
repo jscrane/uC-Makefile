@@ -55,7 +55,7 @@ OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
 -include build-targets.mk
 
 upload: cmd = $(tools.$(upload.tool).cmd)
-upload: $(SKETCH_BIN)
+upload: prebuild $(SKETCH_BIN)
 	$(subst "",, $(tools.$(upload.tool).upload.pattern))
 
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)

@@ -34,7 +34,7 @@ SUFFIX_EEP := partitions.bin
 upload: path = $(runtime.tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd.linux)
 upload: upload.pattern_args = $(tools.$(upload.tool).upload.pattern_args)
-upload: $(SKETCH_BIN)
+upload: prebuild $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.pattern.linux)
 
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)

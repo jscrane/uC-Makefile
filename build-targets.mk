@@ -33,7 +33,7 @@ BUILD_LIBS := $(build.path)/libs
 build.core.path := $(runtime.platform.path)/cores/$(build.core)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
-CORE_SOURCES := $(wildcard $(addprefix $(build.core.path)/, *.c *.cpp *.S) $(addprefix $(build.core.path)/*/, *.c *.cpp *.S) $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
+CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
 LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))
