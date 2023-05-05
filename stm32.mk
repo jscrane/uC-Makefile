@@ -1,14 +1,15 @@
 VENDOR := STMicroelectronics
 PROCESSOR_FAMILY := stm32
 
+SERIAL_PORT ?= /dev/ttyACM0
 MENU_XSERIAL ?= generic
 MENU_USB ?= none
 MENU_XUSB ?= FS
 MENU_OPT ?= osstd
 MENU_DBG ?= none
 MENU_RTLIB ?= nano
-MENU_UPLOAD_METHOD ?= serialMethod
-MENU_SERIAL_PORT ?= $(firstword $(SERIAL_PORT) /dev/ttyUSB0)
+MENU_UPLOAD_METHOD ?= dfu2Method
+MENU_SERIAL_PORT ?= $(SERIAL_PORT)
 STM_TOOLS ?= /usr/local
 
 export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
@@ -43,12 +44,15 @@ LIBRARIES += SrcWrapper
 -include build-targets.mk
 
 upload.method := $(FAMILY).menu.upload_method.$(MENU_UPLOAD_METHOD)
-upload.tool := $($(upload.method).upload.tool)
-upload.protocol := $($(upload.method).upload.protocol)
+upload.tool = $($(upload.method).upload.tool)
+upload.protocol = $($(upload.method).upload.protocol)
 upload.options = $($(upload.method).upload.options)
+upload.usbID = $($(upload.method).upload.usbID)
+upload.altID = $($(upload.method).upload.altID)
 
 upload: path = $(tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd)
+upload: script = $(tools.$(upload.tool).script)
 upload: upload.params = $(tools.$(upload.tool).upload.params)
 upload: serial.port.file = $(notdir $(MENU_SERIAL_PORT))
 upload: $(SKETCH_BIN)

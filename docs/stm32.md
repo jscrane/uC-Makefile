@@ -1,15 +1,16 @@
 ### stm32
 
 variables:
-- MENU_XSERIAL: generic
-- MENU_USB: none
-- MENU_XUSB: FS
-- MENU_OPT: osstd
-- MENU_DBG: none
-- MENU_RTLIB: nano
-- MENU_UPLOAD_METHOD: serialMethod
-- MENU_SERIAL_PORT: $(SERIAL_PORT) or /dev/ttyUSB0
-- STM_TOOLS: /usr/local
+- SERIAL_PORT: ```/dev/ttyACM0```
+- MENU_XSERIAL: ```generic``` (```none```, ```disabled```)
+- MENU_USB: ```none``` (```CDCgen```, ```CDC```, ```HID```)
+- MENU_XUSB: ```FS``` (```HS```, ```HSFS```)
+- MENU_OPT: ```osstd``` (```oslto```, ```o1std```, ```o1lto```, ```o2std```, ```o2lto```, ```o3std```, ```o3lto```, ```ogstd```, ```o0std```)
+- MENU_DBG: ```none``` (```enable_sym```, ```enable_log```, ```enable_all```)
+- MENU_RTLIB: ```nano``` (```nanofp```, ```nanofs```, ```nanofps```, ```full```)
+- MENU_UPLOAD_METHOD: ```serialMethod``` (```swdMethod```, ```dfuMethod```, ```bmpMethod```, ```hidMethod```, ```dfu2Method```, ```dfuoMethod```)
+- MENU_SERIAL_PORT: $(SERIAL_PORT) or ```/dev/ttyUSB0```
+- STM_TOOLS: ```/usr/local```
 
 examples:
 

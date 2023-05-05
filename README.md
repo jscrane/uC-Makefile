@@ -42,10 +42,10 @@ See the [documentation](docs/README.md).
  - [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.6
  - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
  - Arduino [esp8266](https://github.com/esp8266/Arduino), 3.1.2
- - Arduino [esp32](https://github.com/espressif/arduino-esp32), 2.0.6
+ - Arduino [esp32](https://github.com/espressif/arduino-esp32), 2.0.9
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4 (requires editing SD.h for Stellarpad)
  - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
- - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.4.0 (experimental)
+ - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.5.0 (new!)
 
 Note: Energia is no longer developed. Its cores are now integrated with Arduino via
 [this repository](https://github.com/Andy4495/TI_Platform_Cores_For_Arduino).
