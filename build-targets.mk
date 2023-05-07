@@ -156,28 +156,17 @@ endef
 
 $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS)))
 
-OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.$(SUFFIX_HEX).pattern)
+$(SKETCH_HEX):
+	$(recipe.objcopy.$(SUFFIX_HEX).pattern)
+	$(recipe.objcopy.$(SUFFIX_HEX).1.pattern)
+	$(recipe.objcopy.$(SUFFIX_HEX).2.pattern)
+	$(recipe.objcopy.$(SUFFIX_HEX).3.pattern)
 
-define objcopy-hex
-$1:
-	$$(OBJCOPY_HEX_PATTERN)
-endef
+$(SKETCH_BIN):
+	$(recipe.objcopy.$(SUFFIX_BIN).pattern)
 
-$(eval $(call objcopy-hex,$(SKETCH_HEX)))
-
-define objcopy-bin
-$1:
-	$$(recipe.objcopy.$(SUFFIX_BIN).pattern)
-endef
-
-$(eval $(call objcopy-bin,$(SKETCH_BIN)))
-
-define objcopy-eep
-$1:
-	$$(recipe.objcopy.$(SUFFIX_EEP).pattern)
-endef
-
-$(eval $(call objcopy-eep,$(SKETCH_EEP)))
+$(SKETCH_EEP):
+	$(recipe.objcopy.$(SUFFIX_EEP).pattern)
 
 $(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
@@ -196,7 +185,7 @@ $(BUILD_CORE):
 $(build.path):
 	-mkdir -p $(build.path)
 
-prebuild: $(build.path)
+prebuild: $(PREBUILD) $(build.path)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
 	$(recipe.hooks.prebuild.3.pattern)

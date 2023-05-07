@@ -1,3 +1,7 @@
+ifndef FLASH_SIZE
+$(error FLASH_SIZE required)
+endif
+
 LWIP_OPTS ?= lm2f
 F_CPU ?= 80
 DEBUG_PORT ?= Disabled
@@ -50,8 +54,6 @@ build.exception_flags := $($(build.board).menu.exception.$(EXCEPTIONS).build.exc
 build.stdcpp_lib := $($(build.board).menu.exception.$(EXCEPTIONS).build.stdcpp_lib)
 build.mmuflags := $($(build.board).menu.mmu.$(MMU).build.mmuflags)
 
-OBJCOPY_HEX_PATTERN ?= $(recipe.objcopy.hex.1.pattern)
-
 -include build-targets.mk
 
 upload: cmd = $(tools.$(upload.tool).cmd)
@@ -62,7 +64,7 @@ ota: network_cmd = $(tools.$(upload.tool).network_cmd)
 ota: serial.port = $(OTA_HOST)
 ota: network.port = $(OTA_PORT)
 ota: network.password = $(OTA_PASSWORD)
-ota: $(SKETCH_BIN)
+ota: $(SKETCH_HEX) $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
 BUILD_EXTRAS := $(SPIFFS_IMAGE) $(LITTLEFS_IMAGE)

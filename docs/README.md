@@ -12,6 +12,7 @@ A colon separates the name of the variable from its default value. Parentheses i
 - LIBRARIES
 - COMPILER_WARNINGS: `default`
 - SERIAL_PORT: `/dev/ttyUSB0`
+- PREBUILD: per-sketch `prebuild` target
 - CLEAN: per-sketch `clean` target
 
 Targets are in lowercase.
@@ -20,6 +21,8 @@ Targets are in lowercase.
 - upload
 - clean
 - path
+- build-summary
+- version: prints core version
 - term: starts terminal on `SERIAL_PORT`
 
 ### Platform-specific
