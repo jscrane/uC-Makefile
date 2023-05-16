@@ -31,11 +31,20 @@ targets:
 ### esp32
 
 menu options:
-- FLASHFREQ: 80
-- PARTITIONSCHEME: default
+- JTAGADAPTER: default (external, bridge)
+- PSRAM: disabled (enabled)
+- PARTITIONSCHEME: default (minimal, no_ota, noota_3g, noota_ffat, noota_3gffat, huge_app, min_spiffs, fatflash, app3M_fat9M_16MB, rainmaker)
+- CPUFREQ: 240 (160, 80, 40, 26, 20, 13, 10)
+- FLASHMODE: qio (dio, qout, dout)
+- FLASHFREQ: 80 (40)
+- FLASHSIZE: 4M (8M, 2M, 16M)
+- UPLOADSPEED: 921600 (115200, 256000, 230400, 460800, 512000)
+- LOOPCORE: 1 (0)
+- EVENTSCORE: 1 (0)
+- DEBUGLEVEL: none (error, warn, info, debug, verbose)
+- ERASEFLASH: none (all)
 
 other variables:
-- UPLOAD_SPEED: 921600
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 - OTA_HOST
@@ -62,7 +71,6 @@ include esp8266.mk
 Node32s:
 ```
 BOARD := node32s
-UPLOAD_SPEED := 921600
 TERMINAL_SPEED := 115200
 include esp32.mk
 ```

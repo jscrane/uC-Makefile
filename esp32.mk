@@ -1,12 +1,21 @@
 # default options (settable by user)
-UPLOAD_SPEED ?= 921600
 SERIAL_PORT ?= /dev/ttyUSB0
 FS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 
 # menus
-FLASHFREQ ?= 80
+JTAGADAPTER ?= default
+PSRAM ?= disabled
 PARTITIONSCHEME ?= default
+CPUFREQ ?= 240
+FLASHMODE ?= qio
+FLASHFREQ ?= 80
+FLASHSIZE ?= 4M
+UPLOADSPEED ?= 921600
+LOOPCORE ?= 1
+EVENTSCORE ?= 1
+DEBUGLEVEL ?= none
+ERASEFLASH ?= none
 
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32
@@ -19,8 +28,18 @@ build.target := esp32
 tools.esptool_py.path := ${runtime.tools.esptool_py.path}
 tools.esptool_py.cmd = $(tools.esptool_py.cmd.linux)
 
-$(call define-menu-variables,FlashFreq)
+$(call define-menu-variables,JTAGAdapter)
+$(call define-menu-variables,PSRAM)
 $(call define-menu-variables,PartitionScheme)
+$(call define-menu-variables,CPUFreq)
+$(call define-menu-variables,FlashMode)
+$(call define-menu-variables,FlashFreq)
+$(call define-menu-variables,FlashSize)
+$(call define-menu-variables,UploadSpeed)
+$(call define-menu-variables,LoopCore)
+$(call define-menu-variables,EventsCore)
+$(call define-menu-variables,DebugLevel)
+$(call define-menu-variables,EraseFlash)
 
 upload.maximum_size ?= $($(build.mcu).upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)
