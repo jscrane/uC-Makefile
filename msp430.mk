@@ -4,9 +4,6 @@ VENDOR := energia
 PROCESSOR_FAMILY := msp430
 
 -include hardware.mk
-
-upload.protocol := $($(build.board).upload.protocol)
-
 -include build-targets.mk
 
 upload: path = $(runtime.tools.$(upload.tool).path)

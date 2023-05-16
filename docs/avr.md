@@ -14,7 +14,7 @@ when the programmer is `avrdude` there are some extra targets:
 
 ### avr variables
 
-- BOARD_CPU: the chip (and clock speed) of the cpu, if required by the chosen board
+- CPU: the chip (and clock speed) of the cpu, if required by the chosen board
 - UPLOAD_VERIFY: -V
 - UPLOAD_VERBOSE: quiet
 - PROGRAM_VERBOSE
@@ -25,9 +25,12 @@ when the programmer is `avrdude` there are some extra targets:
 ### attiny variables
 
 these correspond to menu options in the IDE (see boards.txt):
-- BOARD_CHIP: _mandatory_
-- BOARD_CLOCK: _mandatory_
-- BOARD_PINMAPPING: anew (old)
+- CHIP: _mandatory_
+- CLOCK: _mandatory_
+- PINMAPPING: anew (old)
+- EESAVE: aenable (disable)
+- BOD: 1v8 (2v7, 4v3)
+- LTO: enable (disable)
 - UPLOAD_VERIFY: noverify
 - PROGRAM_VERIFY: same as UPLOAD_VERIFY
 - UPLOAD_VERBOSE: quiet (verbose)
@@ -35,9 +38,6 @@ these correspond to menu options in the IDE (see boards.txt):
 - ERASE_VERBOSE: same as UPLOAD_VERBOSE
 - BOOTLOADER_VERBOSE: same as UPLOAD_VERBOSE
 - PROGRAMMER: arduinoasisp
-- EESAVE: aenable (disable)
-- BOD: 1v8 (2v7, 4v3)
-- LTO: enable (disable)
 
 ### examples
 
@@ -51,14 +51,14 @@ include avr.mk
 Nano:
 ```
 BOARD := nano
-BOARD_CPU := atmega168
+CPU := atmega168
 include avr.mk
 ```
 
 Pro/Pro Mini with 8MHz CPU:
 ```
 BOARD := pro
-BOARD_CPU := 8MHzatmega328
+CPU := 8MHzatmega328
 TERMINAL_SPEED := 115200
 include avr.mk
 ```
@@ -66,8 +66,8 @@ include avr.mk
 ATTiny84 with Optiboot and 8MHz internal clock:
 ```
 BOARD := attinyx4opti
-BOARD_CHIP := 84
-BOARD_CLOCK := 8internal
+CHIP := 84
+CLOCK := 8internal
 TERMINAL_SPEED := 19200
 include tiny.mk
 ```

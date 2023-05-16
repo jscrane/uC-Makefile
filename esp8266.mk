@@ -1,21 +1,23 @@
-ifndef FLASH_SIZE
-$(error FLASH_SIZE required)
+ifndef EESZ
+$(error EESZ required)
 endif
 
-LWIP_OPTS ?= lm2f
-F_CPU ?= 80
-DEBUG_PORT ?= Disabled
-DEBUG_LEVEL ?= None____
-EXCEPTIONS ?= disabled
-VTABLES ?= flash
-SSL ?= all
-WIPE ?= none
 UPLOAD_SPEED ?= 921600
 UPLOAD_VERBOSE ?= quiet
 SERIAL_PORT ?= /dev/ttyUSB0
 FS_DIR ?= data
 SPIFFS_IMAGE ?= spiffs.img
 LITTLEFS_IMAGE ?= littlefs.img
+
+# menus
+XTAL ?= 80
+DBG ?= Disabled
+LVL ?= None____
+IP ?= lm2f
+WIPE ?= none
+VT ?= flash
+SSL ?= all
+EXCEPTIONS ?= disabled
 MMU ?= 3232
 
 VENDOR := esp8266
@@ -23,36 +25,21 @@ PROCESSOR_FAMILY := esp8266
 
 -include hardware.mk
 
-build.f_cpu := $($(build.board).menu.xtal.$(F_CPU).build.f_cpu)
-build.debug_port := $($(build.board).menu.dbg.$(DEBUG_PORT).build.debug_port)
-build.debug_level := $($(build.board).menu.lvl.$(DEBUG_LEVEL).build.debug_level)
-build.flash_flags := $($(build.board).build.flash_flags)
-build.flash_mode := $($(build.board).build.flash_mode)
-build.flash_freq := $($(build.board).build.flash_freq)
+$(call define-menu-variables,xtal)
+$(call define-menu-variables,dbg)
+$(call define-menu-variables,lvl)
+$(call define-menu-variables,eesz)
+$(call define-menu-variables,ip)
+$(call define-menu-variables,wipe)
+$(call define-menu-variables,vt)
+$(call define-menu-variables,ssl)
+$(call define-menu-variables,exceptions)
+$(call define-menu-variables,mmu)
 
-FLASH_MENU := $(build.board).menu.eesz.$(FLASH_SIZE)
-build.flash_size := $($(FLASH_MENU).build.flash_size)
-build.flash_ld := $($(FLASH_MENU).build.flash_ld)
-build.rfcal_addr := $($(FLASH_MENU).build.rfcal_addr)
-build.spiffs_pagesize := $($(FLASH_MENU).build.spiffs_pagesize)
-build.spiffs_blocksize := $($(FLASH_MENU).build.spiffs_blocksize)
-build.spiffs_start := $($(FLASH_MENU).build.spiffs_start)
-build.spiffs_end := $($(FLASH_MENU).build.spiffs_end)
-
-upload.maximum_size := $($(build.board).menu.eesz.autoflash.upload.maximum_size)
-upload.erase_cmd := $($(build.board).menu.wipe.$(WIPE).upload.erase_cmd)
+upload.maximum_size := $(menu.eesz.autoflash.upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)
 upload.verbose = $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 serial.port = $(SERIAL_PORT)
-
-build.lwip_flags := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_flags)
-build.lwip_lib := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_lib)
-build.lwip_include := $($(build.board).menu.ip.$(LWIP_OPTS).build.lwip_include)
-build.vtable_flags := $($(build.board).menu.vt.$(VTABLES).build.vtable_flags)
-build.ssl_flags := $($(build.board).menu.ssl.$(SSL).build.ssl_flags)
-build.exception_flags := $($(build.board).menu.exception.$(EXCEPTIONS).build.exception_flags)
-build.stdcpp_lib := $($(build.board).menu.exception.$(EXCEPTIONS).build.stdcpp_lib)
-build.mmuflags := $($(build.board).menu.mmu.$(MMU).build.mmuflags)
 
 -include build-targets.mk
 

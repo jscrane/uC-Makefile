@@ -1,5 +1,5 @@
 ifndef PROCESSOR_FAMILY
-$(error PROCESSOR_FAMILY
+$(error PROCESSOR_FAMILY required)
 endif
 ifndef VENDOR
 $(error VENDOR required)
@@ -27,14 +27,20 @@ $(foreach t,$(wildcard $(PACKAGE_DIR)/tools/*), $(eval $(call define-tool,$(notd
 -include platform.local.txt.mk
 -include programmers.txt.mk
 
-build.board := $(BOARD)
+define define-variable
+$1 = $2
+endef
+
+define define-prefix-variables
+$(foreach v, $(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.%=%), $($(v)))))
+endef
+
+define define-menu-variables
+$(call define-prefix-variables,menu.$1.$($(shell echo $1 | tr a-z A-Z)))
+endef
+
+$(eval $(call define-prefix-variables,$(BOARD)))
+
 build.arch := $(PROCESSOR_FAMILY)
-build.mcu := $($(build.board).build.mcu)
-build.f_cpu := $($(build.board).build.f_cpu)
-build.core := $($(build.board).build.core)
-build.variant := $($(build.board).build.variant)
 build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 build.system.path := $(runtime.platform.path)/system
-
-upload.maximum_size := $($(build.board).upload.maximum_size)
-upload.maximum_data_size := $($(build.board).upload.maximum_data_size)

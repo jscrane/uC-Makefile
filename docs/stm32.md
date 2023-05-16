@@ -1,7 +1,6 @@
 ### stm32
 
-variables:
-- SERIAL_PORT: ```/dev/ttyACM0```
+menu items:
 - MENU_XSERIAL: ```generic``` (```none```, ```disabled```)
 - MENU_USB: ```CDCgen``` (```none```, ```CDC```, ```HID```)
 - MENU_XUSB: ```FS``` (```HS```, ```HSFS```)
@@ -10,6 +9,9 @@ variables:
 - MENU_RTLIB: ```nano``` (```nanofp```, ```nanofs```, ```nanofps```, ```full```)
 - MENU_UPLOAD_METHOD: ```dfu2Method``` (```swdMethod```, ```dfuMethod```, ```bmpMethod```, ```hidMethod```, ```serialMethod```, ```dfuoMethod```)
 - MENU_SERIAL_PORT: $(SERIAL_PORT) or ```/dev/ttyUSB0```
+
+other variables:
+- SERIAL_PORT: ```/dev/ttyACM0```
 - STM_TOOLS: ```/usr/local```
 
 examples:

@@ -4,9 +4,6 @@ VENDOR := energia
 PROCESSOR_FAMILY := tivac
 
 -include hardware.mk
-
-build.ldscript := $($(build.board).build.ldscript)
-
 -include build-targets.mk
 
 upload: path = $(runtime.tools.$(upload.tool).path)
