@@ -39,8 +39,8 @@ define define-menu-variables
 $(call define-prefix-variables,menu.$1.$($(shell echo $1 | tr a-z A-Z)))
 endef
 
-$(eval $(call define-prefix-variables,$(BOARD)))
+$(call define-prefix-variables,$(BOARD))
 
 build.arch := $(PROCESSOR_FAMILY)
-build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
-build.system.path := $(runtime.platform.path)/system
+build.variant.path = $(runtime.platform.path)/variants/$(build.variant)
+build.system.path = $(runtime.platform.path)/system
