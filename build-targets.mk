@@ -7,7 +7,6 @@ SUFFIX_EEP ?= eep
 build.project_name := $(SKETCH)
 build.path := .build
 build.source.path ?= .
-upload.tool := $($(build.board).upload.tool)
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SKETCH_BIN := $(build.path)/$(SKETCH).$(SUFFIX_BIN)
 SKETCH_HEX := $(build.path)/$(SKETCH).$(SUFFIX_HEX)
@@ -185,6 +184,9 @@ $(BUILD_CORE):
 $(build.path):
 	-mkdir -p $(build.path)
 
+build-variables:
+	$(foreach v, $(sort $(filter build.%, $(.VARIABLES))), $(info $(v) = $($(v))))
+
 prebuild: $(PREBUILD) $(build.path)
 	$(recipe.hooks.prebuild.1.pattern)
 	$(recipe.hooks.prebuild.2.pattern)
@@ -214,6 +216,6 @@ build-summary: $(SKETCH_ELF)
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
 
-.PHONY: clean all path term version build-summary prebuild
+.PHONY: clean all path term version build-summary prebuild build-variables
 
 -include $(DEPS)

@@ -1,14 +1,17 @@
 ### esp8266
 
-these variables mostly correspond to menu options in the IDE:
-- LWIP_OPTS: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
-- F_CPU: 80 (160)
-- DEBUG_PORT: Disabled (Serial, Serial1)
-- DEBUG_LEVEL: None____ (SSL, TLS_MEM, HTTP_CLIENT, HTTP_SERVER, ..., CORE, WIFI, UPDATER, OTA, OOM, ...)
-- EXCEPTIONS: disabled (enabled)
-- VTABLES: flash (heap, iram)
+menu options:
+- XTAL: 80 (160)
+- DBG: Disabled (Serial, Serial1)
+- LVL: None____ (SSL, TLS_MEM, HTTP_CLIENT, HTTP_SERVER, ..., CORE, WIFI, UPDATER, OTA, OOM, ...)
+- IP: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
+- WIPE: none (sdk, all)
+- VT: flash (heap, iram)
 - SSL: all (basic)
-- WIPE: none  (sdk, all)
+- EXCEPTIONS: disabled (enabled)
+- MMU: 3232 (4816, 4816H, 3216, ext128k, ext8192k)
+
+other variables:
 - UPLOAD_SPEED: 921600 (9600, 57600, 115200, 230400, 460800, 512000)
 - UPLOAD_VERBOSE: quiet
 - FS_DIR: data
@@ -27,12 +30,14 @@ targets:
 
 ### esp32
 
-variables:
+menu options:
+- FLASHFREQ: 80
+- PARTITIONSCHEME: default
+
+other variables:
 - UPLOAD_SPEED: 921600
-- FLASH_FREQ: 80
 - SPIFFS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
-- PARTITION_SCHEME: default
 - OTA_HOST
 - OTA_PORT
 - OTA_PASSWORD
