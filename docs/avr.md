@@ -12,25 +12,32 @@ when the programmer is `avrdude` there are some extra targets:
 - write-fuses
 - write-eeprom
 
-### avr variables
+### avr
 
+menu options:
 - CPU: the chip (and clock speed) of the cpu, if required by the chosen board
+
+other variables:
 - UPLOAD_VERIFY: -V
 - UPLOAD_VERBOSE: quiet
-- PROGRAM_VERBOSE
-- ERASE_VERBOSE
-- BOOTLOADER_VERBOSE
+- PROGRAM_VERBOSE: same as UPLOAD_VERBOSE
+- ERASE_VERBOSE: same as UPLOAD_VERBOSE
+- BOOTLOADER_VERBOSE: same as UPLOAD_VERBOSE
 - PROGRAMMER: arduinoasisp (avrisp, avrispmkii, usbtinyisp, usbasp, parallel, arduinoasispatmega32u4, usbtinyisp2, dragon, ponyser, stk500)
 
-### attiny variables
+### attiny
 
-these correspond to menu options in the IDE (see boards.txt):
+menu options:
 - CHIP: _mandatory_
 - CLOCK: _mandatory_
 - PINMAPPING: anew (old)
-- EESAVE: aenable (disable)
-- BOD: 1v8 (2v7, 4v3)
 - LTO: enable (disable)
+- BOD: 1v8 (2v7, 4v3)
+- EESAVE: aenable (disable)
+- MILLIS: enable (disable)
+- NEOPIXELPORT: porta (portb)
+
+other variables:
 - UPLOAD_VERIFY: noverify
 - PROGRAM_VERIFY: same as UPLOAD_VERIFY
 - UPLOAD_VERBOSE: quiet (verbose)

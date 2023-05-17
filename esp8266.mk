@@ -33,25 +33,7 @@ PROCESSOR_FAMILY := esp8266
 
 -include hardware.mk
 
-$(call define-menu-variables,xtal)
-$(call define-menu-variables,vt)
-$(call define-menu-variables,exception)
-$(call define-menu-variables,stacksmash)
-$(call define-menu-variables,ssl)
-$(call define-menu-variables,mmu)
-$(call define-menu-variables,non32xfer)
-$(call define-menu-variables,ResetMethod)
-$(call define-menu-variables,CrystalFreq)
-$(call define-menu-variables,FlashFreq)
-$(call define-menu-variables,FlashMode)
-$(call define-menu-variables,eesz)
-$(call define-menu-variables,led)
-$(call define-menu-variables,sdk)
-$(call define-menu-variables,ip)
-$(call define-menu-variables,dbg)
-$(call define-menu-variables,lvl)
-$(call define-menu-variables,wipe)
-$(call define-menu-variables,baud)
+$(call define-menus,xtal vt exception stacksmash ssl mmu non32xfer ResetMethod CrystalFreq FlashFreq FlashMode eesz led sdk ip dbg lvl wipe baud)
 
 upload.maximum_size := $(menu.eesz.autoflash.upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)

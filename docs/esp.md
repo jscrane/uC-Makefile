@@ -28,7 +28,6 @@ menu options:
 - BAUD: 115200 (57600, 230400, 256000, 460800, 512000, 921600, 3000000)
 
 other variables:
-- UPLOAD_SPEED: 921600 (9600, 57600, 115200, 230400, 460800, 512000)
 - UPLOAD_VERBOSE: quiet
 - FS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
@@ -77,10 +76,9 @@ targets:
 WeMos D1 Mini:
 ```
 BOARD := d1_mini
-UPLOAD_SPEED := 921600
 TERMINAL_SPEED := 115200
-FLASH_SIZE := 4M1M
-F_CPU := 80
+EESZ := 4M1M
+XTAL := 80
 include esp8266.mk
 ```
 

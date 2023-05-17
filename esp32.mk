@@ -28,26 +28,13 @@ build.target := esp32
 tools.esptool_py.path := ${runtime.tools.esptool_py.path}
 tools.esptool_py.cmd = $(tools.esptool_py.cmd.linux)
 
-$(call define-menu-variables,JTAGAdapter)
-$(call define-menu-variables,PSRAM)
-$(call define-menu-variables,PartitionScheme)
-$(call define-menu-variables,CPUFreq)
-$(call define-menu-variables,FlashMode)
-$(call define-menu-variables,FlashFreq)
-$(call define-menu-variables,FlashSize)
-$(call define-menu-variables,UploadSpeed)
-$(call define-menu-variables,LoopCore)
-$(call define-menu-variables,EventsCore)
-$(call define-menu-variables,DebugLevel)
-$(call define-menu-variables,EraseFlash)
-
-upload.maximum_size ?= $($(build.mcu).upload.maximum_size)
-upload.speed = $(UPLOAD_SPEED)
-serial.port = $(SERIAL_PORT)
+$(call define-menus,JTAGAdapter PSRAM PartitionScheme CPUFreq FlashMode FlashFreq FlashSize UploadSpeed LoopCore EventsCore DebugLevel EraseFlash)
 
 SUFFIX_EEP := partitions.bin
 
 -include build-targets.mk
+
+serial.port = $(SERIAL_PORT)
 
 upload: path = $(runtime.tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd.linux)
