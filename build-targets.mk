@@ -1,12 +1,7 @@
-SKETCH ?= $(wildcard *.ino)
-
 SUFFIX_HEX ?= hex
 SUFFIX_BIN ?= bin
 SUFFIX_EEP ?= eep
 
-build.project_name := $(SKETCH)
-build.path := .build
-build.source.path ?= .
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SKETCH_BIN := $(build.path)/$(SKETCH).$(SUFFIX_BIN)
 SKETCH_HEX := $(build.path)/$(SKETCH).$(SUFFIX_HEX)
@@ -25,12 +20,8 @@ LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p"
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 
 BUILD_CORE := $(build.path)/core
-archive_file := libcore.a
-archive_file_path := $(build.path)/$(archive_file)
 BUILD_LIBS := $(build.path)/libs
 
-build.core.path := $(runtime.platform.path)/cores/$(build.core)
-build.variant.path := $(runtime.platform.path)/variants/$(build.variant)
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
@@ -65,9 +56,6 @@ endif
 endef
 
 $(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
-
-COMPILER_WARNINGS ?= default
-compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
 
 define compile-sketch
 $1.cpp.o: source_file = $1
