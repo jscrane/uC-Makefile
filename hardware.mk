@@ -10,11 +10,23 @@ endif
 
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 
+runtime.hardware.path := $(PACKAGE_DIR)/hardware
+runtime.platform.path := $(wildcard $(runtime.hardware.path)/$(PROCESSOR_FAMILY)/*)
 runtime.ide.path := /usr/local/arduino
 runtime.ide.version := 10815
-runtime.platform.path := $(wildcard $(PACKAGE_DIR)/hardware/$(PROCESSOR_FAMILY)/*)
+ide_version := $(runtime.ide.version)
+runtime.os := linux
+software := ARDUINO
+name := $(VENDOR)
+_id := $(BOARD)
+
+define os-override
+$(firstword $($1.$(runtime.os)) $($1))
+endef
 
 define define-tool
+runtime.tools.$1.cmd := $1
+tools.$1.path := $2
 runtime.tools.$1.path := $2
 runtime.tools.$1-$(notdir $2).path := $2
 endef
@@ -45,6 +57,17 @@ endef
 
 $(call define-prefix-variables,$(BOARD))
 
+SKETCH ?= $(wildcard *.ino)
+COMPILER_WARNINGS ?= default
+
+build.project_name := $(SKETCH)
 build.arch := $(PROCESSOR_FAMILY)
+build.fqbn := $(VENDOR):$(PROCESSOR_FAMILY):$(BOARD)
+build.core.path := $(runtime.platform.path)/cores/$(build.core)
 build.variant.path = $(runtime.platform.path)/variants/$(build.variant)
 build.system.path = $(runtime.platform.path)/system
+build.path := .build
+build.source.path ?= .
+archive_file := libcore.a
+archive_file_path := $(build.path)/$(archive_file)
+compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
