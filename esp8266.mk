@@ -2,7 +2,6 @@ ifndef EESZ
 $(error EESZ required)
 endif
 
-UPLOAD_SPEED ?= 921600
 UPLOAD_VERBOSE ?= quiet
 SERIAL_PORT ?= /dev/ttyUSB0
 FS_DIR ?= data
@@ -11,30 +10,30 @@ LITTLEFS_IMAGE ?= littlefs.img
 
 # menus
 XTAL ?= 80
+VT ?= flash
+EXCEPTION ?= disabled
+STACKSMASH ?= disabled
+SSL ?= all
+MMU ?= 3232
+NON32XFER ?= fast
+RESETMETHOD ?= nodemcu
+CRYSTALFREQ ?= 26
+FLASHFREQ ?= 40
+FLASHMODE ?= dout
+LED ?= 2
+SDK ?= nonosdk_190703
+IP ?= lm2f
 DBG ?= Disabled
 LVL ?= None____
-IP ?= lm2f
 WIPE ?= none
-VT ?= flash
-SSL ?= all
-EXCEPTIONS ?= disabled
-MMU ?= 3232
+BAUD ?= 115200
 
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
 
 -include hardware.mk
 
-$(call define-menu-variables,xtal)
-$(call define-menu-variables,dbg)
-$(call define-menu-variables,lvl)
-$(call define-menu-variables,eesz)
-$(call define-menu-variables,ip)
-$(call define-menu-variables,wipe)
-$(call define-menu-variables,vt)
-$(call define-menu-variables,ssl)
-$(call define-menu-variables,exceptions)
-$(call define-menu-variables,mmu)
+$(call define-menus,xtal vt exception stacksmash ssl mmu non32xfer ResetMethod CrystalFreq FlashFreq FlashMode eesz led sdk ip dbg lvl wipe baud)
 
 upload.maximum_size := $(menu.eesz.autoflash.upload.maximum_size)
 upload.speed = $(UPLOAD_SPEED)

@@ -39,6 +39,10 @@ define define-menu-variables
 $(call define-prefix-variables,menu.$1.$($(shell echo $1 | tr a-z A-Z)))
 endef
 
+define define-menus
+$(foreach m, $1, $(call define-menu-variables,$m))
+endef
+
 $(call define-prefix-variables,$(BOARD))
 
 build.arch := $(PROCESSOR_FAMILY)
