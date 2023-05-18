@@ -33,8 +33,6 @@ PROCESSOR_FAMILY := esp8266
 
 -include hardware.mk
 
-$(call define-menus,xtal vt exception stacksmash ssl mmu non32xfer ResetMethod CrystalFreq FlashFreq FlashMode eesz led sdk ip dbg lvl wipe baud)
-
 # ???
 upload.maximum_size := $(menu.eesz.autoflash.upload.maximum_size)
 upload.verbose = $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))

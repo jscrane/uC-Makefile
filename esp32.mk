@@ -28,8 +28,6 @@ build.target := esp32
 # this is required for recipel.hooks.prebuild.4.pattern (but shouldn't be)
 tools.esptool_py.cmd := $(call os-override,tools.esptool_py.cmd)
 
-$(call define-menus,JTAGAdapter PSRAM PartitionScheme CPUFreq FlashMode FlashFreq FlashSize UploadSpeed LoopCore EventsCore DebugLevel EraseFlash)
-
 SUFFIX_EEP := partitions.bin
 
 -include build-targets.mk
@@ -40,6 +38,7 @@ upload: path = $(tools.$(upload.tool).path)
 upload: cmd = $(call os-override,tools.$(upload.tool).cmd)
 upload: upload.pattern_args = $(tools.$(upload.tool).upload.pattern_args)
 upload: prebuild $(SKETCH_BIN)
+	echo "[$(upload.speed)] [$(UPLOADSPEED)] [$($(BOARD).menu.UploadSpeed.$(UPLOADSPEED).upload.speed)]"
 	$(tools.$(upload.tool).upload.pattern.linux)
 
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)
