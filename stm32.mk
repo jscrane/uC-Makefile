@@ -19,7 +19,7 @@ UPLOAD_METHOD ?= dfu2Method
 -include hardware.mk
 
 FAMILY := $(firstword $(subst ., ,$(BOARD)))
-build.xserial := $($(FAMILY).menu.xserial.$(MENU_XSERIAL).build.xSerial)
+build.bootloader_flags := $($(FAMILY).menu.upload_method.$(UPLOAD_METHOD).build.bootloader_flags)
 build.st_extra_flags := $($(FAMILY).build.st_extra_flags)
 
 LIBRARIES += SrcWrapper
@@ -30,6 +30,6 @@ upload: path = $(tools.$(upload.tool).path)
 upload: cmd = $(tools.$(upload.tool).cmd)
 upload: script = $(tools.$(upload.tool).script)
 upload: upload.params = $(tools.$(upload.tool).upload.params)
-upload: serial.port.file = $(notdir $(MENU_SERIAL_PORT))
+upload: serial.port.file = $(notdir $(SERIAL_PORT))
 upload: prebuild $(SKETCH_BIN)
 	$(subst "",, $(tools.$(upload.tool).upload.pattern))
