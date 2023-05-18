@@ -44,11 +44,11 @@ $1 = $2
 endef
 
 define define-prefix-variables
-$(foreach v, $(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.%=%), $($(v)))))
+$(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.%=%),$($(v)))))
 endef
 
 define define-menu-variables
-$(call define-prefix-variables,menu.$1.$($(shell echo $1 | tr a-z A-Z)))
+$(call define-prefix-variables,$(BOARD).menu.$1.$($(shell echo $1 | tr a-z A-Z)))
 endef
 
 define define-menus
@@ -57,13 +57,15 @@ endef
 
 $(call define-prefix-variables,$(BOARD))
 
+$(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
+
 SKETCH ?= $(wildcard *.ino)
 COMPILER_WARNINGS ?= default
 
 build.project_name := $(SKETCH)
 build.arch := $(PROCESSOR_FAMILY)
 build.fqbn := $(VENDOR):$(PROCESSOR_FAMILY):$(BOARD)
-build.core.path := $(runtime.platform.path)/cores/$(build.core)
+build.core.path = $(runtime.platform.path)/cores/$(build.core)
 build.variant.path = $(runtime.platform.path)/variants/$(build.variant)
 build.system.path = $(runtime.platform.path)/system
 build.path := .build

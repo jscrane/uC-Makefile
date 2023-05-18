@@ -11,8 +11,6 @@ PROCESSOR_FAMILY := avr
 
 -include hardware.mk
 
-$(call define-menu-variables,cpu)
-
 serial.port := $(SERIAL_PORT)
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
 upload.verify := $(UPLOAD_VERIFY)

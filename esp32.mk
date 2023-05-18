@@ -28,8 +28,6 @@ build.target := esp32
 # this is required for recipel.hooks.prebuild.4.pattern (but shouldn't be)
 tools.esptool_py.cmd := $(call os-override,tools.esptool_py.cmd)
 
-$(call define-menus,JTAGAdapter PSRAM PartitionScheme CPUFreq FlashMode FlashFreq FlashSize UploadSpeed LoopCore EventsCore DebugLevel EraseFlash)
-
 SUFFIX_EEP := partitions.bin
 
 -include build-targets.mk

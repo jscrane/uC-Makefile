@@ -16,8 +16,6 @@ COMPILER_PATH := $(lastword $(wildcard $(PACKAGES)/arduino/tools/$(COMPILER_FAMI
 
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 
--include hardware.mk
-
 # menus
 PINMAPPING ?= anew
 LTO ?= enable
@@ -26,11 +24,7 @@ EESAVE ?= aenable
 MILLIS ?= enabled
 NEOPIXELPORT ?= porta
 
-CHIP := $(firstword $(chip) $(CHIP))
-CLOCK := $(firstword $(clock) $(CLOCK))
-PINMAPPING := $(firstword $(pinmapping) $(PINMAPPING))
-
-$(call define-menus,chip clock pinmapping LTO bod eesave millis neopixelport)
+-include hardware.mk
 
 serial.port := $(SERIAL_PORT)
 upload.verbose := $(tools.$(upload.tool).upload.params.$(UPLOAD_VERBOSE))
