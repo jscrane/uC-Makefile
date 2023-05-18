@@ -38,7 +38,6 @@ upload: path = $(tools.$(upload.tool).path)
 upload: cmd = $(call os-override,tools.$(upload.tool).cmd)
 upload: upload.pattern_args = $(tools.$(upload.tool).upload.pattern_args)
 upload: prebuild $(SKETCH_BIN)
-	echo "[$(upload.speed)] [$(UPLOADSPEED)] [$($(BOARD).menu.UploadSpeed.$(UPLOADSPEED).upload.speed)]"
 	$(tools.$(upload.tool).upload.pattern.linux)
 
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)
