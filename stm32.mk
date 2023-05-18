@@ -3,42 +3,23 @@ PROCESSOR_FAMILY := stm32
 
 SERIAL_PORT ?= /dev/ttyACM0
 TERMINAL_SPEED ?= 115200
-MENU_XSERIAL ?= generic
-MENU_USB ?= CDCgen
-MENU_XUSB ?= FS
-MENU_OPT ?= osstd
-MENU_DBG ?= none
-MENU_RTLIB ?= nano
-MENU_UPLOAD_METHOD ?= dfu2Method
-MENU_SERIAL_PORT ?= $(SERIAL_PORT)
 STM_TOOLS ?= /usr/local
 
 export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 
+# menus
+XSERIAL ?= generic
+USB ?= CDCgen
+XUSB ?= FS
+OPT ?= osstd
+DBG ?= none
+RTLIB ?= nano
+UPLOAD_METHOD ?= dfu2Method
+
 -include hardware.mk
 
 FAMILY := $(firstword $(subst ., ,$(BOARD)))
-build.mcu := $($(FAMILY).build.mcu)
-build.core := $($(FAMILY).build.core)
-build.series := $($(FAMILY).build.series)
-build.cmsis_lib_gcc := $($(FAMILY).build.cmsis_lib_gcc)
-
 build.xserial := $($(FAMILY).menu.xserial.$(MENU_XSERIAL).build.xSerial)
-build.enable_usb := $($(FAMILY).menu.usb.$(MENU_USB).build.enable_usb)
-build.usb_speed := $($(FAMILY).menu.xusb.$(MENU_XUSB).build.usb_speed)
-build.flags.optimize := $(firstword $($(FAMILY).menu.opt.$(MENU_OPT).build.flags.optimize) -Os)
-build.flags.debug := $(firstword $($(FAMILY).menu.dbg.$(MENU_DBG).build.flags.debug) -DNDEBUG)
-build.flags.ldspecs := $(firstword $($(FAMILY).menu.rtlib.$(MENU_RTLIB).build.flags.ldspecs) --specs=nano.specs)
-build.flash_offset := $(firstword $($(FAMILY).menu.upload_method.$(MENU_UPLOAD_METHOD).build.flash_offset) 0)
-build.bootloader_flags := $($(FAMILY).menu.upload_method.$(MENU_UPLOAD_METHOD).build.bootloader_flags)
-
-upload.method := $(FAMILY).menu.upload_method.$(MENU_UPLOAD_METHOD)
-upload.tool = $($(upload.method).upload.tool)
-upload.protocol = $($(upload.method).upload.protocol)
-upload.options = $($(upload.method).upload.options)
-upload.usbID = $($(upload.method).upload.usbID)
-upload.altID = $($(upload.method).upload.altID)
-
 build.st_extra_flags := $($(FAMILY).build.st_extra_flags)
 
 LIBRARIES += SrcWrapper
