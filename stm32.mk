@@ -1,11 +1,10 @@
-VENDOR := STMicroelectronics
-PROCESSOR_FAMILY := stm32
+ifndef PNUM
+$(error PNUM required)
+endif
 
 SERIAL_PORT ?= /dev/ttyACM0
 TERMINAL_SPEED ?= 115200
 STM_TOOLS ?= /usr/local
-
-export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 
 # menus
 XSERIAL ?= generic
@@ -16,11 +15,15 @@ DBG ?= none
 RTLIB ?= nano
 UPLOAD_METHOD ?= dfu2Method
 
+VENDOR := STMicroelectronics
+PROCESSOR_FAMILY := stm32
+
+export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+
 -include hardware.mk
 
-FAMILY := $(firstword $(subst ., ,$(BOARD)))
-build.bootloader_flags := $($(FAMILY).menu.upload_method.$(UPLOAD_METHOD).build.bootloader_flags)
-build.st_extra_flags := $($(FAMILY).build.st_extra_flags)
+build.bootloader_flags := $($(BOARD).menu.upload_method.$(UPLOAD_METHOD).build.bootloader_flags)
+build.st_extra_flags := $($(BOARD).build.st_extra_flags)
 
 LIBRARIES += SrcWrapper
 
