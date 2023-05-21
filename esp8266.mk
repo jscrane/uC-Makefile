@@ -40,10 +40,6 @@ serial.port = $(SERIAL_PORT)
 
 -include build-targets.mk
 
-upload: cmd = $(tools.$(upload.tool).cmd)
-upload: prebuild $(SKETCH_BIN)
-	$(subst "",, $(tools.$(upload.tool).upload.pattern))
-
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)
 ota: serial.port = $(OTA_HOST)
 ota: network.port = $(OTA_PORT)

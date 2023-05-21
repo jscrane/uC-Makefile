@@ -201,9 +201,25 @@ build-summary: $(SKETCH_ELF)
 	$(eval DATA_PC = $(shell echo $(DATA_SIZE) "* 100 /" $(upload.maximum_data_size) | bc))
 	@echo data: $(DATA_SIZE) / $(upload.maximum_data_size) bytes \($(DATA_PC)%\)
 
+$(call define-scoped-prefix-variables,tools.$(upload.tool),upload)
+upload: prebuild $(SKETCH_BIN)
+	$(subst "",,$(call os-override,tools.$(upload.tool).upload.pattern))
+
+$(call define-scoped-prefix-variables,tools.$(program.tool),program)
+program: prebuild $(SKETCH_BIN)
+	$(subst "",,$(call os-override,tools.$(program.tool).program.pattern))
+
+$(call define-scoped-prefix-variables,tools.$(program.tool),erase)
+erase:
+	$(subst "",,$(call os-override,tools.$(program.tool).erase.pattern))
+
+$(call define-scoped-prefix-variables,tools.$(bootloader.tool),bootloader)
+bootloader:
+	$(subst "",,$(call os-override,tools.$(bootloader.tool).bootloader.pattern))
+
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
 
-.PHONY: clean all path term version build-summary prebuild build-variables
+.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader
 
 -include $(DEPS)

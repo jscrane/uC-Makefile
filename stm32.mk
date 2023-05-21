@@ -22,17 +22,8 @@ export PATH := $(PATH):$(STM_TOOLS)/STMicroelectronics/STM32Cube/STM32CubeProgra
 
 -include hardware.mk
 
-build.bootloader_flags := $($(BOARD).menu.upload_method.$(UPLOAD_METHOD).build.bootloader_flags)
-build.st_extra_flags := $($(BOARD).build.st_extra_flags)
-
 LIBRARIES += SrcWrapper
 
--include build-targets.mk
+serial.port.file = $(notdir $(SERIAL_PORT))
 
-upload: path = $(tools.$(upload.tool).path)
-upload: cmd = $(tools.$(upload.tool).cmd)
-upload: script = $(tools.$(upload.tool).script)
-upload: upload.params = $(tools.$(upload.tool).upload.params)
-upload: serial.port.file = $(notdir $(SERIAL_PORT))
-upload: prebuild $(SKETCH_BIN)
-	$(subst "",, $(tools.$(upload.tool).upload.pattern))
+-include build-targets.mk

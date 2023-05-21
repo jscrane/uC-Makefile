@@ -21,7 +21,7 @@ name := $(VENDOR)
 _id := $(BOARD)
 
 define os-override
-$(firstword $($1.$(runtime.os)) $($1))
+$(if $($1.$(runtime.os)),$($1.$(runtime.os)),$($1))
 endef
 
 define define-tool
@@ -40,11 +40,11 @@ $(foreach t,$(wildcard $(PACKAGE_DIR)/tools/*), $(eval $(call define-tool,$(notd
 -include programmers.txt.mk
 
 define define-variable
-$1 = $2
+$(1:%.$(runtime.os)=%) = $(value $2)
 endef
 
 define define-prefix-variables
-$(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.%=%),$($(v)))))
+$(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.%=%),$(v))))
 endef
 
 define define-menu-variables
@@ -53,6 +53,14 @@ endef
 
 define define-menus
 $(foreach m, $1, $(call define-menu-variables,$m))
+endef
+
+define define-scoped-variable
+$3: $(call define-variable,$1,$2)
+endef
+
+define define-scoped-prefix-variables
+$(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-scoped-variable,$(v:$1.%=%),$(v),$2)))
 endef
 
 $(call define-prefix-variables,$(BOARD))
