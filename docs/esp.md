@@ -32,16 +32,16 @@ other variables:
 - FS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
 - LITTLEFS_IMAGE: littlefs.img
-- OTA_HOST: the hostname for OTA upload
-- OTA_PORT: the OTA listening port
-- OTA_PASSWORD: the auth password for OTA
+- OTA_HOST: hostname for OTA upload
+- OTA_PORT: OTA listening port
+- OTA_PASSWORD: auth password for OTA
 
 targets:
+- ota: uploads compiled sketch "over the air"
 - spiffs: creates $(SPIFFS_IMAGE)
 - upload-spiffs: writes $(SPIFFS_IMAGE) to flash
 - fs: creates $(LITTLEFS_IMAGE)
 - upload-fs: writes $(FS_IMAGE) to flash
-- ota
 
 ### esp32
 
@@ -67,13 +67,12 @@ other variables:
 - OTA_PASSWORD
 
 targets:
-- fs
-- upload-fs
 - ota
+- upload-fs: builds and uploads spiffs image
 
 ### examples
 
-WeMos D1 Mini:
+WEMOS D1 Mini:
 ```
 BOARD := d1_mini
 TERMINAL_SPEED := 115200

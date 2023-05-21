@@ -68,7 +68,7 @@ $(call define-prefix-variables,$(BOARD))
 
 $(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
 
-SKETCH ?= $(wildcard *.ino)
+SKETCH ?= $(firstword $(wildcard *.ino))
 COMPILER_WARNINGS ?= default
 
 build.project_name := $(SKETCH)

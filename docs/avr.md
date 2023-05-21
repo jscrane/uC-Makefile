@@ -1,10 +1,5 @@
 ### avr and attiny
 
-targets:
-- program: writes sketch using a programmer
-- erase
-- bootloader
-
 when the programmer is `avrdude` there are some extra targets:
 - read-fuses
 - read-flash
@@ -17,10 +12,11 @@ when the programmer is `avrdude` there are some extra targets:
 menu options:
 - CPU: the chip (and clock speed) of the cpu, if required by the chosen board
 
-other variables:
-- UPLOAD_VERIFY: -V
-- UPLOAD_VERBOSE: quiet
+other variables and their defaults:
+- UPLOAD_VERBOSE: `quiet` (`verbose`)
+- UPLOAD_VERIFY: `verify`
 - PROGRAM_VERBOSE: same as UPLOAD_VERBOSE
+- PROGRAM_VERIFY: same as UPLOAD_VERIFY
 - ERASE_VERBOSE: same as UPLOAD_VERBOSE
 - BOOTLOADER_VERBOSE: same as UPLOAD_VERBOSE
 - PROGRAMMER: arduinoasisp (avrisp, avrispmkii, usbtinyisp, usbasp, parallel, arduinoasispatmega32u4, usbtinyisp2, dragon, ponyser, stk500)
@@ -38,10 +34,10 @@ menu options:
 - NEOPIXELPORT: porta (portb)
 
 other variables:
-- UPLOAD_VERIFY: noverify
-- PROGRAM_VERIFY: same as UPLOAD_VERIFY
-- UPLOAD_VERBOSE: quiet (verbose)
+- UPLOAD_VERBOSE: `quiet` (`verbose`)
+- UPLOAD_VERIFY: `verify`
 - PROGRAM_VERBOSE: same as UPLOAD_VERBOSE
+- PROGRAM_VERIFY: same as UPLOAD_VERIFY
 - ERASE_VERBOSE: same as UPLOAD_VERBOSE
 - BOOTLOADER_VERBOSE: same as UPLOAD_VERBOSE
 - PROGRAMMER: arduinoasisp
