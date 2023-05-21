@@ -34,12 +34,6 @@ SUFFIX_EEP := partitions.bin
 
 serial.port = $(SERIAL_PORT)
 
-upload: path = $(tools.$(upload.tool).path)
-upload: cmd = $(call os-override,tools.$(upload.tool).cmd)
-upload: upload.pattern_args = $(tools.$(upload.tool).upload.pattern_args)
-upload: prebuild $(SKETCH_BIN)
-	$(tools.$(upload.tool).upload.pattern.linux)
-
 ota: network_cmd = $(tools.$(upload.tool).network_cmd)
 ota: serial.port = $(OTA_HOST)
 ota: network.port = $(OTA_PORT)
@@ -56,7 +50,7 @@ SPIFFS_BLOCKSIZE := 4096
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(runtime.tools.mkspiffs.path)/$(runtime.tools.mkspiffs.cmd) -c $(FS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
 
-upload-fs: cmd = $(call os-override,tools.$(upload.tool).cmd)
+upload-fs: cmd = $(tools.$(upload.tool).cmd)
 upload-fs: $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
