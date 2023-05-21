@@ -205,14 +205,17 @@ $(call define-scoped-prefix-variables,tools.$(upload.tool),upload)
 upload: prebuild $(SKETCH_BIN)
 	$(subst "",,$(call os-override,tools.$(upload.tool).upload.pattern))
 
+$(call define-scoped-prefix-variables,tools.$(program.tool),program)
 program: prebuild $(SKETCH_BIN)
-	$(tools.$(upload.tool).program.pattern)
+	$(subst "",,$(call os-override,tools.$(program.tool).program.pattern))
 
+$(call define-scoped-prefix-variables,tools.$(program.tool),erase)
 erase:
-	$(tools.$(upload.tool).erase.pattern)
+	$(subst "",,$(call os-override,tools.$(program.tool).erase.pattern))
 
+$(call define-scoped-prefix-variables,tools.$(bootloader.tool),bootloader)
 bootloader:
-	$(tools.$(upload.tool).bootloader.pattern)
+	$(subst "",,$(call os-override,tools.$(bootloader.tool).bootloader.pattern))
 
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
