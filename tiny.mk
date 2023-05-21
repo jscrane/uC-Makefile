@@ -12,7 +12,8 @@ VENDOR := ATTinyCore
 PROCESSOR_FAMILY := avr
 PACKAGES := $(HOME)/.arduino15/packages
 COMPILER_FAMILY := avr-gcc
-COMPILER_PATH := $(lastword $(wildcard $(PACKAGES)/arduino/tools/$(COMPILER_FAMILY)/*))
+TOOLS_DIR := $(PACKAGES)/arduino/tools
+COMPILER_PATH := $(lastword $(wildcard $(TOOLS_DIR)/$(COMPILER_FAMILY)/*))
 
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 

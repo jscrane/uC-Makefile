@@ -4,7 +4,7 @@ Variables are make macros which can be (optionally) set in the user Makefile. Th
 A colon separates the name of the variable from its default value. Parentheses indicate valid alternative values.
 
 - BOARD: _mandatory_ (see `boards.txt`)
-- SKETCH
+- SKETCH: defaults to first `.ino` file found
 - SKETCHBOOK: `~/Arduino`
 - TERMINAL: `minicom`
 - TERMINAL_FLAGS: `-D $(SERIAL_PORT) -b $(TERMINAL_SPEED)`
@@ -18,12 +18,16 @@ A colon separates the name of the variable from its default value. Parentheses i
 Targets are in lowercase.
 
 - all: default target, compiles and links sketch
-- upload
+- upload: uploads compiled sketch using bootloader
+- program: programs sketch using external programmer
+- erase: erases and programs sketch using external programmer
+- bootloader: burns the bootloader using external programmer
+- build-summary
+- term: starts terminal on `SERIAL_PORT`
+- version: prints core version
 - clean
 - path
-- build-summary
-- version: prints core version
-- term: starts terminal on `SERIAL_PORT`
+- build-variables
 
 ### Platform-specific
 - [avr and attiny](avr.md)

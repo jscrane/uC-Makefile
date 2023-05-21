@@ -9,6 +9,7 @@ $(error BOARD required)
 endif
 
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
+TOOLS_DIR ?= $(PACKAGE_DIR)/tools
 
 runtime.hardware.path := $(PACKAGE_DIR)/hardware
 runtime.platform.path := $(wildcard $(runtime.hardware.path)/$(PROCESSOR_FAMILY)/*)
@@ -31,7 +32,7 @@ runtime.tools.$1.path := $2
 runtime.tools.$1-$(notdir $2).path := $2
 endef
 
-$(foreach t,$(wildcard $(PACKAGE_DIR)/tools/*), $(eval $(call define-tool,$(notdir $t),$(lastword $(wildcard $t/*)))))
+$(foreach t,$(wildcard $(TOOLS_DIR)/*), $(eval $(call define-tool,$(notdir $t),$(lastword $(wildcard $t/*)))))
 
 -include boards.txt.mk
 -include boards.local.txt.mk
@@ -67,7 +68,7 @@ $(call define-prefix-variables,$(BOARD))
 
 $(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
 
-SKETCH ?= $(wildcard *.ino)
+SKETCH ?= $(firstword $(wildcard *.ino))
 COMPILER_WARNINGS ?= default
 
 build.project_name := $(SKETCH)
