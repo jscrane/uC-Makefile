@@ -23,3 +23,4 @@ bootloader.verbose := $(tools.$(bootloader.tool).bootloader.params.$(BOOTLOADER_
 
 -include build-targets.mk
 -include programmers.mk
+-include $(upload.tool).mk
