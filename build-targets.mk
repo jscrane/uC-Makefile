@@ -31,7 +31,7 @@ LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r
 LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
-all: prebuild $(SKETCH_BIN) $(SKETCH_HEX) build-summary
+all: prebuild $(SKETCH_BIN) $(SKETCH_HEX) $(SKETCH_ELF) build-summary
 
 define compile-sources
 $1.o: source_file = $1
@@ -193,7 +193,7 @@ path:
 term:
 	$(TERMINAL) $(TERMINAL_FLAGS)
 
-build-summary: $(SKETCH_ELF)
+build-summary:
 	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
 	$(eval FLASH_PC = $(shell echo $(FLASH_SIZE) "* 100 /" $(upload.maximum_size) | bc))
 	@echo program: $(FLASH_SIZE) / $(upload.maximum_size) bytes \($(FLASH_PC)%\)
@@ -202,7 +202,7 @@ build-summary: $(SKETCH_ELF)
 	@echo data: $(DATA_SIZE) / $(upload.maximum_data_size) bytes \($(DATA_PC)%\)
 
 $(call define-scoped-prefix-variables,tools.$(upload.tool),upload)
-upload: prebuild $(SKETCH_BIN)
+upload: all
 	$(subst "",,$(call os-override,tools.$(upload.tool).upload.pattern))
 
 $(call define-scoped-prefix-variables,tools.$(program.tool),program)
