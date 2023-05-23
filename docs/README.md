@@ -8,6 +8,7 @@ A colon separates the name of the variable from its default value. Parentheses i
 - SKETCHBOOK: `~/Arduino`
 - TERMINAL: `minicom`
 - TERMINAL_FLAGS: `-D $(SERIAL_PORT) -b $(TERMINAL_SPEED)`
+- TERMINAL_EXTRA_FLAGS
 - LOCAL_LIBRARY_PATH
 - LIBRARIES
 - COMPILER_WARNINGS: `default`
