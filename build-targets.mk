@@ -183,12 +183,12 @@ prebuild: $(PREBUILD) $(build.path)
 	$(recipe.hooks.prebuild.5.pattern)
 	$(recipe.hooks.prebuild.6.pattern)
 
-clean: $(CLEAN)
+clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
 	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
 
 path:
-	@echo $PATH
+	@echo $(PATH)
 
 term:
 	$(TERMINAL) $(TERMINAL_FLAGS)

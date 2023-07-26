@@ -41,6 +41,8 @@ ota: network.password = $(OTA_PASSWORD)
 ota: prebuild $(SKETCH_BIN)
 	$(tools.$(upload.tool).upload.network_pattern)
 
+BUILD_EXTRAS := $(SPIFFS_IMAGE)
+
 PARTITIONS := $(build.path)/partitions.csv
 SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
 SPIFFS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
