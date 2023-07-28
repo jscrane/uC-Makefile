@@ -104,6 +104,11 @@ endif
 
 ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
+define define-hook
+$1:
+	$($1)
+endef
+
 define library-compile-targets
 $(BUILD_LIBS)/$1.o: source_file = $1
 $(BUILD_LIBS)/$1.o: object_file = $(BUILD_LIBS)/$1.o
@@ -133,15 +138,15 @@ $(foreach s,$(LIBRARY_SOURCES), $(eval $(call library-compile-targets,$s)))
 
 define link-sketch
 $1: object_files = $2
-$1:
-	$$(recipe.hooks.linking.prelink.1.pattern)
-	$$(recipe.hooks.linking.prelink.2.pattern)
-	$$(recipe.hooks.linking.prelink.3.pattern)
-	$$(recipe.hooks.linking.prelink.4.pattern)
+$1: $3
 	$$(recipe.c.combine.pattern)
 endef
 
-$(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS)))
+PRELINK_HOOKS := $(sort $(filter recipe.hooks.linking.prelink.%.pattern, $(.VARIABLES)))
+
+$(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
+
+$(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS),$(PRELINK_HOOKS)))
 
 $(SKETCH_HEX):
 	$(recipe.objcopy.$(SUFFIX_HEX).pattern)
@@ -175,13 +180,11 @@ $(build.path):
 build-variables:
 	$(foreach v, $(sort $(filter build.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 
-prebuild: $(PREBUILD) $(build.path)
-	$(recipe.hooks.prebuild.1.pattern)
-	$(recipe.hooks.prebuild.2.pattern)
-	$(recipe.hooks.prebuild.3.pattern)
-	$(recipe.hooks.prebuild.4.pattern)
-	$(recipe.hooks.prebuild.5.pattern)
-	$(recipe.hooks.prebuild.6.pattern)
+PREBUILD_HOOKS := $(sort $(filter recipe.hooks.prebuild.%.pattern, $(.VARIABLES)))
+
+$(foreach h,$(PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
+
+prebuild: $(build.path) $(PREBUILD_HOOKS)
 
 clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
