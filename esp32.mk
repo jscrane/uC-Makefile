@@ -52,8 +52,8 @@ SPIFFS_BLOCKSIZE := 4096
 $(SPIFFS_IMAGE): $(wildcard $(SPIFFS_DIR)/*)
 	$(runtime.tools.mkspiffs.path)/$(runtime.tools.mkspiffs.cmd) -c $(FS_DIR) -b $(SPIFFS_BLOCKSIZE) -p $(SPIFFS_PAGESIZE) -s $(SPIFFS_SIZE) $@
 
-upload-fs: cmd = $(tools.$(upload.tool).cmd)
-upload-fs: $(SPIFFS_IMAGE)
+upload-spiffs: cmd = $(tools.$(upload.tool).cmd)
+upload-spiffs: $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(SPIFFS_START) $(SPIFFS_IMAGE)
 
-.PHONY: upload upload-fs ota
+.PHONY: upload upload-spiffs ota

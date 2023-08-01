@@ -68,7 +68,7 @@ other variables:
 
 targets:
 - ota
-- upload-fs: builds and uploads spiffs image
+- upload-spiffs: builds and uploads spiffs image
 
 ### examples
 

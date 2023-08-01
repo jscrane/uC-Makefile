@@ -65,4 +65,4 @@ fs: $(LITTLEFS_IMAGE)
 upload-fs: $(LITTLEFS_IMAGE)
 	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $<
 
-.PHONY: upload ota spiffs upload-spiffs fs upload-fs
+.PHONY: ota spiffs upload-spiffs fs upload-fs

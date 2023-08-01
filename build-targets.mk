@@ -223,6 +223,6 @@ bootloader:
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
 
-.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader
+.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader $(PREBUILD_HOOKS) $(PRELINK_HOOKS)
 
 -include $(DEPS)
