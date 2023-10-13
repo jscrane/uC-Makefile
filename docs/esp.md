@@ -40,8 +40,8 @@ targets:
 - ota: uploads compiled sketch "over the air"
 - spiffs: creates $(SPIFFS_IMAGE)
 - upload-spiffs: writes $(SPIFFS_IMAGE) to flash
-- fs: creates $(LITTLEFS_IMAGE)
-- upload-fs: writes $(FS_IMAGE) to flash
+- littlefs: creates $(LITTLEFS_IMAGE)
+- upload-littlefs: writes $(FS_IMAGE) to flash
 
 ### esp32
 
@@ -60,15 +60,19 @@ menu options:
 - ERASEFLASH: none (all)
 
 other variables:
-- SPIFFS_DIR: data
+- FS_DIR: data
 - SPIFFS_IMAGE: spiffs.img
+- LITTLEFS_IMAGE: littlefs.img
 - OTA_HOST
 - OTA_PORT
 - OTA_PASSWORD
 
 targets:
 - ota
-- upload-spiffs: builds and uploads spiffs image
+- spiffs: creates $(SPIFFS_IMAGE)
+- upload-spiffs: writes $(SPIFFS_IMAGE) to flash
+- littlefs: creates $(LITTLEFS_IMAGE)
+- upload-littlefs: writes $(FS_IMAGE) to flash
 
 ### examples
 
