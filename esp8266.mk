@@ -60,9 +60,9 @@ upload-spiffs: $(SPIFFS_IMAGE)
 $(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.mklittlefs.path)/$(tools.mklittlefs.cmd) -c $(FS_DIR) -b $(build.spiffs_blocksize) -p $(build.spiffs_pagesize) -s $$(( $(build.spiffs_end) - $(build.spiffs_start) )) $@
 
-fs: $(LITTLEFS_IMAGE)
+littlefs: $(LITTLEFS_IMAGE)
 
-upload-fs: $(LITTLEFS_IMAGE)
+upload-littlefs: $(LITTLEFS_IMAGE)
 	$(tools.esptool.cmd) $(runtime.platform.path)/tools/upload.py --chip esp8266 --port $(serial.port) --baud $(upload.speed) $(upload.verbose) write_flash $(build.spiffs_start) $<
 
-.PHONY: ota spiffs upload-spiffs fs upload-fs
+.PHONY: ota spiffs upload-spiffs littlefs upload-littlefs
