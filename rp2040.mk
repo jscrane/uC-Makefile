@@ -1,9 +1,12 @@
+ifndef FLASH
+$(error FLASH required)
+endif
+
 SERIAL_PORT ?= /dev/ttyACM0
 
 VENDOR := rp2040
 PROCESSOR_FAMILY := rp2040
 
-FLASH ?= 8388608_0
 FREQ ?= 133
 OPT ?= Small
 RTTI ?= Disabled
