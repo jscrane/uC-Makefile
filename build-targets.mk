@@ -27,7 +27,7 @@ CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
 LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))
-LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r/src/*/*.c $r/src/*/*.cpp))
+LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r/src/*/*.c $r/src/*/*.cpp $r/src/*/*.S))
 LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
