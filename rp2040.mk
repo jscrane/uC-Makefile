@@ -3,7 +3,7 @@ $(error FLASH required)
 endif
 
 SERIAL_PORT ?= /dev/ttyACM0
-LITTLEFS_IMAGE ?= littlefs.img
+LITTLEFS_IMAGE ?= littlefs.bin
 FS_DIR ?= data
 
 VENDOR := rp2040
@@ -48,6 +48,6 @@ $(LITTLEFS_IMAGE_UF2): $(LITTLEFS_IMAGE)
 littlefs: $(LITTLEFS_IMAGE_UF2)
 
 upload-littlefs: littlefs
-	$(runtime.tools.pqt-python3.path)/python3 $(runtime.platform.path)/tools/uf2conv.py --serial $(serial.port) --family RP2040 $(LITTLEFS_IMAGE_UF2) --deploy
+	$(runtime.tools.pqt-python3.path)/python3 -I $(runtime.platform.path)/tools/uf2conv.py --serial $(serial.port) --family RP2040 --deploy $(LITTLEFS_IMAGE_UF2)
 
 .PHONY: littlefs upload-littlefs
