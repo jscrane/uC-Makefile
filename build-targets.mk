@@ -26,9 +26,7 @@ includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIR
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
-LIBSRC1 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/*.c $r/*.cpp $r/utility/*.c $r/utility/*.cpp))
-LIBSRC2 := $(foreach r, $(REQUIRED_ROOTS), $(wildcard $r/src/*.c $r/src/*.cpp $r/src/*/*.c $r/src/*/*.cpp))
-LIBRARY_SOURCES := $(LIBSRC1) $(LIBSRC2)
+LIBRARY_SOURCES := $(foreach r, $(REQUIRED_ROOTS), $(foreach d, $r $r/utility $r/src $r/src/*, $(wildcard $d/*.c $d/*.cpp $d/*.S)))
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
 all: prebuild $(SKETCH_BIN) $(SKETCH_HEX) $(SKETCH_ELF) build-summary

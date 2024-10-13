@@ -16,23 +16,23 @@ A colon separates the name of the variable from its default value. Parentheses i
 - PREBUILD: per-sketch `prebuild` target
 - CLEAN: per-sketch `clean` target
 
-Targets are in lowercase.
+Targets are in **bold**.
 
-- all: default target, compiles and links sketch
-- upload: uploads compiled sketch using bootloader
-- program: programs sketch using external programmer
-- erase: erases and programs sketch using external programmer
-- bootloader: burns the bootloader using external programmer
-- build-summary
-- term: starts terminal on `SERIAL_PORT`
-- version: prints core version
-- clean
-- path
-- build-variables
+- **all** default target, compiles and links sketch
+- **upload** uploads compiled sketch using bootloader
+- **program** programs sketch using external programmer
+- **erase** erases and programs sketch using external programmer
+- **bootloader** burns the bootloader using external programmer
+- **build-summary**
+- **term** starts terminal on `SERIAL_PORT`
+- **version** prints core version
+- **clean**
+- **path**
+- **build-variables**
 
 ### Platform-specific
 - [avr and attiny](avr.md)
 - [esp8266 and esp32](esp.md)
 - [msp430 and tivac](msp.md)
 - [stm32](stm32.md)
-
+- [rp2040](rp2040.md)
