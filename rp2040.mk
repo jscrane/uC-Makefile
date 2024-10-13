@@ -34,7 +34,7 @@ FS_PAGESIZE := 256
 FS_BLOCKSIZE := 4096
 FS_START := $($(BOARD).menu.flash.$(FLASH).build.fs_start)
 FS_SIZE = $(shell echo $($(BOARD).menu.flash.$(FLASH).build.fs_end) " - " $(FS_START) | bc)
-FS_START_HEX := $(shell printf "0x%x" $(FS_START))
+#FS_START_HEX := $(shell printf "0x%x" $(FS_START))
 LITTLEFS_IMAGE_UF2 := $(LITTLEFS_IMAGE).uf2
 
 BUILD_EXTRAS := $(LITTLEFS_IMAGE) $(LITTLEFS_IMAGE_UF2)
@@ -42,12 +42,12 @@ BUILD_EXTRAS := $(LITTLEFS_IMAGE) $(LITTLEFS_IMAGE_UF2)
 $(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.pqt-mklittlefs.path)/mklittlefs -c $(FS_DIR) -b $(FS_BLOCKSIZE) -p $(FS_PAGESIZE) -s $(FS_SIZE) $@
 
-$(LITTLEFS_IMAGE_UF2): $(LITTLEFS_IMAGE)
-	$(runtime.tools.pqt-picotool.path)/picotool uf2 convert $(LITTLEFS_IMAGE) -t bin $@ -o $(FS_START_HEX) --family data
+#$(LITTLEFS_IMAGE_UF2): $(LITTLEFS_IMAGE)
+#	$(runtime.tools.pqt-picotool.path)/picotool uf2 convert $(LITTLEFS_IMAGE) -t bin $@ -o $(FS_START_HEX) --family data
 
-littlefs: $(LITTLEFS_IMAGE_UF2)
+littlefs: $(LITTLEFS_IMAGE)
 
 upload-littlefs: littlefs
-	$(runtime.tools.pqt-python3.path)/python3 -I $(runtime.platform.path)/tools/uf2conv.py --serial $(serial.port) --family RP2040 --deploy $(LITTLEFS_IMAGE_UF2)
+	$(runtime.tools.pqt-python3.path)/python3 -I $(runtime.platform.path)/tools/uf2conv.py --base $(FS_START) --serial $(serial.port) --family RP2040 $(LITTLEFS_IMAGE)
 
 .PHONY: littlefs upload-littlefs
