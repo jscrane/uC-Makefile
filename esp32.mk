@@ -57,7 +57,7 @@ spiffs: $(SPIFFS_IMAGE)
 
 upload-spiffs: cmd = $(tools.$(upload.tool).cmd)
 upload-spiffs: $(SPIFFS_IMAGE)
-	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(FS_START) $(SPIFFS_IMAGE)
+	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default-reset --after hard-reset write-flash -z --flash-mode $(build.flash_mode) --flash-freq $(build.flash_freq) --flash-size detect $(FS_START) $(SPIFFS_IMAGE)
 
 $(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.mklittlefs.path)/$(runtime.tools.mklittlefs.cmd) -c $(FS_DIR) -b $(FS_BLOCKSIZE) -p $(FS_PAGESIZE) -s $(FS_SIZE) $@
@@ -66,6 +66,6 @@ littlefs: $(LITTLEFS_IMAGE)
 
 upload-littlefs: cmd = $(tools.$(upload.tool).cmd)
 upload-littlefs: $(LITTLEFS_IMAGE)
-	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default_reset --after hard_reset write_flash -z --flash_mode $(build.flash_mode) --flash_freq $(build.flash_freq) --flash_size detect $(FS_START) $(LITTLEFS_IMAGE)
+	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default-reset --after hard-reset write-flash -z --flash-mode $(build.flash_mode) --flash-freq $(build.flash_freq) --flash-size detect $(FS_START) $(LITTLEFS_IMAGE)
 
 .PHONY: upload spiffs upload-spiffs littlefs upload-littlefs ota
