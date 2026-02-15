@@ -10,7 +10,7 @@ when the programmer is `avrdude` there are some extra targets:
 ### avr
 
 menu options:
-- CPU: the chip (and clock speed) of the cpu, if required by the chosen board
+- cpu: the chip (and clock speed) of the cpu, if required by the chosen board
 
 other variables and their defaults:
 - UPLOAD_VERBOSE: `quiet` (`verbose`)
