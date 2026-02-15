@@ -9,17 +9,17 @@ FS_DIR ?= data
 VENDOR := rp2040
 PROCESSOR_FAMILY := rp2040
 
-FREQ ?= 133
-OPT ?= Small
-RTTI ?= Disabled
-STACKPROTECT ?= Disabled
-EXCEPTIONS ?= Disabled
-DBGPORT ?= Disabled
-DBGLVL ?= None
-USBSTACK ?= picosdk
-IPBTSTACK ?= ipv4only
-BOOT2 ?= boot2_w25q080_2_padded_checksum
-UPLOADMETHOD ?= default
+freq ?= 133
+opt ?= Small
+rtti ?= Disabled
+stackprotect ?= Disabled
+exceptions ?= Disabled
+dbgport ?= Disabled
+dbglvl ?= None
+usbstack ?= picosdk
+ipbtstack ?= ipv4only
+boot2 ?= boot2_w25q080_2_padded_checksum
+UploadMethod ?= default
 
 -include hardware.mk
 

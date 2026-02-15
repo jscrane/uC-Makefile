@@ -49,7 +49,7 @@ $(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-variable,$(v:$1.
 endef
 
 define define-menu-variables
-$(call define-prefix-variables,$(BOARD).menu.$1.$($(shell echo $1 | tr a-z A-Z)))
+$(call define-prefix-variables,$(BOARD).menu.$1.$($1))
 endef
 
 define define-menus
