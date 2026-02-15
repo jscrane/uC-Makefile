@@ -19,7 +19,7 @@ dbglvl ?= None
 usbstack ?= picosdk
 ipbtstack ?= ipv4only
 boot2 ?= boot2_w25q080_2_padded_checksum
-UploadMethod ?= default
+uploadmethod ?= default
 
 -include hardware.mk
 
