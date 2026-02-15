@@ -56,7 +56,7 @@ menu options:
 - UPLOADSPEED: 921600 (115200, 256000, 230400, 460800, 512000)
 - LOOPCORE: 1 (0)
 - EVENTSCORE: 1 (0)
-- DEBUGLEVEL: none (error, warn, info, debug, verbose)
+- **DEBUGLEVEL**: none (error, warn, info, debug, verbose) - Sets CORE_DEBUG_LEVEL for ESP32 logging. Values map to: none=0, error=1, warn=2, info=3, debug=4, verbose=5. This controls the verbosity of debug output from the ESP32 Arduino core libraries.
 - ERASEFLASH: none (all)
 
 other variables:
@@ -91,3 +91,12 @@ BOARD := node32s
 TERMINAL_SPEED := 115200
 include esp32.mk
 ```
+
+Node32s with verbose debugging:
+```
+BOARD := node32s
+TERMINAL_SPEED := 115200
+DEBUGLEVEL := verbose
+include esp32.mk
+```
+This sets CORE_DEBUG_LEVEL=5, enabling maximum debug output from ESP32 core libraries.
