@@ -1,14 +1,15 @@
 ### stm32
 
 menu items:
-- PNUM: _mandatory_
-- XSERIAL: ```generic``` (```none```, ```disabled```)
-- USB: ```CDCgen``` (```none```, ```CDC```, ```HID```)
-- XUSB: ```FS``` (```HS```, ```HSFS```)
-- OPT: ```osstd``` (```oslto```, ```o1std```, ```o1lto```, ```o2std```, ```o2lto```, ```o3std```, ```o3lto```, ```ogstd```, ```o0std```)
-- DBG: ```none``` (```enable_sym```, ```enable_log```, ```enable_all```)
-- RTLIB: ```nano``` (```nanofp```, ```nanofs```, ```nanofps```, ```full```)
-- UPLOAD_METHOD: ```dfu2Method``` (```swdMethod```, ```dfuMethod```, ```bmpMethod```, ```hidMethod```, ```serialMethod```, ```dfuoMethod```)
+- pnum: _mandatory_
+- xserial: ```generic``` (```none```, ```disabled```)
+- usb: ```CDCgen``` (```none```, ```CDC```, ```HID```)
+- xusb: ```FS``` (```HS```, ```HSFS```)
+- virtio: ```disable``` (```generic```, ```enabled```)
+- opt: ```osstd``` (```oslto```, ```o1std```, ```o1lto```, ```o2std```, ```o2lto```, ```o3std```, ```o3lto```, ```ogstd```, ```o0std```)
+- dbg: ```none``` (```enable_sym```, ```enable_log```, ```enable_all```)
+- rtlib: ```nano``` (```nanofp```, ```nanofs```, ```nanofps```, ```full```)
+- upload_method: ```dfu2Method``` (```swdMethod```, ```dfuMethod```, ```bmpMethod```, ```hidMethod```, ```serialMethod```, ```dfuoMethod```)
 
 other variables:
 - SERIAL_PORT: ```/dev/ttyACM0```
