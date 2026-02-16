@@ -1,7 +1,3 @@
-ifndef EESZ
-$(error EESZ required)
-endif
-
 UPLOAD_VERBOSE ?= quiet
 SERIAL_PORT ?= /dev/ttyUSB0
 FS_DIR ?= data
@@ -9,24 +5,27 @@ SPIFFS_IMAGE ?= spiffs.img
 LITTLEFS_IMAGE ?= littlefs.img
 
 # menus
-XTAL ?= 80
-VT ?= flash
-EXCEPTION ?= disabled
-STACKSMASH ?= disabled
-SSL ?= all
-MMU ?= 3232
-NON32XFER ?= fast
-RESETMETHOD ?= nodemcu
-CRYSTALFREQ ?= 26
-FLASHFREQ ?= 40
-FLASHMODE ?= dout
-LED ?= 2
-SDK ?= nonosdk_190703
-IP ?= lm2f
-DBG ?= Disabled
-LVL ?= None____
-WIPE ?= none
-BAUD ?= 115200
+led ?= 2
+baud ?= 115200
+xtal ?= 80
+CrystalFreq ?= 26
+ifndef eesz
+$(error eesz required)
+endif
+FlashMode ?= dout
+FlashFreq ?= 40
+ResetMethod ?= nodemcu
+dbg ?= Disabled
+lvl ?= None____
+ip ?= lm2f
+vt ?= flash
+exception ?= disabled
+stacksmash ?= disabled
+wipe ?= none
+sdk ?= nonosdk_190703
+ssl ?= all
+mmu ?= 3232
+non32xfer ?= fast
 
 VENDOR := esp8266
 PROCESSOR_FAMILY := esp8266
