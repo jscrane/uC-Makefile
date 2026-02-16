@@ -42,7 +42,7 @@ See the [documentation](docs/README.md).
  - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
  - Arduino [esp8266](https://github.com/esp8266/Arduino), 3.1.2
  - Arduino [esp32](https://github.com/espressif/arduino-esp32), 3.3.7
- - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.5.0
+ - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.6.0
  - [rp2040](https://github.com/earlephilhower/arduino-pico), 5.4.4
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4
  - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
