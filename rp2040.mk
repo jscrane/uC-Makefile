@@ -32,8 +32,8 @@ serial.port = $(SERIAL_PORT)
 
 FS_PAGESIZE := 256
 FS_BLOCKSIZE := 4096
-FS_START := $($(BOARD).menu.flash.$(FLASH).build.fs_start)
-FS_SIZE = $(shell echo $($(BOARD).menu.flash.$(FLASH).build.fs_end) " - " $(FS_START) | bc)
+FS_START := $($(BOARD).menu.flash.$(flash).build.fs_start)
+FS_SIZE = $(shell echo $($(BOARD).menu.flash.$(flash).build.fs_end) " - " $(FS_START) | bc)
 #FS_START_HEX := $(shell printf "0x%x" $(FS_START))
 LITTLEFS_IMAGE_UF2 := $(LITTLEFS_IMAGE).uf2
 
