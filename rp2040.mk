@@ -1,7 +1,3 @@
-ifndef flash
-$(error flash required)
-endif
-
 SERIAL_PORT ?= /dev/ttyACM0
 LITTLEFS_IMAGE ?= littlefs.bin
 FS_DIR ?= data
@@ -9,16 +5,25 @@ FS_DIR ?= data
 VENDOR := rp2040
 PROCESSOR_FAMILY := rp2040
 
+ifndef flash
+$(error flash required)
+endif
 freq ?= 133
+psramcs ?= GPIOnone
+psram ?= 0mb
+psramfreq ?= freq109
+arch ?= arm
 opt ?= Small
+os ?= none
+profile ?= Disabled
 rtti ?= Disabled
 stackprotect ?= Disabled
 exceptions ?= Disabled
 dbgport ?= Disabled
 dbglvl ?= None
-usbstack ?= picosdk
-ipbtstack ?= ipv4only
 boot2 ?= boot2_w25q080_2_padded_checksum
+usbstack ?= picousb
+ipbtstack ?= ipv4only
 uploadmethod ?= default
 
 -include hardware.mk
