@@ -56,8 +56,6 @@ define define-menus
 $(foreach m, $1, $(call define-menu-variables,$m))
 endef
 
-$(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
-
 define define-scoped-variable
 $3: $(call define-variable,$1,$2)
 endef
@@ -67,6 +65,8 @@ $(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-scoped-variable,
 endef
 
 $(call define-prefix-variables,$(BOARD))
+
+$(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
 
 SKETCH ?= $(firstword $(wildcard *.ino))
 COMPILER_WARNINGS ?= default
