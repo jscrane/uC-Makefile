@@ -18,12 +18,20 @@ COMPILER_PATH := $(lastword $(wildcard $(TOOLS_DIR)/$(COMPILER_FAMILY)/*))
 runtime.tools.$(COMPILER_FAMILY).path := $(COMPILER_PATH)
 
 # menus
-PINMAPPING ?= anew
+pinmapping ?= anew
+TimerClockSource ?= default
 LTO ?= enable
-BOD ?= 1v8
-EESAVE ?= aenable
-MILLIS ?= enabled
-NEOPIXELPORT ?= porta
+wiremode ?= amaster
+neopixelport ?= porta
+millis ?= enable
+burnmode ?= upgrade
+bootentry ?= always
+resetpin ?= reset
+bootUART ?= UART0
+eesave ?= aenable
+bod ?= 1v8
+bodact ?= disabled
+bodpd ?= disabled
 
 -include hardware.mk
 
