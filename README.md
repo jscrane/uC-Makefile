@@ -1,7 +1,6 @@
 # uC-Makefile
 
-A Makefile for popular Microcontrollers supporting Energia (msp430 and 
-tivac boards) and Arduino-1.8.x (avr, attiny, esp8266 and esp32 boards).
+A Makefile for popular Microcontrollers supporting Arduino-2.3.x (avr, attiny, esp8266, esp32 and pico boards).
 
 If:
 - You'd prefer to be using vi or emacs to the Arduino IDE
@@ -42,11 +41,11 @@ See the [documentation](docs/README.md).
  - [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.6
  - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
  - Arduino [esp8266](https://github.com/esp8266/Arduino), 3.1.2
- - Arduino [esp32](https://github.com/espressif/arduino-esp32), 2.0.17
- - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4 (requires editing SD.h for Stellarpad)
- - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
+ - Arduino [esp32](https://github.com/espressif/arduino-esp32), 3.3.7
  - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.5.0
- - [rp2040](https://github.com/earlephilhower/arduino-pico), 4.1.1 (new!)
+ - [rp2040](https://github.com/earlephilhower/arduino-pico), 5.4.4
+ - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4
+ - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
 
 Note: Energia is no longer developed. Its cores are now integrated with Arduino via
 [this repository](https://github.com/Andy4495/TI_Platform_Cores_For_Arduino).
