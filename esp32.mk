@@ -5,18 +5,18 @@ SPIFFS_IMAGE ?= spiffs.img
 LITTLEFS_IMAGE ?= littlefs.img
 
 # menus
-JTAGADAPTER ?= default
+JTAGAdapter ?= default
 PSRAM ?= disabled
-PARTITIONSCHEME ?= default
-CPUFREQ ?= 240
-FLASHMODE ?= qio
-FLASHFREQ ?= 80
-FLASHSIZE ?= 4M
-UPLOADSPEED ?= 921600
-LOOPCORE ?= 1
-EVENTSCORE ?= 1
-DEBUGLEVEL ?= none
-ERASEFLASH ?= none
+PartitionScheme ?= default
+CPUFreq ?= 240
+FlashMode ?= qio
+FlashFreq ?= 80
+FlashSize ?= 4M
+UploadSpeed ?= 921600
+LoopCore ?= 1
+EventsCore ?= 1
+DebugLevel ?= none
+EraseFlash ?= none
 
 VENDOR := esp32
 PROCESSOR_FAMILY := esp32

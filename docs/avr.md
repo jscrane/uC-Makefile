@@ -10,7 +10,7 @@ when the programmer is `avrdude` there are some extra targets:
 ### avr
 
 menu options:
-- CPU: the chip (and clock speed) of the cpu, if required by the chosen board
+- cpu: the chip (and clock speed) of the cpu, if required by the chosen board
 
 other variables and their defaults:
 - UPLOAD_VERBOSE: `quiet` (`verbose`)
@@ -24,14 +24,24 @@ other variables and their defaults:
 ### attiny
 
 menu options:
-- CHIP: _mandatory_
-- CLOCK: _mandatory_
-- PINMAPPING: anew (old)
+- chip: _mandatory_
+- clock: _mandatory_
+- sketchclock: depends on board
+- pinmapping: anew (old)
+- INITIALIZE_SECONDARY_TIMERS: 0 (1)
+- TimerClockSource: default (pll, lowpll)
 - LTO: enable (disable)
-- BOD: 1v8 (2v7, 4v3)
-- EESAVE: aenable (disable)
-- MILLIS: enable (disable)
-- NEOPIXELPORT: porta (portb)
+- wiremode: amaster (slave, both)
+- neopixelport: porta (portb, portc, portd)
+- millis: enable (disable)
+- burnmode: upgrade (install)
+- bootentry: always (safereset, fastpoweron, saferesetwdt, fastpoweronwdt, notwdt, aggressive)
+- resetpin: reset (gpio)
+- bootUART: UART0 (UART1)
+- eesave: aenable (disable)
+- bod: 1v8 (2v7, 4v3)
+- bodact: disabled (enabled, sampled)
+- bodpd: disabled (enabled)
 
 other variables:
 - UPLOAD_VERBOSE: `quiet` (`verbose`)

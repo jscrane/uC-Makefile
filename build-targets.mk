@@ -12,7 +12,7 @@ DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
 
 TERMINAL ?= minicom
 TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED) $(TERMINAL_EXTRA_FLAGS)
-CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED)
+CPPFLAGS += -DTERMINAL_SPEED=$(TERMINAL_SPEED) -DBOARD=$(BOARD)
 
 SKETCHBOOK ?= $(HOME)/Arduino
 LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
@@ -178,6 +178,9 @@ $(build.path):
 build-variables:
 	$(foreach v, $(sort $(filter build.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 
+menu-variables:
+	$(foreach v, $(sort $(filter menu.%, $(.VARIABLES))), $(info $(v) = $($(v))))
+
 PREBUILD_HOOKS := $(sort $(filter recipe.hooks.prebuild.%.pattern, $(.VARIABLES)))
 
 $(foreach h,$(PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
@@ -195,10 +198,10 @@ term:
 	$(TERMINAL) $(TERMINAL_FLAGS)
 
 build-summary:
-	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
+	$(eval FLASH_SIZE = $(shell $(recipe.size.pattern) | pcre2grep -o1 "$(recipe.size.regex)" | paste -sd "+" | bc))
 	$(eval FLASH_PC = $(shell echo $(FLASH_SIZE) "* 100 /" $(upload.maximum_size) | bc))
 	@echo program: $(FLASH_SIZE) / $(upload.maximum_size) bytes \($(FLASH_PC)%\)
-	$(eval DATA_SIZE = $(shell $(recipe.size.pattern) | pcregrep -o1 "$(recipe.size.regex.data)" | paste -sd "+" | bc))
+	$(eval DATA_SIZE = $(shell $(recipe.size.pattern) | pcre2grep -o1 "$(recipe.size.regex.data)" | paste -sd "+" | bc))
 	$(eval DATA_PC = $(shell echo $(DATA_SIZE) "* 100 /" $(upload.maximum_data_size) | bc))
 	@echo data: $(DATA_SIZE) / $(upload.maximum_data_size) bytes \($(DATA_PC)%\)
 

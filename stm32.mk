@@ -1,19 +1,18 @@
-ifndef PNUM
-$(error PNUM required)
-endif
-
 SERIAL_PORT ?= /dev/ttyACM0
 TERMINAL_SPEED ?= 115200
 STM_TOOLS ?= /usr/local
 
 # menus
-XSERIAL ?= generic
-USB ?= CDCgen
-XUSB ?= FS
-OPT ?= osstd
-DBG ?= none
-RTLIB ?= nano
-UPLOAD_METHOD ?= dfu2Method
+ifndef pnum
+$(error pnum required)
+endif
+xserial ?= generic
+usb ?= CDCgen
+xusb ?= FS
+opt ?= osstd
+dbg ?= none
+rtlib ?= nano
+upload_method ?= dfu2Method
 
 VENDOR := STMicroelectronics
 PROCESSOR_FAMILY := stm32
