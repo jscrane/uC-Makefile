@@ -50,6 +50,10 @@ See the [documentation](docs/README.md).
 Note: Energia is no longer developed. Its cores are now integrated with Arduino via
 [this repository](https://github.com/Andy4495/TI_Platform_Cores_For_Arduino).
 
+## Dependencies
+
+`uC-Makefile` requires `pcre2grep` to be installed.
+
 ## Credits
 
 - elpaso's [Makefile](https://github.com/elpaso/energia-makefile) for msp430 provided inspiration.
