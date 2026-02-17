@@ -1,37 +1,37 @@
 ### esp8266
 
 menu options:
-- xtal: 80 (160)
-- vt: flash (heap, iram)
-- exception: disabled (enabled)
-- stacksmash: disabled (enabled)
-- ssl: all (basic)
-- mmu: 3232 (4816, 4816H, 3216, ext128k, ext8192k)
-- non32xfer: fast (safe)
-- ResetMethod: nodemcu (ck, nodtr_nosync)
-- CrystalFreq: 26 (40)
-- FlashFreq: 40 (80, 20, 26)
-- FlashMode: dout (dio, quot, qio)
-- eesz: _mandatory_ (1M64, 1M128, 1M144, 1M160, 1M192, 1M256, 1M512, 1M, 2M64, 2M128, 2M256, 2M512, 2M1M, 2M, 4M2M, 4M3M, 4M1M, 4M, 
-			8M6M, 8M7M, 8M, 16M14M, 16M15M, 16M, 512K32, 512K64, 512K128, 512K)
-- led: 2 (0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
-- sdk: nonosdk_190703 (nonosdk_191122, nonosdk_191105, nonosdk_191024, nonosdk_190313, nonosdk221, nonosdk305)
-- ip: lm2f (hb2f, lm2n, hb2n, lm6f, hb6f, hb1)
-- dbg: Disabled (Serial, Serial1)
-- lvl: None____ (SSL, TLS_MEM, HTTP_CLIENT, HTTP_SERVER, SSLTLS_MEM, SSLHTTP_CLIENT, SSLHTTP_SERVER, TLS_MEMHTTP_CLIENT, TLS_MEMHTTP_SERVER, HTTP_CLIENTHTTP_SERVER, 
-			SSLTLS_MEMHTTP_CLIENT, SSLTLS_MEMHTTP_SERVER, SSLHTTP_CLIENTHTTP_SERVER, TLS_MEMHTTP_CLIENTHTTP_SERVER, SSLTLS_MEMHTTP_CLIENTHTTP_SERVER, HTTP_UPDATE, 
-			CORE, WIFI, UPDATER, OTA, OOM, MDNS, HWDT, COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNS, COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT, 
-			COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT_NOEXTRA4K, SSLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNS, 
-			SLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT, SSLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT_NOEXTRA4K, 
-			NoAssert-NDEBUG)
-- wipe: none (sdk, all)
-- baud: 115200 (57600, 230400, 256000, 460800, 512000, 921600, 3000000)
+- `xtal`: `80` (`160`)
+- `vt`: `flash` (`heap`, `iram`)
+- `exception`: `disabled` (`enabled`)
+- `stacksmash`: `disabled` (`enabled`)
+- `ssl`: `all` (`basic`)
+- `mmu`: `3232` (`4816`, `4816H`, `3216`, `ext128k`, `ext8192k`)
+- `non32xfer`: `fast` (`safe`)
+- `ResetMethod`: `nodemcu` (`ck`, `nodtr_nosync`)
+- `CrystalFreq`: `26` (`40`)
+- `FlashFreq`: `40` (`80`, `20`, `26`)
+- `FlashMode`: `dout` (`dio`, `quot`, `qio`)
+- `eesz`: _mandatory_ (`1M64`, `1M128`, `1M144`, `1M160`, `1M192`, `1M256`, `1M512`, `1M`, `2M64`, `2M128`, `2M256`, `2M512`, `2M1M`, `2M`, `4M2M`, `4M3M`, `4M1M`, `4M`, 
+			`8M6M`, `8M7M`, `8M`, `16M14M`, `16M15M`, `16M`, `512K32`, `512K64`, `512K128`, `512K`)
+- `led`: `2` (`0`, `1`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `13`, `14`, `15`, `16`)
+- `sdk`: `nonosdk_190703` (`nonosdk_191122`, `nonosdk_191105`, `nonosdk_191024`, `nonosdk_190313`, `nonosdk221`, `nonosdk305`)
+- `ip`: `lm2f` (`hb2f`, `lm2n`, `hb2n`, `lm6f`, `hb6f`, `hb1`)
+- `dbg`: `Disabled` (`Serial`, `Serial1`)
+- `lvl`: `None____` (`SSL`, `TLS_MEM`, `HTTP_CLIENT`, `HTTP_SERVER`, `SSLTLS_MEM`, `SSLHTTP_CLIENT`, `SSLHTTP_SERVER`, `TLS_MEMHTTP_CLIENT`, `TLS_MEMHTTP_SERVER`, `HTTP_CLIENTHTTP_SERVER`, 
+			`SSLTLS_MEMHTTP_CLIENT`, `SSLTLS_MEMHTTP_SERVER`, `SSLHTTP_CLIENTHTTP_SERVER`, `TLS_MEMHTTP_CLIENTHTTP_SERVER`, `SSLTLS_MEMHTTP_CLIENTHTTP_SERVER`, `HTTP_UPDATE`, 
+			`CORE`, `WIFI`, `UPDATER`, `OTA`, `OOM`, `MDNS`, `HWDT`, `COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNS`, `COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT`, 
+			`COREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT_NOEXTRA4K`, `SSLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNS`, 
+			`SLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT`, `SSLTLS_MEMHTTP_CLIENTHTTP_SERVERCOREWIFIHTTP_UPDATEUPDATEROTAOOMMDNSHWDT_NOEXTRA4K`, 
+			`NoAssert-NDEBUG`)
+- `wipe`: `none` (`sdk`, `all`)
+- `baud`: `115200` (`57600`, `230400`, `256000`, `460800`, `512000`, `921600`, `3000000`)
 
 other variables:
-- UPLOAD_VERBOSE: quiet
-- FS_DIR: data
-- SPIFFS_IMAGE: spiffs.img
-- LITTLEFS_IMAGE: littlefs.img
+- UPLOAD_VERBOSE: `quiet`
+- FS_DIR: `data`
+- SPIFFS_IMAGE: `spiffs.img`
+- LITTLEFS_IMAGE: `littlefs.img`
 - OTA_HOST: hostname for OTA upload
 - OTA_PORT: OTA listening port
 - OTA_PASSWORD: auth password for OTA
@@ -46,23 +46,23 @@ targets:
 ### esp32
 
 menu options:
-- JTAGAdapter: default (external, bridge)
-- PSRAM: disabled (enabled)
-- PartitionScheme: default (minimal, no_ota, noota_3g, noota_ffat, noota_3gffat, huge_app, min_spiffs, fatflash, app3M_fat9M_16MB, rainmaker)
-- CPUFreq: 240 (160, 80, 40, 26, 20, 13, 10)
-- FlashMode: qio (dio, qout, dout)
-- FlashFreq: 80 (40)
-- FlashSize: 4M (8M, 2M, 16M)
-- UploadSpeed: 921600 (115200, 256000, 230400, 460800, 512000)
-- LoopCore: 1 (0)
-- EventsCore: 1 (0)
-- DebugLevel: none (error, warn, info, debug, verbose)
-- EraseFlash: none (all)
+- `JTAGAdapter`: `default` (`external`, `bridge`)
+- `PSRAM`: `disabled` (`enabled`)
+- `PartitionScheme`: `default` (`minimal`, `no_ota`, `noota_3g`, `noota_ffat`, `noota_3gffat`, `huge_app`, `min_spiffs`, `fatflash`, `app3M_fat9M_16MB`, `rainmaker`)
+- `CPUFreq`: `240` (`160`, `80`, `40`, `26`, `20`, `13`, `10`)
+- `FlashMode`: `qio` (`dio`, `qout`, `dout`)
+- `FlashFreq`: `80` (`40`)
+- `FlashSize`: `4M` (`8M`, `2M`, `16M`)
+- `UploadSpeed`: `921600` (`115200`, `256000`, `230400`, `460800`, `512000`)
+- `LoopCore`: `1` (`0`)
+- `EventsCore`: `1` (`0`)
+- `DebugLevel`: `none` (`error`, `warn`, `info`, `debug`, `verbose`)
+- `EraseFlash`: `none` (`all`)
 
 other variables:
-- FS_DIR: data
-- SPIFFS_IMAGE: spiffs.img
-- LITTLEFS_IMAGE: littlefs.img
+- FS_DIR: `data`
+- SPIFFS_IMAGE: `spiffs.img`
+- LITTLEFS_IMAGE: `littlefs.img`
 - OTA_HOST
 - OTA_PORT
 - OTA_PASSWORD
@@ -80,8 +80,8 @@ WEMOS D1 Mini:
 ```
 BOARD := d1_mini
 TERMINAL_SPEED := 115200
-EESZ := 4M1M
-XTAL := 80
+eesz := 4M1M
+xtal := 80
 include esp8266.mk
 ```
 
