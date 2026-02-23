@@ -135,6 +135,7 @@ endef
 $(foreach s,$(LIBRARY_SOURCES), $(eval $(call library-compile-targets,$s)))
 
 define link-sketch
+$1: compiler.c.elf.extra_flags += $(LDFLAGS)
 $1: object_files = $2
 $1: $3
 	$$(recipe.c.combine.pattern)
