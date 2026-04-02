@@ -1,4 +1,5 @@
 SERIAL_PORT ?= /dev/ttyACM0
+TERMINAL_SPEED ?= 115200
 LITTLEFS_IMAGE ?= littlefs.bin
 FS_DIR ?= data
 
@@ -33,22 +34,21 @@ SUFFIX_HEX ?= uf2
 
 -include build-targets.mk
 
+%.pio.h: %.pio
+	$(runtime.tools.pqt-pioasm.path)/pioasm $< $@
+
 serial.port = $(SERIAL_PORT)
 
 FS_PAGESIZE := 256
 FS_BLOCKSIZE := 4096
 FS_START := $($(BOARD).menu.flash.$(flash).build.fs_start)
 FS_SIZE = $(shell echo $($(BOARD).menu.flash.$(flash).build.fs_end) " - " $(FS_START) | bc)
-#FS_START_HEX := $(shell printf "0x%x" $(FS_START))
 LITTLEFS_IMAGE_UF2 := $(LITTLEFS_IMAGE).uf2
 
-BUILD_EXTRAS := $(LITTLEFS_IMAGE) $(LITTLEFS_IMAGE_UF2)
+BUILD_EXTRAS := $(LITTLEFS_IMAGE) $(LITTLEFS_IMAGE_UF2) $(wildcard *.pio.h)
 
 $(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.pqt-mklittlefs.path)/mklittlefs -c $(FS_DIR) -b $(FS_BLOCKSIZE) -p $(FS_PAGESIZE) -s $(FS_SIZE) $@
-
-#$(LITTLEFS_IMAGE_UF2): $(LITTLEFS_IMAGE)
-#	$(runtime.tools.pqt-picotool.path)/picotool uf2 convert $(LITTLEFS_IMAGE) -t bin $@ -o $(FS_START_HEX) --family data
 
 littlefs: $(LITTLEFS_IMAGE)
 
