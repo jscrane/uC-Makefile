@@ -29,7 +29,7 @@ CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 LIBRARY_SOURCES := $(foreach r, $(REQUIRED_ROOTS), $(foreach d, $r $r/utility $r/src $r/src/*, $(wildcard $d/*.c $d/*.cpp $d/*.S)))
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
-all: prebuild $(SKETCH_BIN) $(SKETCH_HEX) $(SKETCH_ELF) build-summary
+all: prebuild $(SKETCH_BIN) $(SKETCH_ELF) $(SKETCH_HEX) build-summary
 
 define compile-sources
 $1.o: source_file = $1
@@ -147,7 +147,7 @@ $(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
 
 $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS),$(PRELINK_HOOKS)))
 
-$(SKETCH_HEX):
+$(SKETCH_HEX): $(SKETCH_ELF)
 	$(recipe.objcopy.$(SUFFIX_HEX).pattern)
 	$(recipe.objcopy.$(SUFFIX_HEX).1.pattern)
 	$(recipe.objcopy.$(SUFFIX_HEX).2.pattern)
