@@ -225,6 +225,13 @@ bootloader:
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
 
-.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader $(PREBUILD_HOOKS) $(PRELINK_HOOKS)
+.gitignore:
+	@echo ".build" >> $@
+	@echo "*.cpp.o" >> $@
+	@echo "*.cpp.d" >> $@
+	@echo "*.txt.mk" >> $@
+	@echo "serialout.txt" >> $@
+
+.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore $(PREBUILD_HOOKS) $(PRELINK_HOOKS)
 
 -include $(DEPS)
