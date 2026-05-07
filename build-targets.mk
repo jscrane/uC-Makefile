@@ -141,7 +141,9 @@ $1: $3
 	$$(recipe.c.combine.pattern)
 endef
 
-PRELINK_HOOKS := $(sort $(filter recipe.hooks.linking.prelink.%.pattern, $(.VARIABLES)))
+get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
+
+PRELINK_HOOKS := $(call get-recipes,recipe.hooks.linking.prelink)
 
 $(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
 
@@ -159,13 +161,21 @@ $(SKETCH_BIN):
 $(SKETCH_EEP):
 	$(recipe.objcopy.$(SUFFIX_EEP).pattern)
 
+$(SKETCH_ELF): $(OBJECTS) $(BUILD_CORE) $(CORE_PREBUILD_HOOKS) $(archive_file_path) $(CORE_POSTBUILD_HOOKS) $(LIBRARY_OBJECTS)
+
+$(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
+
 $(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
 $(archive_file_path): $(ARCHIVE_TARGETS)
 
-$(SKETCH_ELF): $(OBJECTS) $(archive_file_path) $(LIBRARY_OBJECTS)
+CORE_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.prebuild)
 
-$(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
+$(foreach h,$(CORE_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
+
+CORE_POSTBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.postbuild)
+
+$(foreach h,$(CORE_POSTBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
 $(BUILD_CORE):
 	-mkdir -p $@
@@ -182,11 +192,15 @@ build-variables:
 menu-variables:
 	$(foreach v, $(sort $(filter menu.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 
-PREBUILD_HOOKS := $(sort $(filter recipe.hooks.prebuild.%.pattern, $(.VARIABLES)))
+PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.prebuild)
 
 $(foreach h,$(PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
-prebuild: $(build.path) $(PREBUILD_HOOKS)
+SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
+
+$(foreach h,$(SKETCH_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
+
+prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
 clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
@@ -232,6 +246,7 @@ version:
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
-.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore $(PREBUILD_HOOKS) $(PRELINK_HOOKS)
+.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore
+.PHONY: $(SKETCH_PREBUILD_HOOKS) $(PREBUILD_HOOKS) $(PRELINK_HOOKS) $(CORE_PREBUILD_HOOKS) $(CORE_POSTBUILD_HOOKS)
 
 -include $(DEPS)
