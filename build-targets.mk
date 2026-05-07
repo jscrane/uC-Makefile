@@ -141,7 +141,6 @@ $1: $3
 	$$(recipe.c.combine.pattern)
 endef
 
-# $(1) = hook prefix (e.g., recipe.hooks.linking.prelink)
 get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
 
 PRELINK_HOOKS := $(call get-recipes,recipe.hooks.linking.prelink)
