@@ -159,13 +159,21 @@ $(SKETCH_BIN):
 $(SKETCH_EEP):
 	$(recipe.objcopy.$(SUFFIX_EEP).pattern)
 
+$(SKETCH_ELF): $(OBJECTS) $(BUILD_CORE) $(CORE_PREBUILD_HOOKS) $(archive_file_path) $(CORE_POSTBUILD_HOOKS) $(LIBRARY_OBJECTS)
+
+$(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
+
 $(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
 $(archive_file_path): $(ARCHIVE_TARGETS)
 
-$(SKETCH_ELF): $(OBJECTS) $(archive_file_path) $(LIBRARY_OBJECTS)
+CORE_PREBUILD_HOOKS := $(sort $(filter recipe.hooks.core.prebuild.%.pattern, $(.VARIABLES)))
 
-$(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
+$(foreach h,$(CORE_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
+
+CORE_POSTBUILD_HOOKS := $(sort $(filter recipe.hooks.core.postbuild.%.pattern, $(.VARIABLES)))
+
+$(foreach h,$(CORE_POSTBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
 $(BUILD_CORE):
 	-mkdir -p $@
