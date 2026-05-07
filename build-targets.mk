@@ -141,7 +141,10 @@ $1: $3
 	$$(recipe.c.combine.pattern)
 endef
 
-PRELINK_HOOKS := $(sort $(filter recipe.hooks.linking.prelink.%.pattern, $(.VARIABLES)))
+# $(1) = hook prefix (e.g., recipe.hooks.linking.prelink)
+get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
+
+PRELINK_HOOKS := $(call get-recipes,recipe.hooks.linking.prelink)
 
 $(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
 
@@ -167,11 +170,11 @@ $(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
 $(archive_file_path): $(ARCHIVE_TARGETS)
 
-CORE_PREBUILD_HOOKS := $(sort $(filter recipe.hooks.core.prebuild.%.pattern, $(.VARIABLES)))
+CORE_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.prebuild)
 
 $(foreach h,$(CORE_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
-CORE_POSTBUILD_HOOKS := $(sort $(filter recipe.hooks.core.postbuild.%.pattern, $(.VARIABLES)))
+CORE_POSTBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.postbuild)
 
 $(foreach h,$(CORE_POSTBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
@@ -190,11 +193,15 @@ build-variables:
 menu-variables:
 	$(foreach v, $(sort $(filter menu.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 
-PREBUILD_HOOKS := $(sort $(filter recipe.hooks.prebuild.%.pattern, $(.VARIABLES)))
+PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.prebuild)
 
 $(foreach h,$(PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
-prebuild: $(build.path) $(PREBUILD_HOOKS)
+SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
+
+$(foreach h,$(SKETCH_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
+
+prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
 clean:
 	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
@@ -241,6 +248,6 @@ version:
 	@echo "serialout.txt" >> $@
 
 .PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore
-.PHONY: $(PREBUILD_HOOKS) $(PRELINK_HOOKS) $(CORE_PREBUILD_HOOKS) $(CORE_POSTBUILD_HOOKS)
+.PHONY: $(SKETCH_PREBUILD_HOOKS) $(PREBUILD_HOOKS) $(PRELINK_HOOKS) $(CORE_PREBUILD_HOOKS) $(CORE_POSTBUILD_HOOKS)
 
 -include $(DEPS)
