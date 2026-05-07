@@ -240,6 +240,7 @@ version:
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
-.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore $(PREBUILD_HOOKS) $(PRELINK_HOOKS)
+.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore
+.PHONY: $(PREBUILD_HOOKS) $(PRELINK_HOOKS) $(CORE_PREBUILD_HOOKS) $(CORE_POSTBUILD_HOOKS)
 
 -include $(DEPS)
