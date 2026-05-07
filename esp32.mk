@@ -45,12 +45,15 @@ ota: prebuild $(SKETCH_BIN)
 BUILD_EXTRAS := $(SPIFFS_IMAGE) $(LITTLEFS_IMAGE)
 
 PARTITIONS := $(build.path)/partitions.csv
-SPIFFS_PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS))
-FS_START := $(shell echo $(SPIFFS_PART) | cut -f4 -d, -)
-FS_SIZE := $(shell echo $(SPIFFS_PART) | cut -f5 -d, -)
 FS_PAGESIZE := 256
 FS_BLOCKSIZE := 4096
-$(SPIFFS_IMAGE): $(wildcard $(FS_DIR)/*)
+
+$(PARTITIONS): $(build.path) recipe.hooks.prebuild.1.pattern recipe.hooks.prebuild.2.pattern recipe.hooks.prebuild.3.pattern
+	$(eval PART := $(shell sed -ne "/^spiffs/p" $(PARTITIONS)))
+	$(eval FS_START := $(shell echo $(PART) | cut -f4 -d, -))
+	$(eval FS_SIZE := $(shell echo $(PART) | cut -f5 -d, -))
+
+$(SPIFFS_IMAGE): $(PARTITIONS) $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.mkspiffs.path)/$(runtime.tools.mkspiffs.cmd) -c $(FS_DIR) -b $(FS_BLOCKSIZE) -p $(FS_PAGESIZE) -s $(FS_SIZE) $@
 
 spiffs: $(SPIFFS_IMAGE)
@@ -59,7 +62,7 @@ upload-spiffs: cmd = $(tools.$(upload.tool).cmd)
 upload-spiffs: $(SPIFFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default-reset --after hard-reset write-flash -z --flash-mode $(build.flash_mode) --flash-freq $(build.flash_freq) --flash-size detect $(FS_START) $(SPIFFS_IMAGE)
 
-$(LITTLEFS_IMAGE): $(wildcard $(FS_DIR)/*)
+$(LITTLEFS_IMAGE): $(PARTITIONS) $(wildcard $(FS_DIR)/*)
 	$(runtime.tools.mklittlefs.path)/$(runtime.tools.mklittlefs.cmd) -c $(FS_DIR) -b $(FS_BLOCKSIZE) -p $(FS_PAGESIZE) -s $(FS_SIZE) $@
 
 littlefs: $(LITTLEFS_IMAGE)
@@ -68,4 +71,4 @@ upload-littlefs: cmd = $(tools.$(upload.tool).cmd)
 upload-littlefs: $(LITTLEFS_IMAGE)
 	$(runtime.tools.$(upload.tool).path)/$(cmd) --chip esp32 --port $(serial.port) --before default-reset --after hard-reset write-flash -z --flash-mode $(build.flash_mode) --flash-freq $(build.flash_freq) --flash-size detect $(FS_START) $(LITTLEFS_IMAGE)
 
-.PHONY: upload spiffs upload-spiffs littlefs upload-littlefs ota
+.PHONY: spiffs upload-spiffs littlefs upload-littlefs ota
