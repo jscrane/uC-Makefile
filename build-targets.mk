@@ -151,7 +151,7 @@ define \n
 endef
 
 define objcopy-recipe
-$(build.path)/$(SKETCH).$(1): $(SKETCH_ELF)
+$(build.path)/$(SKETCH).$1: $(SKETCH_ELF)
 	$(foreach r,$(call get-recipes,recipe.objcopy.$1),$(value $r)$(\n))
 endef
 
