@@ -72,7 +72,7 @@ targets:
 - spiffs: creates $(SPIFFS_IMAGE)
 - upload-spiffs: writes $(SPIFFS_IMAGE) to flash
 - littlefs: creates $(LITTLEFS_IMAGE)
-- upload-littlefs: writes $(FS_IMAGE) to flash
+- upload-littlefs: writes $(LITTLEFS_IMAGE) to flash
 
 ### examples
 
