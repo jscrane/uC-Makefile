@@ -29,9 +29,6 @@ uploadmethod ?= default
 
 -include hardware.mk
 
-# alternative is "bin" (for OTA)
-SUFFIX_HEX ?= uf2
-
 -include build-targets.mk
 
 %.pio.h: %.pio

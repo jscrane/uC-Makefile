@@ -29,8 +29,6 @@ build.target := esp32
 # this is required for recipel.hooks.prebuild.4.pattern (but shouldn't be)
 tools.esptool_py.cmd := $(call os-override,tools.esptool_py.cmd)
 
-SUFFIX_EEP := partitions.bin
-
 -include build-targets.mk
 
 serial.port = $(SERIAL_PORT)
