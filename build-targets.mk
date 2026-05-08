@@ -1,11 +1,4 @@
-SUFFIX_HEX ?= hex
-SUFFIX_BIN ?= bin
-SUFFIX_EEP ?= eep
-
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
-SKETCH_BIN := $(build.path)/$(SKETCH).$(SUFFIX_BIN)
-SKETCH_HEX := $(build.path)/$(SKETCH).$(SUFFIX_HEX)
-SKETCH_EEP := $(build.path)/$(SKETCH).$(SUFFIX_EEP)
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
 OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
 DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
@@ -29,7 +22,10 @@ CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 LIBRARY_SOURCES := $(foreach r, $(REQUIRED_ROOTS), $(foreach d, $r $r/utility $r/src $r/src/*, $(wildcard $d/*.c $d/*.cpp $d/*.S)))
 LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
 
-all: prebuild $(SKETCH_BIN) $(SKETCH_ELF) $(SKETCH_HEX) build-summary
+OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
+OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
+
+all: prebuild $(SKETCH_ELF) $(OBJCOPY_TARGETS) build-summary
 
 define compile-sources
 $1.o: source_file = $1
@@ -100,7 +96,7 @@ ifdef build.core
 $(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
 endif
 
-ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
+CORE_ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
 define define-hook
 $1:
@@ -149,25 +145,23 @@ $(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
 
 $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS),$(PRELINK_HOOKS)))
 
-$(SKETCH_HEX): $(SKETCH_ELF)
-	$(recipe.objcopy.$(SUFFIX_HEX).pattern)
-	$(recipe.objcopy.$(SUFFIX_HEX).1.pattern)
-	$(recipe.objcopy.$(SUFFIX_HEX).2.pattern)
-	$(recipe.objcopy.$(SUFFIX_HEX).3.pattern)
+define \n
 
-$(SKETCH_BIN):
-	$(recipe.objcopy.$(SUFFIX_BIN).pattern)
 
-$(SKETCH_EEP):
-	$(recipe.objcopy.$(SUFFIX_EEP).pattern)
+endef
+
+define objcopy-recipe
+$(build.path)/$(SKETCH).$(1): $(SKETCH_ELF)
+	$(foreach r,$(call get-recipes,recipe.objcopy.$1),$(value $r)$(\n))
+endef
+
+$(foreach s,$(OBJCOPY_SUFFIXES),$(eval $(call objcopy-recipe,$s)))
 
 $(SKETCH_ELF): $(OBJECTS) $(BUILD_CORE) $(CORE_PREBUILD_HOOKS) $(archive_file_path) $(CORE_POSTBUILD_HOOKS) $(LIBRARY_OBJECTS)
 
-$(SKETCH_BIN): $(SKETCH_ELF) $(SKETCH_EEP)
+$(CORE_ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
-$(ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
-
-$(archive_file_path): $(ARCHIVE_TARGETS)
+$(archive_file_path): $(CORE_ARCHIVE_TARGETS)
 
 CORE_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.prebuild)
 
