@@ -139,9 +139,11 @@ endef
 
 get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
 
-PRELINK_HOOKS := $(call get-recipes,recipe.hooks.linking.prelink)
+ALL_HOOKS := $(call get-recipes,recipe.hooks)
 
-$(foreach h,$(PRELINK_HOOKS), $(eval $(call define-hook,$h)))
+$(foreach h,$(ALL_HOOKS), $(eval $(call define-hook,$h)))
+
+PRELINK_HOOKS := $(call get-recipes,recipe.hooks.linking.prelink)
 
 $(eval $(call link-sketch,$(SKETCH_ELF),$(OBJECTS) $(LIBRARY_OBJECTS),$(PRELINK_HOOKS)))
 
@@ -165,11 +167,7 @@ $(archive_file_path): $(CORE_ARCHIVE_TARGETS)
 
 CORE_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.prebuild)
 
-$(foreach h,$(CORE_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
-
 CORE_POSTBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.postbuild)
-
-$(foreach h,$(CORE_POSTBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
 $(BUILD_CORE):
 	-mkdir -p $@
@@ -188,11 +186,7 @@ menu-variables:
 
 PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.prebuild)
 
-$(foreach h,$(PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
-
 SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
-
-$(foreach h,$(SKETCH_PREBUILD_HOOKS), $(eval $(call define-hook,$h)))
 
 prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
