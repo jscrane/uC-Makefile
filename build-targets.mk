@@ -175,17 +175,15 @@ $(BUILD_CORE):
 	-mkdir -p $@
 
 # convert .txt files into .mk files:
-# - adding dollar: { -> $${
 # - dollar protection: $XYZ -> $$XYZ
-# - brace translation: ${} -> $()
+# - brace translation: {} -> $()
 # - quote shielding: -DVAR="value" -> -DVAR=\"value\"
-# - delete comments and empty lines
-# - rename host-specific properties: property$(HOST_SUFFIX)=value -> property=value
-# - delete other OS-specific properties
+# - deleting comments and empty lines
+# - renaming host-specific properties: property$(HOST_SUFFIX)=value -> property=value
+# - deleting other OS-specific properties
 %.txt.mk: $(runtime.platform.path)/%.txt
-	@sed -e 's/{/$${/g' \
-	  -e 's/\$$\([^{]\)/\$$\$$\1/g' \
-	  -e 's/{/(/g' -e 's/}/)/g' \
+	@sed -e 's/\$$/\$$\$$/g' \
+	  -e 's/{/\$$(/g' -e 's/}/)/g' \
 	  -e 's/-D\([A-Z0-9_]*\)="\([^"]*\)"/-D\1=\\"\2\\"/g' \
 	  -e '/^\#/d' -e '/^$$/d' \
 	  -e 's/\(.*\)$(HOST_SUFFIX)=\(.*\)/\1=\2/g' \

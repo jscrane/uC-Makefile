@@ -10,21 +10,17 @@ endif
 
 ifeq ($(OS),Windows_NT)
     runtime.os := windows
-    HOST_SUFFIX := .windows
-    DELETE_SUFFIXES := .linux .macosx
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
         runtime.os := linux
-        HOST_SUFFIX := .linux
-        DELETE_SUFFIXES := .windows .macosx
-    endif
-    ifeq ($(UNAME_S),Darwin)
+    else ifeq ($(UNAME_S),Darwin)
         runtime.os := macosx
-        HOST_SUFFIX := .macosx
-        DELETE_SUFFIXES := .windows .linux
     endif
 endif
+
+HOST_SUFFIX := .$(runtime.os)
+DELETE_SUFFIXES := $(filter-out $(HOST_SUFFIX),.linux .windows .macosx)
 
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 TOOLS_DIR ?= $(PACKAGE_DIR)/tools
