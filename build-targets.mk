@@ -64,6 +64,7 @@ $(eval $(call compile-sketch,$(SKETCH)))
 define core-compile-targets
 $(BUILD_CORE)/$1.o: source_file = $1
 $(BUILD_CORE)/$1.o: object_file = $(BUILD_CORE)/$1.o
+$(BUILD_CORE)/$1.o: $1
 
 ifeq ($(suffix $1),.c)
 $(BUILD_CORE)/$1.o:
@@ -106,6 +107,7 @@ endef
 define library-compile-targets
 $(BUILD_LIBS)/$1.o: source_file = $1
 $(BUILD_LIBS)/$1.o: object_file = $(BUILD_LIBS)/$1.o
+$(BUILD_LIBS)/$1.o: $1
 
 ifeq ($(suffix $1),.c)
 $(BUILD_LIBS)/$1.o: compiler.c.extra_flags += $(CPPFLAGS)
