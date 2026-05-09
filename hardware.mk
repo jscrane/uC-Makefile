@@ -8,6 +8,24 @@ ifndef BOARD
 $(error BOARD required)
 endif
 
+ifeq ($(OS),Windows_NT)
+    runtime.os := windows
+    HOST_SUFFIX := .windows
+    DELETE_SUFFIXES := .linux .macosx
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        runtime.os := linux
+        HOST_SUFFIX := .linux
+        DELETE_SUFFIXES := .windows .macosx
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        runtime.os := macosx
+        HOST_SUFFIX := .macosx
+        DELETE_SUFFIXES := .windows .linux
+    endif
+endif
+
 PACKAGE_DIR := $(HOME)/.arduino15/packages/$(VENDOR)
 TOOLS_DIR ?= $(PACKAGE_DIR)/tools
 
@@ -16,14 +34,9 @@ runtime.platform.path := $(wildcard $(runtime.hardware.path)/$(PROCESSOR_FAMILY)
 runtime.ide.path := /usr/local/arduino
 runtime.ide.version := 10815
 ide_version := $(runtime.ide.version)
-runtime.os := linux
 software := ARDUINO
 name := $(VENDOR)
 _id := $(BOARD)
-
-define os-override
-$(if $($1.$(runtime.os)),$($1.$(runtime.os)),$($1))
-endef
 
 define define-tool
 runtime.tools.$1.cmd := $1

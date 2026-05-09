@@ -180,12 +180,16 @@ $(BUILD_CORE):
 # - brace translation: ${} -> $()
 # - quote shielding: -DVAR="value" -> -DVAR=\"value\"
 # - delete comments and empty lines
+# - rename host-specific properties: property$(HOST_SUFFIX)=value -> property=value
+# - delete other OS-specific properties
 %.txt.mk: $(runtime.platform.path)/%.txt
 	@sed -e 's/{/$${/g' \
 	  -e 's/\$$\([^{]\)/\$$\$$\1/g' \
 	  -e 's/{/(/g' -e 's/}/)/g' \
 	  -e 's/-D\([A-Z0-9_]*\)="\([^"]*\)"/-D\1=\\"\2\\"/g' \
 	  -e '/^\#/d' -e '/^$$/d' \
+	  -e 's/\(.*\)$(HOST_SUFFIX)=\(.*\)/\1=\2/g' \
+	  $(foreach s,$(DELETE_SUFFIXES),-e '/$(s)=/d') \
 	  < $< > $@
 
 $(build.path):
@@ -223,19 +227,19 @@ build-summary:
 
 $(call define-scoped-prefix-variables,tools.$(upload.tool),upload)
 upload: all
-	$(subst "",,$(call os-override,tools.$(upload.tool).upload.pattern))
+	$(tools.$(upload.tool).upload.pattern)
 
 $(call define-scoped-prefix-variables,tools.$(program.tool),program)
-program: prebuild $(SKETCH_BIN)
-	$(subst "",,$(call os-override,tools.$(program.tool).program.pattern))
+program: all
+	$(tools.$(upload.tool).program.pattern)
 
 $(call define-scoped-prefix-variables,tools.$(program.tool),erase)
 erase:
-	$(subst "",,$(call os-override,tools.$(program.tool).erase.pattern))
+	$(tools.$(upload.tool).erase.pattern)
 
 $(call define-scoped-prefix-variables,tools.$(bootloader.tool),bootloader)
 bootloader:
-	$(subst "",,$(call os-override,tools.$(bootloader.tool).bootloader.pattern))
+	$(tools.$(upload.tool).bootloader.pattern)
 
 version:
 	@echo "$(name) $(notdir $(runtime.platform.path))"
