@@ -174,8 +174,19 @@ CORE_POSTBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.postbuild)
 $(BUILD_CORE):
 	-mkdir -p $@
 
+# convert .txt files into .mk files:
+# - adding dollar: { -> $${
+# - dollar protection: $XYZ -> $$XYZ
+# - brace translation: ${} -> $()
+# - quote shielding: -DVAR="value" -> -DVAR=\"value\"
+# - delete comments and empty lines
 %.txt.mk: $(runtime.platform.path)/%.txt
-	@sed -e 's/{/$${/g' -e '/^\#/d' -e '/^$$/d' -e 's/-D\([A-Z_]*\)="\([a-zA-Z0-9$${}/_.-]*\)"/-D\1=\\"\2\\"/g' < $< > $@
+	@sed -e 's/{/$${/g' \
+	  -e 's/\$$\([^{]\)/\$$\$$\1/g' \
+	  -e 's/{/(/g' -e 's/}/)/g' \
+	  -e 's/-D\([A-Z0-9_]*\)="\([^"]*\)"/-D\1=\\"\2\\"/g' \
+	  -e '/^\#/d' -e '/^$$/d' \
+	  < $< > $@
 
 $(build.path):
 	-mkdir -p $(build.path)
