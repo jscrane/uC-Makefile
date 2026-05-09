@@ -26,9 +26,6 @@ build.target := esp32
 
 -include hardware.mk
 
-# this is required for recipel.hooks.prebuild.4.pattern (but shouldn't be)
-tools.esptool_py.cmd := $(call os-override,tools.esptool_py.cmd)
-
 -include build-targets.mk
 
 serial.port = $(SERIAL_PORT)
