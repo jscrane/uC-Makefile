@@ -33,20 +33,14 @@ $1.o: object_file = $1.o
 
 ifeq ($(suffix $1),.c)
 $1.o: compiler.c.extra_flags += $(CPPFLAGS)
-$1.o:
-	$$(recipe.c.o.pattern)
 endif
 
 ifeq ($(suffix $1),.cpp)
 $1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-$1.o:
-	$$(recipe.cpp.o.pattern)
 endif
 
-ifeq ($(suffix $1),.S)
 $1.o:
-	$$(recipe.S.o.pattern)
-endif
+	$$(recipe$(suffix $1).o.pattern)
 endef
 
 $(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
@@ -97,23 +91,15 @@ $(BUILD_LIBS)/$1.o: $1
 
 ifeq ($(suffix $1),.c)
 $(BUILD_LIBS)/$1.o: compiler.c.extra_flags += $(CPPFLAGS)
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
-	$$(recipe.c.o.pattern)
 endif
 
 ifeq ($(suffix $1),.cpp)
 $(BUILD_LIBS)/$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
-	$$(recipe.cpp.o.pattern)
 endif
 
-ifeq ($(suffix $1),.S)
 $(BUILD_LIBS)/$1.o:
 	mkdir -p $$(dir $$@)
-	$$(recipe.S.o.pattern)
-endif
+	$$(recipe$(suffix $1).o.pattern)
 endef
 
 $(foreach s,$(LIBRARY_SOURCES), $(eval $(call library-compile-targets,$s)))
