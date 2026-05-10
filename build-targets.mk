@@ -24,7 +24,7 @@ OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
 
 all: prebuild $(SKETCH_ELF) $(OBJCOPY_TARGETS) build-summary
 
-define compile-sources
+define compile-source
 $2: source_file = $1
 $2: object_file = $2
 $2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
@@ -32,7 +32,7 @@ $2: $1
 	$$(recipe$(suffix $1).o.pattern)
 endef
 
-$(foreach s,$(SOURCES), $(eval $(call compile-sources,$s,$s.o)))
+$(foreach s,$(SOURCES), $(eval $(call compile-source,$s,$s.o)))
 
 define compile-sketch
 $2: source_file = $1
@@ -44,7 +44,7 @@ endef
 
 $(eval $(call compile-sketch,$(SKETCH),$(SKETCH).cpp.o))
 
-define compile-core-sources
+define compile-core-source
 $2: source_file = $1
 $2: object_file = $2
 $2: $1
@@ -52,26 +52,21 @@ $2: $1
 	$$(recipe$(suffix $1).o.pattern)
 endef
 
-$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-sources,$s,$(BUILD_CORE)/$s.o)))
+$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$s.o)))
 
-define core-archive-targets
+define archive-core-object
 $(archive_file_path)($(notdir $1)): object_file = $1
 $(archive_file_path)($(notdir $1)):
 	$$(recipe.ar.pattern)
 endef
 
 ifdef build.core
-$(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
+$(foreach o,$(CORE_OBJECTS), $(eval $(call archive-core-object,$o)))
 endif
 
 CORE_ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
-define define-hook
-$1:
-	$($1)
-endef
-
-define compile-library-sources
+define compile-library-source
 $2: source_file = $1
 $2: object_file = $2
 $2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
@@ -87,7 +82,7 @@ $(foreach r,$(REQUIRED_ROOTS), \
     $(foreach s,$(_CUR_SRCS), \
         $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
         $(eval LIBRARY_OBJECTS += $(_OBJ)) \
-        $(eval $(call compile-library-sources,$(s),$(_OBJ)))))
+        $(eval $(call compile-library-source,$(s),$(_OBJ)))))
 
 define link-sketch
 $1: compiler.c.elf.extra_flags += $(LDFLAGS)
@@ -99,6 +94,11 @@ endef
 get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
 
 ALL_HOOKS := $(call get-recipes,recipe.hooks)
+
+define define-hook
+$1:
+	$($1)
+endef
 
 $(foreach h,$(ALL_HOOKS), $(eval $(call define-hook,$h)))
 
