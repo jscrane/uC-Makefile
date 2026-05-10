@@ -25,44 +25,34 @@ OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
 all: prebuild $(SKETCH_ELF) $(OBJCOPY_TARGETS) build-summary
 
 define compile-sources
-$1.o: source_file = $1
-$1.o: object_file = $1.o
-
-ifeq ($(suffix $1),.c)
-$1.o: compiler.c.extra_flags += $(CPPFLAGS)
-endif
-
-ifeq ($(suffix $1),.cpp)
-$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-endif
-
-$1.o:
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
+$2: $1
 	$$(recipe$(suffix $1).o.pattern)
 endef
 
-$(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
+$(foreach s,$(SOURCES), $(eval $(call compile-sources,$s,$s.o)))
 
 define compile-sketch
-$1.cpp.o: source_file = $1
-$1.cpp.o: object_file = $1.cpp.o
-$1.cpp.o: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
-$1.cpp.o:
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
+$2: $1
 	$$(recipe.cpp.o.pattern)
 endef
 
-$(eval $(call compile-sketch,$(SKETCH)))
+$(eval $(call compile-sketch,$(SKETCH),$(SKETCH).cpp.o))
 
-define core-compile-targets
-$(BUILD_CORE)/$1.o: source_file = $1
-$(BUILD_CORE)/$1.o: object_file = $(BUILD_CORE)/$1.o
-$(BUILD_CORE)/$1.o: $1
-
-$(BUILD_CORE)/$1.o:
+define compile-core-sources
+$2: source_file = $1
+$2: object_file = $2
+$2: $1
 	mkdir -p "$$(dir $$@)"
 	$$(recipe$(suffix $1).o.pattern)
 endef
 
-$(foreach s,$(CORE_SOURCES), $(eval $(call core-compile-targets,$s)))
+$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-sources,$s,$(BUILD_CORE)/$s.o)))
 
 define core-archive-targets
 $(archive_file_path)($(notdir $1)): object_file = $1
@@ -81,7 +71,7 @@ $1:
 	$($1)
 endef
 
-define library-compile-targets
+define compile-library-sources
 $2: source_file = $1
 $2: object_file = $2
 $2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
@@ -97,7 +87,7 @@ $(foreach r,$(REQUIRED_ROOTS), \
     $(foreach s,$(_CUR_SRCS), \
         $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
         $(eval LIBRARY_OBJECTS += $(_OBJ)) \
-        $(eval $(call library-compile-targets,$(s),$(_OBJ)))))
+        $(eval $(call compile-library-sources,$(s),$(_OBJ)))))
 
 define link-sketch
 $1: compiler.c.elf.extra_flags += $(LDFLAGS)
