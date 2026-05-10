@@ -9,6 +9,8 @@ If:
 - You want more control over the build process than it gives you (e.g., compiler optimisation levels)
 - ... then this is for you!
 
+Supports `linux`, `windows` and `macosx` OS platforms, although only `linux` has been tested.
+
 ## Configuration
 Install the makefile fragments in _somedir_.
 
@@ -38,12 +40,14 @@ See the [documentation](docs/README.md).
 
 ## Supported Cores
 
- - [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.6
+This project tracks the latest version of each supported core:
+
+ - [avr](https://github.com/arduino/ArduinoCore-avr), 1.8.7
  - [attiny](https://github.com/SpenceKonde/ATTinyCore), 1.5.2
  - Arduino [esp8266](https://github.com/esp8266/Arduino), 3.1.2
- - Arduino [esp32](https://github.com/espressif/arduino-esp32), 3.3.7
+ - Arduino [esp32](https://github.com/espressif/arduino-esp32), 3.3.8
  - [stm32](https://github.com/stm32duino/Arduino_Core_STM32), 2.6.0
- - [rp2040](https://github.com/earlephilhower/arduino-pico), 5.4.4
+ - [rp2040](https://github.com/earlephilhower/arduino-pico), 5.6.0
  - Energia [tivac](https://github.com/energia/tivac-core), 1.0.4
  - Energia [msp430](https://github.com/energia/msp430-lg-core), 1.0.7
 
