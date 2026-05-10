@@ -13,7 +13,7 @@ LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p"
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 
 BUILD_CORE := $(build.path)/core
-BUILD_LIBS := $(build.path)/libs
+BUILD_LIBS := $(build.path)/libraries
 
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
@@ -66,23 +66,9 @@ $(BUILD_CORE)/$1.o: source_file = $1
 $(BUILD_CORE)/$1.o: object_file = $(BUILD_CORE)/$1.o
 $(BUILD_CORE)/$1.o: $1
 
-ifeq ($(suffix $1),.c)
 $(BUILD_CORE)/$1.o:
 	mkdir -p "$$(dir $$@)"
-	$$(recipe.c.o.pattern)
-endif
-
-ifeq ($(suffix $1),.cpp)
-$(BUILD_CORE)/$1.o:
-	mkdir -p "$$(dir $$@)"
-	$$(recipe.cpp.o.pattern)
-endif
-
-ifeq ($(suffix $1),.S)
-$(BUILD_CORE)/$1.o:
-	mkdir -p "$$(dir $$@)"
-	$$(recipe.S.o.pattern)
-endif
+	$$(recipe$(suffix $1).o.pattern)
 endef
 
 $(foreach s,$(CORE_SOURCES), $(eval $(call core-compile-targets,$s)))
