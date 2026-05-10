@@ -19,9 +19,6 @@ includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIR
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
 
-LIBRARY_SOURCES := $(foreach r, $(REQUIRED_ROOTS), $(foreach d, $r $r/utility $r/src $r/src/*, $(wildcard $d/*.c $d/*.cpp $d/*.S)))
-LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
-
 OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
 OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
 
@@ -85,24 +82,22 @@ $1:
 endef
 
 define library-compile-targets
-$(BUILD_LIBS)/$1.o: source_file = $1
-$(BUILD_LIBS)/$1.o: object_file = $(BUILD_LIBS)/$1.o
-$(BUILD_LIBS)/$1.o: $1
-
-ifeq ($(suffix $1),.c)
-$(BUILD_LIBS)/$1.o: compiler.c.extra_flags += $(CPPFLAGS)
-endif
-
-ifeq ($(suffix $1),.cpp)
-$(BUILD_LIBS)/$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-endif
-
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
+$2: $1
+	@mkdir -p $$(dir $$@)
 	$$(recipe$(suffix $1).o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-$(foreach s,$(LIBRARY_SOURCES), $(eval $(call library-compile-targets,$s)))
+$(foreach r,$(REQUIRED_ROOTS), \
+    $(eval _CUR_SRCS := $(wildcard $r/*.c $r/*.cpp $r/*.S $r/utility/*.c $r/utility/*.cpp $r/utility/*.S $r/src/*.c $r/src/*.cpp $r/src/*.S)) \
+    $(foreach s,$(_CUR_SRCS), \
+        $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
+        $(eval LIBRARY_OBJECTS += $(_OBJ)) \
+        $(eval $(call library-compile-targets,$(s),$(_OBJ)))))
 
 define link-sketch
 $1: compiler.c.elf.extra_flags += $(LDFLAGS)
