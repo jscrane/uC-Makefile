@@ -154,14 +154,17 @@ define \n
 
 endef
 
+PREOBJCOPY_HOOKS := $(call get-recipes,recipe.hooks.objcopy.preobjcopy)
+
+POSTOBJCOPY_HOOKS := $(call get-recipes,recipe.hooks.objcopy.postobjcopy)
+
 define objcopy-recipe
-$(build.path)/$(SKETCH).$1: $(SKETCH_ELF)
+$(build.path)/$(SKETCH).$1: $(SKETCH_ELF) $(PREOBJCOPY_HOOKS)
 	$(foreach r,$(call get-recipes,recipe.objcopy.$1),$(value $r)$(\n))
+	$(foreach r,$(POSTOBJCOPY_HOOKS),$($r))
 endef
 
 $(foreach s,$(OBJCOPY_SUFFIXES),$(eval $(call objcopy-recipe,$s)))
-
-$(SKETCH_ELF): $(OBJECTS) $(BUILD_CORE) $(CORE_PREBUILD_HOOKS) $(archive_file_path) $(CORE_POSTBUILD_HOOKS) $(LIBRARY_OBJECTS)
 
 $(CORE_ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
@@ -170,6 +173,8 @@ $(archive_file_path): $(CORE_ARCHIVE_TARGETS)
 CORE_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.prebuild)
 
 CORE_POSTBUILD_HOOKS := $(call get-recipes,recipe.hooks.core.postbuild)
+
+$(SKETCH_ELF): $(OBJECTS) $(BUILD_CORE) $(CORE_PREBUILD_HOOKS) $(archive_file_path) $(CORE_POSTBUILD_HOOKS) $(LIBRARY_OBJECTS)
 
 $(BUILD_CORE):
 	-mkdir -p $@
@@ -250,6 +255,6 @@ version:
 	@echo "serialout.txt" >> $@
 
 .PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore
-.PHONY: $(SKETCH_PREBUILD_HOOKS) $(PREBUILD_HOOKS) $(PRELINK_HOOKS) $(CORE_PREBUILD_HOOKS) $(CORE_POSTBUILD_HOOKS)
+.PHONY: $(ALL_HOOKS)
 
 -include $(DEPS)
