@@ -1,7 +1,12 @@
+BUILD_SKETCH := $(build.path)/sketch
+BUILD_CORE := $(build.path)/core
+BUILD_LIBS := $(build.path)/libraries
+
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
-SOURCES += $(wildcard *.cpp) $(wildcard *.c)
-OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
-DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
+SOURCE_PATTERN := *.c *.cpp *.S
+SOURCES += $(foreach s,$(SOURCE_PATTERN),$(wildcard $s))
+OBJECTS := $(foreach s,$(SOURCES), $(BUILD_SKETCH)/$s.o) $(BUILD_SKETCH)/$(SKETCH).cpp.o
+DEPS := $(foreach o,$(OBJECTS), $(o:.o=.d))
 
 TERMINAL ?= minicom
 TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED) $(TERMINAL_EXTRA_FLAGS)
@@ -12,125 +17,83 @@ LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 
-BUILD_CORE := $(build.path)/core
-BUILD_LIBS := $(build.path)/libs
-
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
-CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
-CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
-
-LIBRARY_SOURCES := $(foreach r, $(REQUIRED_ROOTS), $(foreach d, $r $r/utility $r/src $r/src/*, $(wildcard $d/*.c $d/*.cpp $d/*.S)))
-LIBRARY_OBJECTS := $(foreach s, $(LIBRARY_SOURCES), $(BUILD_LIBS)/$s.o)
+CORE_FIND_EXPR := $(foreach p,$(SOURCE_PATTERN),-name "$p" -o) -false
+CORE_SOURCES := $(shell find $(build.core.path) -type f \( $(CORE_FIND_EXPR) \)) $(wildcard $(addprefix $(build.variant.path)/, $(SOURCE_PATTERN)))
+CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$(notdir $s).o)
 
 OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
 OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
 
 all: prebuild $(SKETCH_ELF) $(OBJCOPY_TARGETS) build-summary
 
-define compile-sources
-$1.o: source_file = $1
-$1.o: object_file = $1.o
+define compile-source
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
+$2: $1
+	@mkdir -p $$(dir $$@)
+	$$(recipe$(suffix $1).o.pattern)
 
-ifeq ($(suffix $1),.c)
-$1.o: compiler.c.extra_flags += $(CPPFLAGS)
-$1.o:
-	$$(recipe.c.o.pattern)
-endif
-
-ifeq ($(suffix $1),.cpp)
-$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-$1.o:
-	$$(recipe.cpp.o.pattern)
-endif
-
-ifeq ($(suffix $1),.S)
-$1.o:
-	$$(recipe.S.o.pattern)
-endif
+-include $(2:.o=.d)
 endef
 
-$(foreach s,$(SOURCES), $(eval $(call compile-sources,$s)))
+$(foreach s,$(SOURCES), $(eval $(call compile-source,$s,$(BUILD_SKETCH)/$s.o)))
 
 define compile-sketch
-$1.cpp.o: source_file = $1
-$1.cpp.o: object_file = $1.cpp.o
-$1.cpp.o: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
-$1.cpp.o:
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
+$2: $1
+	@mkdir -p $$(dir $$@)
 	$$(recipe.cpp.o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-$(eval $(call compile-sketch,$(SKETCH)))
+$(eval $(call compile-sketch,$(SKETCH),$(BUILD_SKETCH)/$(SKETCH).cpp.o))
 
-define core-compile-targets
-$(BUILD_CORE)/$1.o: source_file = $1
-$(BUILD_CORE)/$1.o: object_file = $(BUILD_CORE)/$1.o
-$(BUILD_CORE)/$1.o: $1
-
-ifeq ($(suffix $1),.c)
-$(BUILD_CORE)/$1.o:
+define compile-core-source
+$2: source_file = $1
+$2: object_file = $2
+$2: $1
 	mkdir -p "$$(dir $$@)"
-	$$(recipe.c.o.pattern)
-endif
+	$$(recipe$(suffix $1).o.pattern)
 
-ifeq ($(suffix $1),.cpp)
-$(BUILD_CORE)/$1.o:
-	mkdir -p "$$(dir $$@)"
-	$$(recipe.cpp.o.pattern)
-endif
-
-ifeq ($(suffix $1),.S)
-$(BUILD_CORE)/$1.o:
-	mkdir -p "$$(dir $$@)"
-	$$(recipe.S.o.pattern)
-endif
+-include $(2:.o=.d)
 endef
 
-$(foreach s,$(CORE_SOURCES), $(eval $(call core-compile-targets,$s)))
+$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$(notdir $s).o)))
 
-define core-archive-targets
+define archive-core-object
 $(archive_file_path)($(notdir $1)): object_file = $1
 $(archive_file_path)($(notdir $1)):
 	$$(recipe.ar.pattern)
 endef
 
 ifdef build.core
-$(foreach o,$(CORE_OBJECTS), $(eval $(call core-archive-targets,$o)))
+$(foreach o,$(CORE_OBJECTS), $(eval $(call archive-core-object,$o)))
 endif
 
 CORE_ARCHIVE_TARGETS := $(foreach o,$(CORE_OBJECTS),$(archive_file_path)($(notdir $o)))
 
-define define-hook
-$1:
-	$($1)
+define compile-library-source
+$2: source_file = $1
+$2: object_file = $2
+$2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
+$2: $1
+	@mkdir -p $$(dir $$@)
+	$$(recipe$(suffix $1).o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-define library-compile-targets
-$(BUILD_LIBS)/$1.o: source_file = $1
-$(BUILD_LIBS)/$1.o: object_file = $(BUILD_LIBS)/$1.o
-$(BUILD_LIBS)/$1.o: $1
-
-ifeq ($(suffix $1),.c)
-$(BUILD_LIBS)/$1.o: compiler.c.extra_flags += $(CPPFLAGS)
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
-	$$(recipe.c.o.pattern)
-endif
-
-ifeq ($(suffix $1),.cpp)
-$(BUILD_LIBS)/$1.o: compiler.cpp.extra_flags += $(CPPFLAGS)
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
-	$$(recipe.cpp.o.pattern)
-endif
-
-ifeq ($(suffix $1),.S)
-$(BUILD_LIBS)/$1.o:
-	mkdir -p $$(dir $$@)
-	$$(recipe.S.o.pattern)
-endif
-endef
-
-$(foreach s,$(LIBRARY_SOURCES), $(eval $(call library-compile-targets,$s)))
+$(foreach r,$(REQUIRED_ROOTS), \
+    $(eval _CUR_SRCS := $(wildcard $(addprefix $r/, $(SOURCE_PATTERN) $(addprefix utility/, $(SOURCE_PATTERN)) $(addprefix src/, $(SOURCE_PATTERN))))) \
+    $(foreach s,$(_CUR_SRCS), \
+        $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
+        $(eval LIBRARY_OBJECTS += $(_OBJ)) \
+        $(eval $(call compile-library-source,$(s),$(_OBJ)))))
 
 define link-sketch
 $1: compiler.c.elf.extra_flags += $(LDFLAGS)
@@ -142,6 +105,11 @@ endef
 get-recipes = $(sort $(filter $(1).pattern $(1).%.pattern, $(.VARIABLES)))
 
 ALL_HOOKS := $(call get-recipes,recipe.hooks)
+
+define define-hook
+$1:
+	$($1)
+endef
 
 $(foreach h,$(ALL_HOOKS), $(eval $(call define-hook,$h)))
 
@@ -211,8 +179,7 @@ SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
 prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
 clean:
-	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
-	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
+	-rm -fr *.txt.mk $(build.path) $(BUILD_EXTRAS)
 
 path:
 	@echo $(PATH)
@@ -249,8 +216,6 @@ version:
 
 .gitignore:
 	@echo ".build" >> $@
-	@echo "*.cpp.o" >> $@
-	@echo "*.cpp.d" >> $@
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
