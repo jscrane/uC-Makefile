@@ -129,7 +129,7 @@ POSTOBJCOPY_HOOKS := $(call get-recipes,recipe.hooks.objcopy.postobjcopy)
 define objcopy-recipe
 $(build.path)/$(SKETCH).$1: $(SKETCH_ELF) $(PREOBJCOPY_HOOKS)
 	$(foreach r,$(call get-recipes,recipe.objcopy.$1),$(value $r)$(\n))
-	$(foreach r,$(POSTOBJCOPY_HOOKS),$($r))
+	$(foreach h,$(POSTOBJCOPY_HOOKS),$($h)$(\n)	)
 endef
 
 $(foreach s,$(OBJCOPY_SUFFIXES),$(eval $(call objcopy-recipe,$s)))
