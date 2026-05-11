@@ -169,6 +169,13 @@ $(build.path):
 build-variables:
 	$(foreach v, $(sort $(filter build.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 
+PRESAVEHEX_HOOKS := $(call get-recipes,recipe.hooks.savehex.presavehex)
+
+POSTSAVEHEX_HOOKS := $(call get-recipes,recipe.hooks.savehex.postsavehex)
+
+savehex: all $(PRESAVEHEX_HOOKS)
+	$(foreach h,$(POSTSAVEHEX_HOOKS),$($h)$(\n)	)
+
 menu-variables:
 	$(foreach v, $(sort $(filter menu.%, $(.VARIABLES))), $(info $(v) = $($(v))))
 

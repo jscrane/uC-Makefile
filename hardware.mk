@@ -91,3 +91,4 @@ build.source.path ?= .
 archive_file := libcore.a
 archive_file_path := $(build.path)/$(archive_file)
 compiler.warning_flags := $(compiler.warning_flags.$(COMPILER_WARNINGS))
+sketch_path ?= $(build.source.path)
