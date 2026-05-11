@@ -177,8 +177,7 @@ SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
 prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
 clean:
-	-rm -f $(OBJECTS) $(DEPS) *.txt.mk
-	-rm -fr $(build.path) $(BUILD_CORE) $(BUILD_LIBS) $(BUILD_EXTRAS)
+	-rm -fr *.txt.mk $(build.path) $(BUILD_EXTRAS)
 
 path:
 	@echo $(PATH)
