@@ -17,7 +17,7 @@ BUILD_LIBS := $(build.path)/libraries
 
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
-CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$s.o)
+CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$(notdir $s).o)
 
 OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
 OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
@@ -50,9 +50,11 @@ $2: object_file = $2
 $2: $1
 	mkdir -p "$$(dir $$@)"
 	$$(recipe$(suffix $1).o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$s.o)))
+$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$(notdir $s).o)))
 
 define archive-core-object
 $(archive_file_path)($(notdir $1)): object_file = $1
