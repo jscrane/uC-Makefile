@@ -13,8 +13,6 @@ A colon separates the name of the variable from its default value. Parentheses i
 - LIBRARIES
 - COMPILER_WARNINGS: `default`
 - SERIAL_PORT: `/dev/ttyUSB0`
-- PREBUILD: per-sketch `prebuild` target
-- CLEAN: per-sketch `clean` target
 
 Targets are in **bold**.
 
@@ -24,6 +22,7 @@ Targets are in **bold**.
 - **erase** erases and programs sketch using external programmer
 - **bootloader** burns the bootloader using external programmer
 - **build-summary**
+- **savehex** exports compiled binary
 - **term** starts terminal on `SERIAL_PORT`
 - **version** prints core version
 - **clean**
