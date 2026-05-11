@@ -25,7 +25,7 @@ CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$(notdir $s).o)
 OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
 OBJCOPY_TARGETS := $(foreach s,$(OBJCOPY_SUFFIXES),$(build.path)/$(SKETCH).$s)
 
-all: prebuild $(SKETCH_ELF) $(OBJCOPY_TARGETS) build-summary
+all: prebuild $(SKETCH_ELF) objcopy build-summary
 
 define compile-source
 $2: source_file = $1
@@ -127,12 +127,13 @@ PREOBJCOPY_HOOKS := $(call get-recipes,recipe.hooks.objcopy.preobjcopy)
 POSTOBJCOPY_HOOKS := $(call get-recipes,recipe.hooks.objcopy.postobjcopy)
 
 define objcopy-recipe
-$(build.path)/$(SKETCH).$1: $(SKETCH_ELF) $(PREOBJCOPY_HOOKS)
+$(build.path)/$(SKETCH).$1: $(SKETCH_ELF)
 	$(foreach r,$(call get-recipes,recipe.objcopy.$1),$(value $r)$(\n))
-	$(foreach h,$(POSTOBJCOPY_HOOKS),$($h)$(\n)	)
 endef
 
 $(foreach s,$(OBJCOPY_SUFFIXES),$(eval $(call objcopy-recipe,$s)))
+
+objcopy: $(PREOBJCOPY_HOOKS) $(OBJCOPY_TARGETS) $(POSTOBJCOPY_HOOKS)
 
 $(CORE_ARCHIVE_TARGETS): $(BUILD_CORE) | $(CORE_OBJECTS)
 
@@ -219,7 +220,7 @@ version:
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
-.PHONY: clean all path term version build-summary prebuild build-variables upload program erase bootloader .gitignore
+.PHONY: clean all path term version objcopy build-summary prebuild build-variables upload program erase bootloader .gitignore
 .PHONY: $(ALL_HOOKS)
 
 -include $(DEPS)
