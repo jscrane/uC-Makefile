@@ -3,7 +3,8 @@ BUILD_CORE := $(build.path)/core
 BUILD_LIBS := $(build.path)/libraries
 
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
-SOURCES += $(wildcard *.cpp) $(wildcard *.c)
+SOURCE_PATTERN := *.c *.cpp *.S
+SOURCES += $(foreach s,$(SOURCE_PATTERN),$(wildcard $s))
 OBJECTS := $(foreach s,$(SOURCES), $(BUILD_SKETCH)/$s.o) $(BUILD_SKETCH)/$(SKETCH).cpp.o
 DEPS := $(foreach o,$(OBJECTS), $(o:.o=.d))
 
@@ -17,7 +18,8 @@ LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p"
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
 
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
-CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
+CORE_FIND_EXPR := $(foreach p,$(SOURCE_PATTERN),-name "$p" -o) -false
+CORE_SOURCES := $(shell find $(build.core.path) -type f \( $(CORE_FIND_EXPR) \)) $(wildcard $(addprefix $(build.variant.path)/, $(SOURCE_PATTERN)))
 CORE_OBJECTS := $(foreach s, $(CORE_SOURCES), $(BUILD_CORE)/$(notdir $s).o)
 
 OBJCOPY_SUFFIXES := $(sort $(patsubst recipe.objcopy.%.pattern,%,$(filter recipe.objcopy.%.pattern,$(.VARIABLES))))
@@ -87,7 +89,7 @@ $2: $1
 endef
 
 $(foreach r,$(REQUIRED_ROOTS), \
-    $(eval _CUR_SRCS := $(wildcard $r/*.c $r/*.cpp $r/*.S $r/utility/*.c $r/utility/*.cpp $r/utility/*.S $r/src/*.c $r/src/*.cpp $r/src/*.S)) \
+    $(eval _CUR_SRCS := $(wildcard $(addprefix $r/, $(SOURCE_PATTERN) $(addprefix utility/, $(SOURCE_PATTERN)) $(addprefix src/, $(SOURCE_PATTERN))))) \
     $(foreach s,$(_CUR_SRCS), \
         $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
         $(eval LIBRARY_OBJECTS += $(_OBJ)) \
@@ -214,8 +216,6 @@ version:
 
 .gitignore:
 	@echo ".build" >> $@
-	@echo "*.cpp.o" >> $@
-	@echo "*.cpp.d" >> $@
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
