@@ -149,14 +149,14 @@ $(BUILD_CORE):
 	-mkdir -p $@
 
 # convert .txt files into .mk files:
-# - dollar protection: $XYZ -> $$XYZ
+# - dollar protection: $XYZ -> \$$XYZ
 # - brace translation: {} -> $()
 # - quote shielding: -DVAR="value" -> -DVAR=\"value\"
 # - deleting comments and empty lines
 # - renaming host-specific properties: property$(HOST_SUFFIX)=value -> property=value
 # - deleting other OS-specific properties
 %.txt.mk: $(runtime.platform.path)/%.txt
-	@sed -e 's/\$$/\$$\$$/g' \
+	@sed -e 's/\$$/\\$$\$$/g' \
 	  -e 's/{/\$$(/g' -e 's/}/)/g' \
 	  -e 's/-D\([A-Z0-9_]*\)="\([^"]*\)"/-D\1=\\"\2\\"/g' \
 	  -e '/^\#/d' -e '/^$$/d' \
@@ -187,7 +187,7 @@ SKETCH_PREBUILD_HOOKS := $(call get-recipes,recipe.hooks.sketch.prebuild)
 prebuild: $(build.path) $(PREBUILD_HOOKS) $(SKETCH_PREBUILD_HOOKS)
 
 clean:
-	-rm -fr *.txt.mk $(build.path) $(BUILD_EXTRAS)
+	-rm -fr *.txt.mk build $(build.path) $(BUILD_EXTRAS)
 
 path:
 	@echo $(PATH)
@@ -224,10 +224,11 @@ version:
 
 .gitignore:
 	@echo ".build" >> $@
+	@echo "build" >> $@
 	@echo "*.txt.mk" >> $@
 	@echo "serialout.txt" >> $@
 
-.PHONY: clean all path term version objcopy build-summary prebuild build-variables upload program erase bootloader .gitignore
+.PHONY: clean all path term version objcopy savehex build-summary prebuild build-variables upload program erase bootloader .gitignore
 .PHONY: $(ALL_HOOKS)
 
 -include $(DEPS)
