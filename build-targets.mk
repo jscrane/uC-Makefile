@@ -63,8 +63,6 @@ $2: $1
 -include $(2:.o=.d)
 endef
 
-$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$(notdir $s).o)))
-
 define archive-core-object
 $(archive_file_path)($(notdir $1)): object_file = $1
 $(archive_file_path)($(notdir $1)):
@@ -72,6 +70,7 @@ $(archive_file_path)($(notdir $1)):
 endef
 
 ifdef build.core
+$(foreach s,$(CORE_SOURCES), $(eval $(call compile-core-source,$s,$(BUILD_CORE)/$(notdir $s).o)))
 $(foreach o,$(CORE_OBJECTS), $(eval $(call archive-core-object,$o)))
 endif
 
