@@ -1,7 +1,11 @@
+BUILD_SKETCH := $(build.path)/sketch
+BUILD_CORE := $(build.path)/core
+BUILD_LIBS := $(build.path)/libraries
+
 SKETCH_ELF := $(build.path)/$(SKETCH).elf
 SOURCES += $(wildcard *.cpp) $(wildcard *.c)
-OBJECTS := $(foreach s,$(SOURCES), $s.o) $(SKETCH).cpp.o
-DEPS := $(foreach s,$(OBJECTS), $(s:.o=.d))
+OBJECTS := $(foreach s,$(SOURCES), $(BUILD_SKETCH)/$s.o) $(BUILD_SKETCH)/$(SKETCH).cpp.o
+DEPS := $(foreach o,$(OBJECTS), $(o:.o=.d))
 
 TERMINAL ?= minicom
 TERMINAL_FLAGS ?= -D $(SERIAL_PORT) -b $(TERMINAL_SPEED) $(TERMINAL_EXTRA_FLAGS)
@@ -11,9 +15,6 @@ SKETCHBOOK ?= $(HOME)/Arduino
 LIBRARY_PATH := $(LOCAL_LIBRARY_PATH) $(SKETCHBOOK)/libraries $(runtime.platform.path)/libraries
 LIBRARIES += $(sort $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SKETCH)))
 REQUIRED_ROOTS := $(foreach r, $(LIBRARIES), $(firstword $(foreach d, $(LIBRARY_PATH), $(wildcard $d/$r))))
-
-BUILD_CORE := $(build.path)/core
-BUILD_LIBS := $(build.path)/libraries
 
 includes := -I$(build.core.path) -I"$(build.variant.path)" $(foreach r, $(REQUIRED_ROOTS), -I$r -I$r/src)
 CORE_SOURCES := $(shell find $(build.core.path) -type f \( -name \*.c -o -name \*.cpp -o -name \*.S \)) $(wildcard $(addprefix $(build.variant.path)/, *.c *.cpp *.S))
@@ -29,20 +30,26 @@ $2: source_file = $1
 $2: object_file = $2
 $2: compiler$(suffix $1).extra_flags += $(CPPFLAGS)
 $2: $1
+	@mkdir -p $$(dir $$@)
 	$$(recipe$(suffix $1).o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-$(foreach s,$(SOURCES), $(eval $(call compile-source,$s,$s.o)))
+$(foreach s,$(SOURCES), $(eval $(call compile-source,$s,$(BUILD_SKETCH)/$s.o)))
 
 define compile-sketch
 $2: source_file = $1
 $2: object_file = $2
 $2: compiler.cpp.extra_flags += -x c++ -include Arduino.h $(CPPFLAGS)
 $2: $1
+	@mkdir -p $$(dir $$@)
 	$$(recipe.cpp.o.pattern)
+
+-include $(2:.o=.d)
 endef
 
-$(eval $(call compile-sketch,$(SKETCH),$(SKETCH).cpp.o))
+$(eval $(call compile-sketch,$(SKETCH),$(BUILD_SKETCH)/$(SKETCH).cpp.o))
 
 define compile-core-source
 $2: source_file = $1
