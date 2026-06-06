@@ -87,8 +87,10 @@ $2: $1
 -include $(2:.o=.d)
 endef
 
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+
 $(foreach r,$(REQUIRED_ROOTS), \
-    $(eval _CUR_SRCS := $(wildcard $(addprefix $r/, $(SOURCE_PATTERN) $(addprefix utility/, $(SOURCE_PATTERN)) $(addprefix src/, $(SOURCE_PATTERN))))) \
+    $(eval _CUR_SRCS := $(wildcard $(addprefix $r/, $(SOURCE_PATTERN))) $(call rwildcard,$r/src,$(SOURCE_PATTERN)) $(call rwildcard,$r/utility,$(SOURCE_PATTERN))) \
     $(foreach s,$(_CUR_SRCS), \
         $(eval _OBJ := $(patsubst $(dir $r)%,$(BUILD_LIBS)/%,$(s)).o) \
         $(eval LIBRARY_OBJECTS += $(_OBJ)) \
