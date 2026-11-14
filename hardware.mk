@@ -73,6 +73,8 @@ define define-scoped-prefix-variables
 $(foreach v,$(filter $1.%, $(.VARIABLES)), $(eval $(call define-scoped-variable,$(v:$1.%=%),$(v),$2)))
 endef
 
+uppercase = $(shell printf '%s' '$(1)' | tr '[:lower:]' '[:upper:]')
+
 $(call define-prefix-variables,$(BOARD))
 
 $(call define-menus,$(foreach m,$(filter menu.%,$(.VARIABLES)),$(m:menu.%=%)))
@@ -81,7 +83,7 @@ SKETCH ?= $(firstword $(wildcard *.ino))
 COMPILER_WARNINGS ?= default
 
 build.project_name := $(SKETCH)
-build.arch := $(PROCESSOR_FAMILY)
+build.arch := $(call uppercase,$(PROCESSOR_FAMILY))
 build.fqbn := $(VENDOR):$(PROCESSOR_FAMILY):$(BOARD)
 build.core.path = $(runtime.platform.path)/cores/$(build.core)
 build.variant.path = $(runtime.platform.path)/variants/$(build.variant)
